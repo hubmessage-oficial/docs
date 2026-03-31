@@ -1,0 +1,102 @@
+---
+title: "Enviar texto"
+description: "Envie mensagens de texto simples via WhatsApp"
+api: "POST https://zapi.hubmessage.io/channels/{channel_id}/token/{channel_token}/send-text"
+---
+
+import { projectName } from '/snippets/variables.mdx';
+
+## Conceituação
+
+Método para envio de mensagens de texto simples. Suporta formatação do WhatsApp, emojis e quebras de linha.
+
+### Quebras de linha
+
+Para adicionar quebras de linha na mensagem, utilize qualquer um dos formatos: `\n`, `\r`, `\r\n` ou `%0a`.
+
+---
+
+## Atributos
+
+### Header
+
+| Atributo | Tipo | Obrigatório | Descrição |
+|---|---|---|---|
+| `Authorization` | string | Sim | `Bearer {seu_secret_key}` |
+| `Content-Type` | string | Sim | `application/json` |
+
+### Body
+
+| Atributo | Tipo | Obrigatório | Descrição |
+|---|---|---|---|
+| `phone` | string | Sim | Telefone do destinatário no formato DDI + DDD + número. Ex: `5511999999999` |
+| `message` | string | Sim | Texto da mensagem a ser enviada |
+| `delayMessage` | number | Não | Delay em segundos antes do envio (1-15). Padrão: 1-3 segundos |
+| `delayTyping` | number | Não | Tempo em segundos exibindo status "digitando" (1-15). Padrão: 0 |
+| `editMessageId` | string | Não | ID de uma mensagem enviada anteriormente para editar |
+
+---
+
+## Exemplo de requisição
+
+```bash
+curl -X POST https://zapi.hubmessage.io/channels/SEU_CANAL/token/SEU_TOKEN/send-text \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SEU_SECRET_KEY" \
+  -d '{
+    "phone": "5511999999999",
+    "message": "Bem-vindo ao *Hub Message*!"
+  }'
+```
+
+### Body
+
+```json
+{
+  "phone": "5511999999999",
+  "message": "Bem-vindo ao *Hub Message*!"
+}
+```
+
+### Body com opcionais
+
+```json
+{
+  "phone": "5511999999999",
+  "message": "Bem-vindo ao *Hub Message*!",
+  "delayMessage": 5,
+  "delayTyping": 3
+}
+```
+
+---
+
+## Resposta
+
+### 200 - Sucesso
+
+```json
+{
+  "zaapId": "3999984263738042930CD6ECDE9VDWSA",
+  "messageId": "D241XXXX732339502B68",
+  "id": "D241XXXX732339502B68"
+}
+```
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| `zaapId` | string | Identificador interno |
+| `messageId` | string | ID da mensagem no WhatsApp |
+| `id` | string | Mesmo valor do `messageId` (compatibilidade) |
+
+<Note>
+  A estrutura de resposta é idêntica à da Z-API. Seu código existente que processa esses retornos continuará funcionando sem alterações.
+</Note>
+
+### 405 - Método não permitido
+
+Verifique se o método HTTP utilizado é `POST`.
+
+### 415 - Content-Type inválido
+
+Verifique se o header `Content-Type: application/json` está sendo enviado corretamente.

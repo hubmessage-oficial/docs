@@ -1,0 +1,98 @@
+---
+title: "Z-API Compatibilidade"
+description: "Migre da Z-API para o Hub Message sem quebrar suas integrações"
+---
+
+import { projectName, zapiBaseUrl, zapiOriginalUrl, frontendUrl, supportEmail } from '/snippets/variables.mdx';
+
+## O que é a versão Z-API Compatibilidade?
+
+A versão **Z-API Compatibilidade** foi criada para facilitar a migração de clientes que hoje utilizam a Z-API e desejam migrar para o {projectName} como sua solução oficial de API para WhatsApp e demais canais de mensagem.
+
+Sabemos que trocar de provedor de API pode ser um processo trabalhoso — especialmente quando você já tem integrações rodando em produção. Por isso, desenvolvemos essa camada de compatibilidade que mantém a mesma estrutura que você já conhece.
+
+## O que muda na prática?
+
+<Note>
+  As únicas mudanças necessárias na sua aplicação são a **base URL** e o **header de autenticação**.
+</Note>
+
+| | Antes (Z-API) | Depois (Hub Message) |
+|---|---|---|
+| **Base URL** | `https://api.z-api.io` | `https://zapi.hubmessage.io` |
+| **Autenticação** | Header `Client-Token` | Header `Authorization: Bearer {secret}` |
+| **Nomenclatura** | `instance` / `instance_id` | `channel` / `channel_id` |
+| **Path da URL** | `/instances/{id}/token/{token}` | `/instances/` ou `/channels/` (ambos funcionam) |
+| **Payloads das APIs** | — | Mesma estrutura |
+| **Body dos Webhooks** | — | Mesma estrutura |
+
+### Sobre nomenclatura
+
+No {projectName}, o que antes era chamado de **instância** (`instance_id`) agora é tratado como **canal** (`channel_id`). O conceito é o mesmo — representa a conexão com um número de WhatsApp — mas adotamos o termo "canal" por ser mais abrangente, já que o {projectName} suporta múltiplos canais de mensagem além do WhatsApp.
+
+<Note>
+  Para compatibilidade, a API aceita tanto `/instances/` quanto `/channels/` no path. Se você está migrando da Z-API, pode manter `/instances/` sem problema — suas integrações continuam funcionando. Para novas integrações, recomendamos usar `/channels/`.
+</Note>
+
+Ou seja, se hoje sua aplicação faz uma chamada como:
+
+```bash
+curl -X POST https://api.z-api.io/instances/SUA_INSTANCIA/token/SEU_TOKEN/send-text \
+  -H "Content-Type: application/json" \
+  -H "Client-Token: SEU_CLIENT_TOKEN" \
+  -d '{"phone": "5511999999999", "message": "Olá!"}'
+```
+
+Basta trocar para:
+
+```bash
+curl -X POST https://zapi.hubmessage.io/channels/SEU_CANAL/token/SEU_TOKEN/send-text \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SEU_SECRET" \
+  -d '{"phone": "5511999999999", "message": "Olá!"}'
+```
+
+Note que **apenas a base URL e o header de autenticação mudaram** — o path e body são idênticos.
+
+O secret para o header `Authorization` é gerado no painel do Hub Message ao criar sua instância. Os payloads de envio e os bodys dos webhooks mantêm exatamente a mesma estrutura, garantindo que suas integrações continuem funcionando sem quebras.
+
+## Por que migrar?
+
+<CardGroup cols={2}>
+  <Card title="API Oficial do WhatsApp" icon="whatsapp">
+    Utilize a API oficial do WhatsApp Business com toda a segurança e estabilidade que isso proporciona.
+  </Card>
+  <Card title="Menor risco de bloqueio" icon="shield-check">
+    Por utilizar a API oficial do WhatsApp, o risco de banimento é significativamente menor comparado a soluções não oficiais.
+  </Card>
+  <Card title="Migração simples" icon="arrow-right-arrow-left">
+    Troque apenas a base URL e pronto — suas integrações continuam funcionando.
+  </Card>
+  <Card title="Suporte dedicado" icon="headset">
+    Conte com o suporte da equipe {projectName} durante todo o processo de migração.
+  </Card>
+</CardGroup>
+
+## Como migrar
+
+<Steps>
+  <Step title="Crie sua conta no Hub Message">
+    Acesse o [Dashboard]({frontendUrl}) e crie sua conta.
+  </Step>
+  <Step title="Configure sua instância">
+    Crie uma nova instância e conecte seu número de WhatsApp.
+  </Step>
+  <Step title="Atualize a base URL e autenticação">
+    Substitua `https://api.z-api.io` por `https://zapi.hubmessage.io` e troque o header `Client-Token` por `Authorization: Bearer SEU_SECRET`.
+  </Step>
+  <Step title="Configure os webhooks">
+    Atualize a URL de callback dos webhooks no Dashboard para apontar para o seu servidor. Os eventos recebidos terão a mesma estrutura de antes.
+  </Step>
+  <Step title="Teste e valide">
+    Faça testes de envio e recebimento para garantir que tudo está funcionando corretamente.
+  </Step>
+</Steps>
+
+<Info>
+  Precisa de ajuda na migração? Entre em contato pelo e-mail [{supportEmail}](mailto:{supportEmail}).
+</Info>

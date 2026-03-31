@@ -1,0 +1,3 @@
+- criacao de instancia quebra
+- delayMessage, delayTyping, editMessageId precisam ser revistos.
+- edição de mensagem nao ta funcionando.
