@@ -1,0 +1,15 @@
+---
+title: "Send Pix button"
+description: "Send messages with a Pix payment button"
+openapi: "POST /send-button-pix"
+---
+
+## Overview
+
+Method for sending messages with a Pix payment button. The recipient receives a button that copies the Pix key when clicked.
+
+Supported key types: **CPF**, **CNPJ**, **PHONE**, **EMAIL**, and **EVP** (random key).
+
+<Note>
+  The response structure is identical to Z-API. Your existing code that processes these returns will continue working without changes.
+</Note>

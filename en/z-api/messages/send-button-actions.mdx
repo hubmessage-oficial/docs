@@ -1,0 +1,25 @@
+---
+title: "Send action buttons"
+description: "Send messages with action buttons (call, URL, quick reply)"
+openapi: "POST /send-button-actions"
+---
+
+## Overview
+
+Method for sending messages with action buttons. There are three button types:
+
+- **CALL** — Button to call a phone number
+- **URL** — Button to open a link
+- **REPLY** — Quick reply button
+
+<Warning>
+  Do not combine all three button types in the same message. Send **CALL + URL** buttons together, and **REPLY** buttons separately. Combining all of them causes errors on WhatsApp Web.
+</Warning>
+
+<Tip>
+  For copy-code buttons, use the URL format: `https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=YOUR_CODE`
+</Tip>
+
+<Note>
+  The response structure is identical to Z-API. Your existing code that processes these returns will continue working without changes.
+</Note>

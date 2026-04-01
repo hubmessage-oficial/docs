@@ -1,0 +1,34 @@
+---
+title: "Reply to message"
+description: "Reply to existing messages via WhatsApp"
+---
+
+## Overview
+
+To reply to an existing message, simply include the `messageId` attribute in the body of any send endpoint (text, image, audio, etc). The `messageId` is the ID of the original message you want to reply to.
+
+You can get the `messageId` in two ways:
+- **Sent messages** — returned in the API response when sending
+- **Received messages** — received via webhook
+
+### Example
+
+Replying to a message with text using the `/send-text` endpoint:
+
+```json
+{
+  "phone": "5511999999999",
+  "message": "Thanks for reaching out!",
+  "messageId": "3999984263738042930CD6ECDE9VDWSA"
+}
+```
+
+This works for `/send-image`, `/send-audio`, `/send-video`, `/send-document`, `/send-sticker`, and `/send-contact` as well — just add the `messageId` field.
+
+<Note>
+  The response structure is identical to Z-API. Your existing code that processes these returns will continue working without changes.
+</Note>
+
+<Warning>
+  The `privateAnswer` attribute (private reply in groups) from Z-API is **not compatible** with the official API and is not available in this version.
+</Warning>

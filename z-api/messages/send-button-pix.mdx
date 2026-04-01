@@ -1,0 +1,15 @@
+---
+title: "Enviar botão Pix"
+description: "Envie mensagens com botão de pagamento via Pix"
+openapi: "POST /send-button-pix"
+---
+
+## Conceituação
+
+Método para envio de mensagens com botão de pagamento via Pix. O destinatário recebe um botão que ao ser clicado copia a chave Pix.
+
+Os tipos de chave suportados são: **CPF**, **CNPJ**, **PHONE**, **EMAIL** e **EVP** (chave aleatória).
+
+<Note>
+  A estrutura de resposta é idêntica à da Z-API. Seu código existente que processa esses retornos continuará funcionando sem alterações.
+</Note>

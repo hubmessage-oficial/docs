@@ -1,0 +1,17 @@
+---
+title: "Enviar link"
+description: "Envie mensagens com preview de link via WhatsApp"
+openapi: "POST /send-link"
+---
+
+## Conceituação
+
+Método para envio de mensagens com preview de link, incluindo imagem, título e descrição.
+
+<Warning>
+  Os links só são clicáveis se o destinatário tiver seu número salvo na agenda ou se ele tiver iniciado uma conversa com você anteriormente.
+</Warning>
+
+<Note>
+  A estrutura de resposta é idêntica à da Z-API. Seu código existente que processa esses retornos continuará funcionando sem alterações.
+</Note>

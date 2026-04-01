@@ -1,0 +1,19 @@
+---
+title: "Enviar lista de botões"
+description: "Envie mensagens com botões de seleção rápida"
+openapi: "POST /send-button-list"
+---
+
+## Conceituação
+
+Método para envio de mensagens com botões de seleção rápida. O destinatário pode escolher entre as opções apresentadas, que funcionam como resposta à mensagem.
+
+Opcionalmente, você pode incluir uma **imagem** ou **vídeo** junto aos botões adicionando o campo `image` ou `video` dentro de `buttonList`.
+
+<Warning>
+  Envie apenas `image` ou `video`, nunca os dois ao mesmo tempo.
+</Warning>
+
+<Note>
+  A estrutura de resposta é idêntica à da Z-API. Seu código existente que processa esses retornos continuará funcionando sem alterações.
+</Note>

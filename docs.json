@@ -40,11 +40,21 @@
                 "group": "Mensagens",
                 "pages": [
                   "z-api/messages/introduction",
+                  "z-api/messages/reply-message",
                   "z-api/messages/send-text",
                   "z-api/messages/send-image",
                   "z-api/messages/send-audio",
                   "z-api/messages/send-video",
+                  "z-api/messages/send-link",
+                  "z-api/messages/send-button-actions",
+                  "z-api/messages/send-button-list",
+                  "z-api/messages/send-contact",
+                  "z-api/messages/send-document",
                   "z-api/messages/send-sticker",
+                  "z-api/messages/send-carousel",
+                  "z-api/messages/send-button-pix",
+                  "z-api/messages/send-catalog",
+                  "z-api/messages/send-product",
                   "z-api/messages/send-reaction",
                   "z-api/messages/send-remove-reaction"
                 ]
@@ -82,11 +92,21 @@
                 "group": "Messages",
                 "pages": [
                   "en/z-api/messages/introduction",
+                  "en/z-api/messages/reply-message",
                   "en/z-api/messages/send-text",
                   "en/z-api/messages/send-image",
                   "en/z-api/messages/send-audio",
                   "en/z-api/messages/send-video",
+                  "en/z-api/messages/send-link",
+                  "en/z-api/messages/send-button-actions",
+                  "en/z-api/messages/send-button-list",
+                  "en/z-api/messages/send-contact",
+                  "en/z-api/messages/send-document",
                   "en/z-api/messages/send-sticker",
+                  "en/z-api/messages/send-carousel",
+                  "en/z-api/messages/send-button-pix",
+                  "en/z-api/messages/send-catalog",
+                  "en/z-api/messages/send-product",
                   "en/z-api/messages/send-reaction",
                   "en/z-api/messages/send-remove-reaction"
                 ]

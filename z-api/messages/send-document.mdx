@@ -1,0 +1,21 @@
+---
+title: "Enviar documento"
+description: "Envie documentos (PDF, DOC, XLS, etc) via WhatsApp"
+openapi: "POST /send-document/{extension}"
+---
+
+## Conceituação
+
+Método para envio de documentos. A extensão do arquivo deve ser informada no path da URL (ex: `/send-document/pdf`). Você pode enviar por **URL** ou por **Base64**.
+
+<Warning>
+  Ao enviar em Base64, é obrigatório incluir o prefixo com o tipo do documento, por exemplo: `data:application/pdf;base64,`.
+</Warning>
+
+<Note>
+  A estrutura de resposta é idêntica à da Z-API. Seu código existente que processa esses retornos continuará funcionando sem alterações.
+</Note>
+
+<Note>
+  Os limites de tamanho e formatos suportados seguem as políticas do WhatsApp. Consulte a [documentação oficial do WhatsApp](https://developers.facebook.com/docs/whatsapp/api/media) para mais detalhes.
+</Note>

@@ -1,0 +1,25 @@
+---
+title: "Enviar botões de ação"
+description: "Envie mensagens com botões de ação (ligar, URL, resposta rápida)"
+openapi: "POST /send-button-actions"
+---
+
+## Conceituação
+
+Método para envio de mensagens com botões de ação. Existem três tipos de botão:
+
+- **CALL** — Botão para ligar para um número
+- **URL** — Botão para abrir um link
+- **REPLY** — Botão de resposta rápida
+
+<Warning>
+  Não combine os três tipos de botão na mesma mensagem. Envie botões de **CALL + URL** juntos, e botões de **REPLY** separadamente. Combinar todos causa erro no WhatsApp Web.
+</Warning>
+
+<Tip>
+  Para botões de copiar código, use o formato de URL: `https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=SEU_CODIGO`
+</Tip>
+
+<Note>
+  A estrutura de resposta é idêntica à da Z-API. Seu código existente que processa esses retornos continuará funcionando sem alterações.
+</Note>

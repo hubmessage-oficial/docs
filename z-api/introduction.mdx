@@ -17,14 +17,14 @@ Sabemos que trocar de provedor de API pode ser um processo trabalhoso — especi
   As únicas mudanças necessárias na sua aplicação são a **base URL** e o **header de autenticação**.
 </Note>
 
-| | Antes (Z-API) | Depois (Hub Message) |
+|  | Z-API | Hub Message |
 |---|---|---|
 | **Base URL** | `https://api.z-api.io` | `https://zapi.hubmessage.io` |
-| **Autenticação** | Header `Client-Token` | Header `Authorization: Bearer {secret}` |
-| **Nomenclatura** | `instance` / `instance_id` | `channel` / `channel_id` |
-| **Path da URL** | `/instances/{id}/token/{token}` | `/instances/` ou `/channels/` (ambos funcionam) |
-| **Payloads das APIs** | — | Mesma estrutura |
-| **Body dos Webhooks** | — | Mesma estrutura |
+| **Autenticação** | `Client-Token` | `Authorization: Bearer {secret}` |
+| **Nomenclatura** | `instance_id` | `channel_id` |
+| **Path** | `/instances/` | `/instances/` ou `/channels/` |
+| **Payloads** | — | Mesma estrutura |
+| **Webhooks** | — | Mesma estrutura |
 
 ### Sobre nomenclatura
 

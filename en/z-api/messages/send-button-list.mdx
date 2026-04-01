@@ -1,0 +1,19 @@
+---
+title: "Send button list"
+description: "Send messages with quick selection buttons"
+openapi: "POST /send-button-list"
+---
+
+## Overview
+
+Method for sending messages with quick selection buttons. The recipient can choose from the presented options, which work as a reply to the message.
+
+Optionally, you can include an **image** or **video** with the buttons by adding the `image` or `video` field inside `buttonList`.
+
+<Warning>
+  Send only `image` or `video`, never both at the same time.
+</Warning>
+
+<Note>
+  The response structure is identical to Z-API. Your existing code that processes these returns will continue working without changes.
+</Note>

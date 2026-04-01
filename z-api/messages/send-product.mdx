@@ -1,0 +1,19 @@
+---
+title: "Enviar produto"
+description: "Envie produtos do catálogo do WhatsApp Business"
+openapi: "POST /send-product"
+---
+
+## Conceituação
+
+Método para envio de produtos cadastrados no catálogo do WhatsApp Business. O produto deve estar previamente cadastrado no catálogo da conta business.
+
+O `productId` pode ser obtido via API de listagem de produtos ou pelo webhook de produtos.
+
+<Warning>
+  Este recurso requer uma conta **WhatsApp Business** com catálogo configurado.
+</Warning>
+
+<Note>
+  A estrutura de resposta é idêntica à da Z-API. Seu código existente que processa esses retornos continuará funcionando sem alterações.
+</Note>

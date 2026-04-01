@@ -1,0 +1,19 @@
+---
+title: "Send product"
+description: "Send products from the WhatsApp Business catalog"
+openapi: "POST /send-product"
+---
+
+## Overview
+
+Method for sending products registered in the WhatsApp Business catalog. The product must be previously registered in the business account's catalog.
+
+The `productId` can be obtained via the product listing API or through the products webhook.
+
+<Warning>
+  This feature requires a **WhatsApp Business** account with a configured catalog.
+</Warning>
+
+<Note>
+  The response structure is identical to Z-API. Your existing code that processes these returns will continue working without changes.
+</Note>
