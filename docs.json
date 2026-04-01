@@ -21,7 +21,8 @@
                 "group": "Introdução",
                 "pages": [
                   "index",
-                  "authentication"
+                  "authentication",
+                  "conversation-window"
                 ]
               },
               {
@@ -86,7 +87,8 @@
                 "group": "Introduction",
                 "pages": [
                   "en/index",
-                  "en/authentication"
+                  "en/authentication",
+                  "en/conversation-window"
                 ]
               },
               {
