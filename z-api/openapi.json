@@ -1,0 +1,809 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Z-API Compatibilidade",
+    "description": "API compatível com Z-API para facilitar a migração para o Hub Message",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://zapi.hubmessage.io/channels/{channel_id}/token/{channel_token}",
+      "variables": {
+        "channel_id": {
+          "description": "ID do canal (equivalente ao instance_id da Z-API)",
+          "default": "SEU_CANAL"
+        },
+        "channel_token": {
+          "description": "Token do canal (equivalente ao token da Z-API)",
+          "default": "SEU_TOKEN"
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/send-text": {
+      "post": {
+        "summary": "Enviar texto",
+        "description": "Envia uma mensagem de texto simples. Suporta formatação do WhatsApp, emojis e quebras de linha (`\\n`, `\\r`, `\\r\\n` ou `%0a`).",
+        "operationId": "sendText",
+        "tags": ["Mensagens"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendTextRequest"
+              },
+              "example": {
+                "phone": "5511999999999",
+                "message": "Bem-vindo ao *Hub Message*!"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mensagem enviada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                },
+                "example": {
+                  "zaapId": "3999984263738042930CD6ECDE9VDWSA",
+                  "messageId": "D241XXXX732339502B68",
+                  "id": "D241XXXX732339502B68"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Método não permitido. Verifique se está usando POST.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": 405,
+                  "message": "Method not allowed"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Content-Type inválido. Envie `Content-Type: application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": 415,
+                  "message": "Unsupported media type"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/send-image": {
+      "post": {
+        "summary": "Enviar imagem",
+        "description": "Envia uma mensagem com imagem. Aceita URL ou Base64 (com prefixo `data:image/png;base64,`).",
+        "operationId": "sendImage",
+        "tags": ["Mensagens"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendImageRequest"
+              },
+              "examples": {
+                "url": {
+                  "summary": "Envio por URL",
+                  "value": {
+                    "phone": "5511999999999",
+                    "image": "https://exemplo.com/imagem.png",
+                    "caption": "Confira essa imagem!",
+                    "viewOnce": false
+                  }
+                },
+                "base64": {
+                  "summary": "Envio por Base64",
+                  "value": {
+                    "phone": "5511999999999",
+                    "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAAMg...",
+                    "caption": "Confira essa imagem!",
+                    "viewOnce": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mensagem enviada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                },
+                "example": {
+                  "zaapId": "3999984263738042930CD6ECDE9VDWSA",
+                  "messageId": "D241XXXX732339502B68",
+                  "id": "D241XXXX732339502B68"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Método não permitido. Verifique se está usando POST.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": 405,
+                  "message": "Method not allowed"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Content-Type inválido. Envie `Content-Type: application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": 415,
+                  "message": "Unsupported media type"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/send-remove-reaction": {
+      "post": {
+        "summary": "Remover reação",
+        "description": "Remove uma reação (emoji) de uma mensagem existente.",
+        "operationId": "sendRemoveReaction",
+        "tags": ["Mensagens"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendRemoveReactionRequest"
+              },
+              "example": {
+                "phone": "5511999999999",
+                "messageId": "D241XXXX732339502B68"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reação removida com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                },
+                "example": {
+                  "zaapId": "3999984263738042930CD6ECDE9VDWSA",
+                  "messageId": "D241XXXX732339502B68",
+                  "id": "D241XXXX732339502B68"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Método não permitido. Verifique se está usando POST.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": 405,
+                  "message": "Method not allowed"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Content-Type inválido. Envie `Content-Type: application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": 415,
+                  "message": "Unsupported media type"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/send-video": {
+      "post": {
+        "summary": "Enviar vídeo",
+        "description": "Envia uma mensagem com vídeo. Aceita URL ou Base64 (com prefixo `data:video/mp4;base64,`).",
+        "operationId": "sendVideo",
+        "tags": ["Mensagens"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendVideoRequest"
+              },
+              "examples": {
+                "url": {
+                  "summary": "Envio por URL",
+                  "value": {
+                    "phone": "5511999999999",
+                    "video": "https://exemplo.com/video.mp4",
+                    "caption": "Confira esse vídeo!",
+                    "viewOnce": false
+                  }
+                },
+                "base64": {
+                  "summary": "Envio por Base64",
+                  "value": {
+                    "phone": "5511999999999",
+                    "video": "data:video/mp4;base64,AAYXJ0eHJlZgIGZ0eXBtc0eH...",
+                    "caption": "Confira esse vídeo!",
+                    "viewOnce": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mensagem enviada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                },
+                "example": {
+                  "zaapId": "3999984263738042930CD6ECDE9VDWSA",
+                  "messageId": "D241XXXX732339502B68",
+                  "id": "D241XXXX732339502B68"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Método não permitido. Verifique se está usando POST.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": 405,
+                  "message": "Method not allowed"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Content-Type inválido. Envie `Content-Type: application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": 415,
+                  "message": "Unsupported media type"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/send-sticker": {
+      "post": {
+        "summary": "Enviar sticker",
+        "description": "Envia um sticker (figurinha). Aceita URL ou Base64 (com prefixo `data:image/png;base64,`).",
+        "operationId": "sendSticker",
+        "tags": ["Mensagens"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendStickerRequest"
+              },
+              "examples": {
+                "url": {
+                  "summary": "Envio por URL",
+                  "value": {
+                    "phone": "5511999999999",
+                    "sticker": "https://exemplo.com/sticker.png",
+                    "stickerAuthor": "Hub Message"
+                  }
+                },
+                "base64": {
+                  "summary": "Envio por Base64",
+                  "value": {
+                    "phone": "5511999999999",
+                    "sticker": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAAMg...",
+                    "stickerAuthor": "Hub Message"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mensagem enviada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                },
+                "example": {
+                  "zaapId": "3999984263738042930CD6ECDE9VDWSA",
+                  "messageId": "D241XXXX732339502B68",
+                  "id": "D241XXXX732339502B68"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Método não permitido. Verifique se está usando POST.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": 405,
+                  "message": "Method not allowed"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Content-Type inválido. Envie `Content-Type: application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": 415,
+                  "message": "Unsupported media type"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/send-reaction": {
+      "post": {
+        "summary": "Enviar reação",
+        "description": "Envia uma reação (emoji) a uma mensagem existente. Funciona tanto para mensagens enviadas quanto recebidas.",
+        "operationId": "sendReaction",
+        "tags": ["Mensagens"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendReactionRequest"
+              },
+              "example": {
+                "phone": "5511999999999",
+                "reaction": "❤️",
+                "messageId": "D241XXXX732339502B68"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reação enviada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                },
+                "example": {
+                  "zaapId": "3999984263738042930CD6ECDE9VDWSA",
+                  "messageId": "D241XXXX732339502B68",
+                  "id": "D241XXXX732339502B68"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Método não permitido. Verifique se está usando POST.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": 405,
+                  "message": "Method not allowed"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Content-Type inválido. Envie `Content-Type: application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": 415,
+                  "message": "Unsupported media type"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/send-audio": {
+      "post": {
+        "summary": "Enviar áudio",
+        "description": "Envia uma mensagem de áudio (mensagem de voz). Aceita URL ou Base64 (com prefixo `data:audio/mpeg;base64,`).",
+        "operationId": "sendAudio",
+        "tags": ["Mensagens"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendAudioRequest"
+              },
+              "examples": {
+                "url": {
+                  "summary": "Envio por URL",
+                  "value": {
+                    "phone": "5511999999999",
+                    "audio": "https://exemplo.com/audio.mp3",
+                    "viewOnce": false
+                  }
+                },
+                "base64": {
+                  "summary": "Envio por Base64",
+                  "value": {
+                    "phone": "5511999999999",
+                    "audio": "data:audio/mpeg;base64,SUQzAwAAA...",
+                    "viewOnce": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mensagem enviada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                },
+                "example": {
+                  "zaapId": "3999984263738042930CD6ECDE9VDWSA",
+                  "messageId": "D241XXXX732339502B68",
+                  "id": "D241XXXX732339502B68"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Método não permitido. Verifique se está usando POST.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": 405,
+                  "message": "Method not allowed"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Content-Type inválido. Envie `Content-Type: application/json`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": 415,
+                  "message": "Unsupported media type"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SendTextRequest": {
+        "type": "object",
+        "required": ["phone", "message"],
+        "properties": {
+          "phone": {
+            "type": "string",
+            "description": "Telefone do destinatário (DDI + DDD + número)",
+            "example": "5511999999999"
+          },
+          "message": {
+            "type": "string",
+            "description": "Texto da mensagem",
+            "example": "Bem-vindo ao *Hub Message*!"
+          },
+          "delayMessage": {
+            "type": "integer",
+            "description": "Delay em segundos antes do envio (1-15)",
+            "minimum": 1,
+            "maximum": 15
+          },
+          "delayTyping": {
+            "type": "integer",
+            "description": "Tempo em segundos exibindo status \"digitando\" (1-15)",
+            "minimum": 1,
+            "maximum": 15
+          },
+          "editMessageId": {
+            "type": "string",
+            "description": "ID de uma mensagem enviada anteriormente para editar"
+          }
+        }
+      },
+      "SendImageRequest": {
+        "type": "object",
+        "required": ["phone", "image"],
+        "properties": {
+          "phone": {
+            "type": "string",
+            "description": "Telefone do destinatário (DDI + DDD + número)",
+            "example": "5511999999999"
+          },
+          "image": {
+            "type": "string",
+            "description": "URL da imagem ou dados em Base64"
+          },
+          "caption": {
+            "type": "string",
+            "description": "Legenda da imagem"
+          },
+          "messageId": {
+            "type": "string",
+            "description": "ID de uma mensagem existente para responder"
+          },
+          "delayMessage": {
+            "type": "integer",
+            "description": "Delay em segundos antes do envio (1-15)",
+            "minimum": 1,
+            "maximum": 15
+          },
+          "viewOnce": {
+            "type": "boolean",
+            "description": "Enviar como mensagem de visualização única",
+            "default": false
+          }
+        }
+      },
+      "SendAudioRequest": {
+        "type": "object",
+        "required": ["phone", "audio"],
+        "properties": {
+          "phone": {
+            "type": "string",
+            "description": "Telefone do destinatário (DDI + DDD + número)",
+            "example": "5511999999999"
+          },
+          "audio": {
+            "type": "string",
+            "description": "URL do áudio ou dados em Base64"
+          },
+          "viewOnce": {
+            "type": "boolean",
+            "description": "Enviar como mensagem de visualização única",
+            "default": false
+          },
+"delayMessage": {
+            "type": "integer",
+            "description": "Delay em segundos antes do envio (1-15)",
+            "minimum": 1,
+            "maximum": 15
+          },
+          "delayTyping": {
+            "type": "integer",
+            "description": "Tempo em segundos exibindo status \"Gravando áudio...\" (1-15)",
+            "minimum": 1,
+            "maximum": 15
+          }
+        }
+      },
+      "SendRemoveReactionRequest": {
+        "type": "object",
+        "required": ["phone", "messageId"],
+        "properties": {
+          "phone": {
+            "type": "string",
+            "description": "Telefone do destinatário (DDI + DDD + número)",
+            "example": "5511999999999"
+          },
+          "messageId": {
+            "type": "string",
+            "description": "ID da mensagem que terá a reação removida"
+          },
+          "delayMessage": {
+            "type": "integer",
+            "description": "Delay em segundos antes do envio (1-15)",
+            "minimum": 1,
+            "maximum": 15
+          }
+        }
+      },
+      "SendReactionRequest": {
+        "type": "object",
+        "required": ["phone", "reaction", "messageId"],
+        "properties": {
+          "phone": {
+            "type": "string",
+            "description": "Telefone do destinatário (DDI + DDD + número)",
+            "example": "5511999999999"
+          },
+          "reaction": {
+            "type": "string",
+            "description": "Emoji da reação",
+            "example": "❤️"
+          },
+          "messageId": {
+            "type": "string",
+            "description": "ID da mensagem que receberá a reação"
+          },
+          "delayMessage": {
+            "type": "integer",
+            "description": "Delay em segundos antes do envio (1-15)",
+            "minimum": 1,
+            "maximum": 15
+          }
+        }
+      },
+      "SendVideoRequest": {
+        "type": "object",
+        "required": ["phone", "video"],
+        "properties": {
+          "phone": {
+            "type": "string",
+            "description": "Telefone do destinatário (DDI + DDD + número)",
+            "example": "5511999999999"
+          },
+          "video": {
+            "type": "string",
+            "description": "URL do vídeo ou dados em Base64"
+          },
+          "caption": {
+            "type": "string",
+            "description": "Legenda do vídeo"
+          },
+          "messageId": {
+            "type": "string",
+            "description": "ID de uma mensagem existente para responder"
+          },
+          "delayMessage": {
+            "type": "integer",
+            "description": "Delay em segundos antes do envio (1-15)",
+            "minimum": 1,
+            "maximum": 15
+          },
+          "viewOnce": {
+            "type": "boolean",
+            "description": "Enviar como mensagem de visualização única",
+            "default": false
+          }
+        }
+      },
+      "SendStickerRequest": {
+        "type": "object",
+        "required": ["phone", "sticker"],
+        "properties": {
+          "phone": {
+            "type": "string",
+            "description": "Telefone do destinatário (DDI + DDD + número)",
+            "example": "5511999999999"
+          },
+          "sticker": {
+            "type": "string",
+            "description": "URL do sticker ou dados em Base64"
+          },
+          "stickerAuthor": {
+            "type": "string",
+            "description": "Nome do autor do sticker"
+          },
+          "messageId": {
+            "type": "string",
+            "description": "ID de uma mensagem existente para responder"
+          },
+          "delayMessage": {
+            "type": "integer",
+            "description": "Delay em segundos antes do envio (1-15)",
+            "minimum": 1,
+            "maximum": 15
+          }
+        }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "zaapId": {
+            "type": "string",
+            "description": "Identificador interno"
+          },
+          "messageId": {
+            "type": "string",
+            "description": "ID da mensagem no WhatsApp"
+          },
+          "id": {
+            "type": "string",
+            "description": "Mesmo valor do messageId (compatibilidade)"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "integer",
+            "description": "Código do erro"
+          },
+          "message": {
+            "type": "string",
+            "description": "Descrição do erro"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Secret Key gerada no painel de Segurança do Hub Message"
+      }
+    }
+  }
+}

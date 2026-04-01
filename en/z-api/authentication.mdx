@@ -1,0 +1,64 @@
+---
+title: "Authentication"
+description: "How to generate and use your API credentials in Hub Message"
+---
+
+import { projectName, frontendUrl } from '/snippets/variables.mdx';
+
+## API Credentials
+
+Unlike Z-API which uses the `Client-Token` header, {projectName} works with a key pair: **Public Key** and **Secret Key**.
+
+To generate your credentials, go to the **Security** menu in the dashboard: [Security]({frontendUrl}/app/security).
+
+---
+
+## Public Key
+
+The Public Key is used **exclusively** by the channel connection SDK. With it, you can connect channels (such as WhatsApp, Telegram, etc.) directly within your system, without needing to access the {projectName} dashboard.
+
+<Note>
+  The Public Key can be exposed in your application's frontend, as it has limited permissions for channel connection only.
+</Note>
+
+Example usage with the SDK:
+
+```javascript
+import { HubMessage } from '@hubmessage/connect';
+
+const hub = new HubMessage({
+  publicKey: 'YOUR_PUBLIC_KEY'
+});
+```
+
+<Tip>
+  Install the SDK via npm: [`@hubmessage/connect`](https://www.npmjs.com/package/@hubmessage/connect)
+</Tip>
+
+---
+
+## Secret Key
+
+The Secret Key is used for authentication in {projectName} APIs. It must be sent in the `Authorization` header as a Bearer token.
+
+<Warning>
+  The Secret Key must **never** be exposed in the frontend. Use it only in your application's backend.
+</Warning>
+
+Example usage in API calls:
+
+```bash
+curl -X POST https://zapi.hubmessage.io/channels/YOUR_CHANNEL/token/YOUR_TOKEN/send-text \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_SECRET_KEY" \
+  -d '{"phone": "5511999999999", "message": "Hello!"}'
+```
+
+---
+
+## Summary
+
+| Key | Usage | Can expose in frontend? |
+|---|---|---|
+| **Public Key** | Channel connection SDK | Yes |
+| **Secret Key** | API calls (`Authorization` header) | No, backend only |

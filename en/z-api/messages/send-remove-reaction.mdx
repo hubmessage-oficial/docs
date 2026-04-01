@@ -1,0 +1,15 @@
+---
+title: "Remove reaction"
+description: "Remove a reaction (emoji) from an existing message"
+openapi: "POST /send-remove-reaction"
+---
+
+## Overview
+
+Method for removing a reaction from an existing message. Works for both sent and received messages.
+
+To use this endpoint, you need the `messageId` of the message that will have the reaction removed.
+
+<Note>
+  The response structure is identical to Z-API. Your existing code that processes these returns will continue working without changes.
+</Note>

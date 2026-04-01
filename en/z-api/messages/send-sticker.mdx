@@ -1,0 +1,21 @@
+---
+title: "Send sticker"
+description: "Send stickers via WhatsApp"
+openapi: "POST /send-sticker"
+---
+
+## Overview
+
+Method for sending stickers. You can send via **URL** or **Base64**.
+
+<Warning>
+  When sending as Base64, you must include the prefix with the image type, for example: `data:image/png;base64,`. To validate, paste the full Base64 in the browser address bar and verify the image renders correctly.
+</Warning>
+
+<Note>
+  The response structure is identical to Z-API. Your existing code that processes these returns will continue working without changes.
+</Note>
+
+<Note>
+  File size limits and supported formats follow WhatsApp policies. See the [official WhatsApp documentation](https://developers.facebook.com/docs/whatsapp/api/media) for details.
+</Note>

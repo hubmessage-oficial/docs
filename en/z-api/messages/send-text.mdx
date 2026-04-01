@@ -1,0 +1,15 @@
+---
+title: "Send text"
+description: "Send simple text messages via WhatsApp"
+openapi: "POST /send-text"
+---
+
+## Overview
+
+Method for sending simple text messages. Supports WhatsApp formatting, emojis, and line breaks.
+
+To add line breaks in the message, use any of these formats: `\n`, `\r`, `\r\n` or `%0a`.
+
+<Note>
+  The response structure is identical to Z-API. Your existing code that processes these returns will continue working without changes.
+</Note>

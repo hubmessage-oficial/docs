@@ -1,12 +1,12 @@
 ---
-title: "Enviar imagem"
-description: "Envie mensagens com imagens via WhatsApp"
-openapi: "POST /send-image"
+title: "Enviar sticker"
+description: "Envie stickers (figurinhas) via WhatsApp"
+openapi: "POST /send-sticker"
 ---
 
 ## Conceituação
 
-Método para envio de imagens. Você pode enviar a imagem de duas formas: por **URL** ou por **Base64**.
+Método para envio de stickers (figurinhas). Você pode enviar por **URL** ou por **Base64**.
 
 <Warning>
   Ao enviar em Base64, é obrigatório incluir o prefixo com o tipo da imagem, por exemplo: `data:image/png;base64,`. Para validar, cole o Base64 completo na barra de endereço do navegador e verifique se a imagem renderiza corretamente.

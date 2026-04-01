@@ -1,0 +1,15 @@
+---
+title: "Enviar reação"
+description: "Envie uma reação (emoji) a uma mensagem existente"
+openapi: "POST /send-reaction"
+---
+
+## Conceituação
+
+Método para enviar uma reação com emoji a uma mensagem existente. Funciona tanto para mensagens enviadas quanto recebidas.
+
+Para utilizar este endpoint, é necessário ter o `messageId` da mensagem que receberá a reação.
+
+<Note>
+  A estrutura de resposta é idêntica à da Z-API. Seu código existente que processa esses retornos continuará funcionando sem alterações.
+</Note>

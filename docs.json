@@ -8,37 +8,89 @@
     "dark": "#3347CC"
   },
   "favicon": "/favicon.svg",
+  "openapi": ["/z-api/openapi.json"],
   "navigation": {
-    "versions": [
+    "languages": [
       {
-        "version": "Hub Message",
-        "tag": "Padrão",
-        "groups": [
+        "language": "pt-BR",
+        "tabs": [
           {
-            "group": "Introdução",
-            "pages": [
-              "index",
-              "quickstart"
+            "tab": "Hub Message",
+            "groups": [
+              {
+                "group": "Introdução",
+                "pages": [
+                  "index",
+                  "quickstart"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Z-API Compatibilidade",
+            "groups": [
+              {
+                "group": "Introdução",
+                "pages": [
+                  "z-api/introduction",
+                  "z-api/authentication"
+                ]
+              },
+              {
+                "group": "Mensagens",
+                "pages": [
+                  "z-api/messages/introduction",
+                  "z-api/messages/send-text",
+                  "z-api/messages/send-image",
+                  "z-api/messages/send-audio",
+                  "z-api/messages/send-video",
+                  "z-api/messages/send-sticker",
+                  "z-api/messages/send-reaction",
+                  "z-api/messages/send-remove-reaction"
+                ]
+              }
             ]
           }
         ]
       },
       {
-        "version": "Z-API Compatibilidade",
-        "groups": [
+        "language": "en",
+        "tabs": [
           {
-            "group": "Introdução",
-            "pages": [
-              "z-api/introduction",
-              "z-api/authentication"
+            "tab": "Hub Message",
+            "groups": [
+              {
+                "group": "Introduction",
+                "pages": [
+                  "index",
+                  "quickstart"
+                ]
+              }
             ]
           },
           {
-            "group": "Mensagens",
-            "pages": [
-              "z-api/messages/introduction",
-              "z-api/messages/send-text",
-              "z-api/messages/send-image"
+            "tab": "Z-API Compatibility",
+            "groups": [
+              {
+                "group": "Introduction",
+                "pages": [
+                  "en/z-api/introduction",
+                  "en/z-api/authentication"
+                ]
+              },
+              {
+                "group": "Messages",
+                "pages": [
+                  "en/z-api/messages/introduction",
+                  "en/z-api/messages/send-text",
+                  "en/z-api/messages/send-image",
+                  "en/z-api/messages/send-audio",
+                  "en/z-api/messages/send-video",
+                  "en/z-api/messages/send-sticker",
+                  "en/z-api/messages/send-reaction",
+                  "en/z-api/messages/send-remove-reaction"
+                ]
+              }
             ]
           }
         ]

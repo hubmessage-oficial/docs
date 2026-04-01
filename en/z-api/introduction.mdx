@@ -1,0 +1,98 @@
+---
+title: "Z-API Compatibility"
+description: "Migrate from Z-API to Hub Message without breaking your integrations"
+---
+
+import { projectName, zapiBaseUrl, zapiOriginalUrl, frontendUrl, supportEmail } from '/snippets/variables.mdx';
+
+## What is the Z-API Compatibility version?
+
+The **Z-API Compatibility** version was created to make it easy for customers currently using Z-API to migrate to {projectName} as their official API solution for WhatsApp and other messaging channels.
+
+We know that switching API providers can be a complex process — especially when you already have integrations running in production. That's why we developed this compatibility layer that maintains the same structure you already know.
+
+## What changes in practice?
+
+<Note>
+  The only changes required in your application are the **base URL** and the **authentication header**.
+</Note>
+
+| | Before (Z-API) | After (Hub Message) |
+|---|---|---|
+| **Base URL** | `https://api.z-api.io` | `https://zapi.hubmessage.io` |
+| **Authentication** | `Client-Token` header | `Authorization: Bearer {secret}` header |
+| **Naming** | `instance` / `instance_id` | `channel` / `channel_id` |
+| **URL Path** | `/instances/{id}/token/{token}` | `/instances/` or `/channels/` (both work) |
+| **API Payloads** | — | Same structure |
+| **Webhook Body** | — | Same structure |
+
+### About naming
+
+In {projectName}, what was previously called **instance** (`instance_id`) is now referred to as **channel** (`channel_id`). The concept is the same — it represents a connection to a WhatsApp number — but we adopted the term "channel" because it's more comprehensive, since {projectName} supports multiple messaging channels beyond WhatsApp.
+
+<Note>
+  For compatibility, the API accepts both `/instances/` and `/channels/` in the path. If you're migrating from Z-API, you can keep `/instances/` without any issues — your integrations will continue working. For new integrations, we recommend using `/channels/`.
+</Note>
+
+If today your application makes a call like:
+
+```bash
+curl -X POST https://api.z-api.io/instances/YOUR_INSTANCE/token/YOUR_TOKEN/send-text \
+  -H "Content-Type: application/json" \
+  -H "Client-Token: YOUR_CLIENT_TOKEN" \
+  -d '{"phone": "5511999999999", "message": "Hello!"}'
+```
+
+Just change it to:
+
+```bash
+curl -X POST https://zapi.hubmessage.io/channels/YOUR_CHANNEL/token/YOUR_TOKEN/send-text \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_SECRET" \
+  -d '{"phone": "5511999999999", "message": "Hello!"}'
+```
+
+Note that **only the base URL and authentication header changed** — the path and body are identical.
+
+The secret for the `Authorization` header is generated in the Hub Message dashboard when you create your channel. The request payloads and webhook bodies maintain exactly the same structure, ensuring your integrations continue working without breaking.
+
+## Why migrate?
+
+<CardGroup cols={2}>
+  <Card title="Official WhatsApp API" icon="whatsapp">
+    Use the official WhatsApp Business API with all the security and stability it provides.
+  </Card>
+  <Card title="Lower risk of blocking" icon="shield-check">
+    By using the official WhatsApp API, the risk of banning is significantly lower compared to unofficial solutions.
+  </Card>
+  <Card title="Simple migration" icon="arrow-right-arrow-left">
+    Just change the base URL and you're done — your integrations keep working.
+  </Card>
+  <Card title="Dedicated support" icon="headset">
+    Count on the {projectName} team's support throughout the migration process.
+  </Card>
+</CardGroup>
+
+## How to migrate
+
+<Steps>
+  <Step title="Create your Hub Message account">
+    Go to the [Dashboard]({frontendUrl}) and create your account.
+  </Step>
+  <Step title="Set up your channel">
+    Create a new channel and connect your WhatsApp number.
+  </Step>
+  <Step title="Update the base URL and authentication">
+    Replace `https://api.z-api.io` with `https://zapi.hubmessage.io` and change the `Client-Token` header to `Authorization: Bearer YOUR_SECRET`.
+  </Step>
+  <Step title="Configure webhooks">
+    Update the webhook callback URL in the Dashboard to point to your server. Incoming events will have the same structure as before.
+  </Step>
+  <Step title="Test and validate">
+    Run send and receive tests to make sure everything is working correctly.
+  </Step>
+</Steps>
+
+<Info>
+  Need help with the migration? Contact us at [{supportEmail}](mailto:{supportEmail}).
+</Info>

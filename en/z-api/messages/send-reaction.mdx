@@ -1,0 +1,15 @@
+---
+title: "Send reaction"
+description: "Send a reaction (emoji) to an existing message"
+openapi: "POST /send-reaction"
+---
+
+## Overview
+
+Method for sending an emoji reaction to an existing message. Works for both sent and received messages.
+
+To use this endpoint, you need the `messageId` of the message that will receive the reaction.
+
+<Note>
+  The response structure is identical to Z-API. Your existing code that processes these returns will continue working without changes.
+</Note>

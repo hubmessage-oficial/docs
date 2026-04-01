@@ -1,0 +1,21 @@
+---
+title: "Enviar áudio"
+description: "Envie mensagens de áudio via WhatsApp"
+openapi: "POST /send-audio"
+---
+
+## Conceituação
+
+Método para envio de mensagens de áudio. Você pode enviar por **URL** ou por **Base64**. O áudio é enviado como mensagem de voz no WhatsApp.
+
+<Warning>
+  Ao enviar em Base64, é obrigatório incluir o prefixo com o tipo do áudio, por exemplo: `data:audio/mpeg;base64,`.
+</Warning>
+
+<Note>
+  A estrutura de resposta é idêntica à da Z-API. Seu código existente que processa esses retornos continuará funcionando sem alterações.
+</Note>
+
+<Note>
+  Os limites de tamanho e formatos suportados seguem as políticas do WhatsApp. Consulte a [documentação oficial do WhatsApp](https://developers.facebook.com/docs/whatsapp/api/media) para mais detalhes.
+</Note>

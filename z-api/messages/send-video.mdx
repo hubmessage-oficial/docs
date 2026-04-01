@@ -1,0 +1,21 @@
+---
+title: "Enviar vídeo"
+description: "Envie mensagens com vídeo via WhatsApp"
+openapi: "POST /send-video"
+---
+
+## Conceituação
+
+Método para envio de vídeos. Você pode enviar por **URL** ou por **Base64**.
+
+<Warning>
+  Ao enviar em Base64, é obrigatório incluir o prefixo com o tipo do vídeo, por exemplo: `data:video/mp4;base64,`.
+</Warning>
+
+<Note>
+  A estrutura de resposta é idêntica à da Z-API. Seu código existente que processa esses retornos continuará funcionando sem alterações.
+</Note>
+
+<Note>
+  Os limites de tamanho e formatos suportados seguem as políticas do WhatsApp. Consulte a [documentação oficial do WhatsApp](https://developers.facebook.com/docs/whatsapp/api/media) para mais detalhes.
+</Note>
