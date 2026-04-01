@@ -1,14 +1,17 @@
 ## O que precisamos arrumar
 
 ### Infraestrutura
+
 - [ ] Dashboards da interface não refletem as coisas.
 - [ ] Criação de instância (canal) quebra.
 
 ### Envio de texto
+
 - [ ] `delayMessage`, `delayTyping` precisam ser revistos. Ref: https://developers.facebook.com/documentation/business-messaging/whatsapp/typing-indicators
 - [ ] Responder mensagem não está funcionando. Ref: https://developers.facebook.com/documentation/business-messaging/whatsapp/messages/contextual-replies
 
 ### Envio de mídia
+
 - [ ] Imagem, áudio, vídeo de visualização única não funciona (`viewOnce`).
 - [ ] Envio de imagem não funciona com Base64.
 - [ ] Envio de áudio não funciona com Base64.
@@ -17,18 +20,23 @@
 - [ ] Envio de documento: quando passa `fileName: "meu documento.pdf"` chega como "meu documento.pdf.pdf". Se passa `"meu documento"` chega como "meu documento.null".
 
 ### Envio de link
+
 - [ ] Enviar mensagem de link não funciona. Poderia ser enviado um `templateMessage`.
 
 ### Envio de localização
+
 - [ ] Não funciona copiando body exato da Z-API: `{"error": "json: cannot unmarshal string into Go struct field SendMessageInput.latitude of type float64"}`. Se passa number ao invés de string, não dá erro mas a mensagem não é enviada. Ideal aceitar string também.
 
 ### Envio de contato
+
 - [ ] Enviar vários contatos não funciona (`send-contacts`), apenas um (`send-contact`). Ref: https://developers.facebook.com/documentation/business-messaging/whatsapp/messages/contacts-messages
 
 ### Reações
+
 - [ ] Enviar/remover reação não funciona. Ref: https://developers.facebook.com/documentation/business-messaging/whatsapp/messages/reaction-messages
 
 ### Botões e listas
+
 - [ ] Enviar texto com botões não funciona. Ref: https://developers.facebook.com/documentation/business-messaging/whatsapp/messages/interactive-reply-buttons-messages
 - [ ] Enviar botões de ação não funciona. Ref: https://developers.facebook.com/documentation/business-messaging/whatsapp/messages/interactive-cta-url-messages
 - [ ] Enviar botões com imagem não funciona. Ref: https://developers.facebook.com/documentation/business-messaging/whatsapp/messages/interactive-reply-buttons-messages
@@ -38,19 +46,18 @@
 - [ ] Enviar carrossel não funciona. Ref: https://developers.facebook.com/documentation/business-messaging/whatsapp/messages/interactive-media-carousel-messages
 
 ### Catálogo e produtos
+
 - [ ] Enviar produto não funciona. Ref: https://www.postman.com/meta/whatsapp-business-platform/example/13382743-d630e536-f57b-4d4c-b2d4-f7c1f43d7495?sideView=agentMode
 - [ ] Enviar catálogo não funciona. Ref: https://www.postman.com/meta/whatsapp-business-platform/request/13382743-ecf9332f-19fc-4cb1-a674-caf69bc3e766?sideView=agentMode&tab=body
 
 ### Pedidos e pagamentos
+
 - [ ] Enviar pedido não funciona. Ref: https://developers.facebook.com/documentation/business-messaging/whatsapp/payments/payments-br/orders#order-details-example
 - [ ] Enviar status do pedido não funciona. Ref: https://developers.facebook.com/documentation/business-messaging/whatsapp/payments/payments-br/orders#order-status-example
 - [ ] Enviar status do pagamento não funciona. Ref: https://developers.facebook.com/documentation/business-messaging/whatsapp/payments/payments-br/orders#paymentstatussupported
 
----
-
-## Em desenvolvimento (funcionalidades que a API oficial suporta e precisam ser implementadas)
-
 ### Grupos
+
 - [ ] Criar grupo — Z-API: `POST /create-group` — Ref oficial: https://developers.facebook.com/documentation/business-messaging/whatsapp/groups/reference
 - [ ] Metadados do grupo — Z-API: `GET /group-metadata/{phone}` — Ref oficial: https://developers.facebook.com/documentation/business-messaging/whatsapp/groups/reference
 - [ ] Remover participantes — Z-API: `POST /remove-participant` — Ref oficial: https://developers.facebook.com/documentation/business-messaging/whatsapp/groups/reference
@@ -63,6 +70,7 @@
 - [ ] Atualizar imagem do grupo — Z-API: `POST /update-group-photo` — Ref oficial: https://developers.facebook.com/documentation/business-messaging/whatsapp/groups/reference
 
 ### Perfil da empresa
+
 - [ ] Dados da conta business — Z-API: `GET /business/profile` — Ref oficial: https://developers.facebook.com/docs/whatsapp/cloud-api/reference/business-profiles
 - [ ] Alterar descrição da empresa — Z-API: `POST /business/company-description` — Ref oficial: https://developers.facebook.com/docs/whatsapp/cloud-api/reference/business-profiles
 - [ ] Alterar email da empresa — Z-API: `POST /business/company-email` — Ref oficial: https://developers.facebook.com/docs/whatsapp/cloud-api/reference/business-profiles
@@ -71,6 +79,7 @@
 - [ ] Atribuir categorias — Z-API: `POST /business/categories` — Ref oficial: https://developers.facebook.com/docs/whatsapp/cloud-api/reference/business-profiles
 
 ### Catálogo e produtos
+
 - [ ] Criar/editar produto — Z-API: `POST /products` — Ref oficial: https://developers.facebook.com/docs/marketing-api/reference/product-catalog/products/
 - [ ] Listar produtos — Z-API: `GET /catalogs` — Ref oficial: https://developers.facebook.com/docs/marketing-api/reference/product-catalog/products/
 - [ ] Buscar produto por ID — Z-API: `GET /products/{productId}` — Ref oficial: https://developers.facebook.com/docs/marketing-api/reference/product-catalog/products/
