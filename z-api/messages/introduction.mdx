@@ -7,6 +7,26 @@ import { projectName } from '/snippets/variables.mdx';
 
 ## Conceituação
 
+Os endpoints de mensagens desta seção permitem enviar mensagens **somente quando a janela de conversa do WhatsApp estiver aberta** (dentro do período de 24 horas). Isso é uma regra da API oficial do WhatsApp Business.
+
+<Warning>
+  A janela de conversa de 24 horas é aberta quando o **cliente envia uma mensagem para você**. Fora dessa janela, só é possível enviar mensagens utilizando **templates aprovados pela Meta**. As mensagens desta seção **não funcionam** fora da janela de conversa.
+</Warning>
+
+### Dentro da janela (24h)
+
+O cliente enviou uma mensagem para você? Ótimo, a janela está aberta. Você pode usar qualquer endpoint desta seção para responder com texto, imagem, áudio, vídeo, documento, etc.
+
+### Fora da janela (após 24h)
+
+Se o cliente **não** enviou uma mensagem nas últimas 24 horas, a única forma de iniciar uma conversa é enviando um **template de mensagem** previamente aprovado pela Meta. Templates são mensagens pré-definidas que você cria e submete para aprovação no painel da Meta.
+
+<Info>
+  Na Z-API (conexão não oficial) essa limitação não existia — você podia enviar mensagens a qualquer momento. Na API oficial, essa regra é obrigatória e não pode ser contornada.
+</Info>
+
+---
+
 Para enviar uma mensagem, você precisa do **número do telefone** do contato destinatário, incluindo o código do país.
 
 | Formato | Exemplo |

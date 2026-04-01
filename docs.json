@@ -8,7 +8,7 @@
     "dark": "#3347CC"
   },
   "favicon": "/favicon.svg",
-  "openapi": ["/z-api/openapi.json"],
+  "openapi": ["/z-api/openapi.json", "/templates/openapi.json"],
   "navigation": {
     "languages": [
       {
@@ -20,7 +20,20 @@
               {
                 "group": "Introdução",
                 "pages": [
-                  "index"
+                  "index",
+                  "authentication"
+                ]
+              },
+              {
+                "group": "Templates",
+                "pages": [
+                  "templates/introduction",
+                  "templates/list-businesses",
+                  "templates/list-templates",
+                  "templates/sync-templates",
+                  "templates/create-template",
+                  "templates/update-template",
+                  "templates/delete-template"
                 ]
               }
             ]
@@ -72,7 +85,20 @@
               {
                 "group": "Introduction",
                 "pages": [
-                  "en/index"
+                  "en/index",
+                  "en/authentication"
+                ]
+              },
+              {
+                "group": "Templates",
+                "pages": [
+                  "en/templates/introduction",
+                  "en/templates/list-businesses",
+                  "en/templates/list-templates",
+                  "en/templates/sync-templates",
+                  "en/templates/create-template",
+                  "en/templates/update-template",
+                  "en/templates/delete-template"
                 ]
               }
             ]

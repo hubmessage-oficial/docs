@@ -1,0 +1,17 @@
+---
+title: "Deletar template"
+description: "Remove um template existente"
+openapi: "DELETE /whatsapp/businesses/{wabaId}/templates/{templateId}"
+---
+
+## Conceituação
+
+Remove um template existente do WABA. A exclusão é permanente.
+
+<Warning>
+  Essa ação não pode ser desfeita. Uma vez deletado, o template precisará ser criado novamente e passar por nova aprovação da Meta.
+</Warning>
+
+<Note>
+  O `templateId` é obtido através do endpoint de [Listar templates](/templates/list-templates).
+</Note>

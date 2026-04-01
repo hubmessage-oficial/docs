@@ -7,6 +7,26 @@ import { projectName } from '/snippets/variables.mdx';
 
 ## Overview
 
+The message endpoints in this section allow you to send messages **only when the WhatsApp conversation window is open** (within the 24-hour period). This is a rule from the official WhatsApp Business API.
+
+<Warning>
+  The 24-hour conversation window opens when the **customer sends a message to you**. Outside this window, you can only send messages using **Meta-approved templates**. The messages in this section **do not work** outside the conversation window.
+</Warning>
+
+### Inside the window (24h)
+
+Did the customer send you a message? Great, the window is open. You can use any endpoint in this section to reply with text, image, audio, video, document, etc.
+
+### Outside the window (after 24h)
+
+If the customer has **not** sent a message in the last 24 hours, the only way to start a conversation is by sending a **message template** previously approved by Meta. Templates are pre-defined messages that you create and submit for approval in the Meta dashboard.
+
+<Info>
+  In Z-API (unofficial connection) this limitation didn't exist — you could send messages at any time. In the official API, this rule is mandatory and cannot be bypassed.
+</Info>
+
+---
+
 To send a message, you need the recipient's **phone number**, including the country code.
 
 | Format | Example |

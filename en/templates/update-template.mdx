@@ -1,0 +1,17 @@
+---
+title: "Edit template"
+description: "Edit an existing template and resubmit for approval"
+openapi: "PUT /whatsapp/businesses/{wabaId}/templates/{templateId}"
+---
+
+## Overview
+
+Edits an existing template and resubmits it for Meta approval. The body is the same used when creating the template.
+
+<Warning>
+  When editing an approved template, it goes back to `PENDING` status until Meta reviews it again.
+</Warning>
+
+<Note>
+  The `templateId` is obtained from the [List templates](/en/templates/list-templates) endpoint.
+</Note>

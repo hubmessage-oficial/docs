@@ -1,0 +1,758 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Templates API",
+    "description": "API para gerenciamento de templates de mensagem do WhatsApp Business",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.hubmessage.io"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/whatsapp/businesses": {
+      "get": {
+        "summary": "Listar WABAs",
+        "description": "Retorna a lista de WABAs (WhatsApp Business Accounts) disponíveis para o token autenticado.",
+        "operationId": "listBusinesses",
+        "tags": [
+          "Templates"
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de WABAs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Business"
+                  }
+                },
+                "example": [
+                  {
+                    "businessId": "428083093730937",
+                    "name": "Demostração",
+                    "channelsCount": 1,
+                    "connectedCount": 1,
+                    "disconnectedCount": 0
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/whatsapp/businesses/{wabaId}/templates": {
+      "get": {
+        "summary": "Listar templates",
+        "description": "Retorna a lista de templates de um WABA. A estrutura dos `components` varia conforme a categoria e configuração de cada template.",
+        "operationId": "listTemplates",
+        "tags": [
+          "Templates"
+        ],
+        "parameters": [
+          {
+            "name": "wabaId",
+            "in": "path",
+            "required": true,
+            "description": "ID do WABA (obtido via Listar WABAs)",
+            "schema": {
+              "type": "string",
+              "example": "428083093730937"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de templates",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Template"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "1900296177408890",
+                      "name": "confirm_account",
+                      "status": "APPROVED",
+                      "category": "AUTHENTICATION",
+                      "language": "pt_BR",
+                      "parameter_format": "POSITIONAL",
+                      "message_send_ttl_seconds": 600,
+                      "components": [
+                        {
+                          "type": "BODY",
+                          "text": "Seu código de verificação é *{{1}}*. Para sua segurança, não o compartilhe.",
+                          "add_security_recommendation": true,
+                          "example": {
+                            "body_text": [
+                              [
+                                "123456"
+                              ]
+                            ]
+                          }
+                        },
+                        {
+                          "type": "BUTTONS",
+                          "buttons": [
+                            {
+                              "type": "URL",
+                              "text": "Copiar código",
+                              "url": "https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=otp{{1}}",
+                              "example": [
+                                "https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=otp123456"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "summary": "Criar template",
+        "description": "Cria um novo template de mensagem e envia para aprovação da Meta.",
+        "operationId": "createTemplate",
+        "tags": [
+          "Templates"
+        ],
+        "parameters": [
+          {
+            "name": "wabaId",
+            "in": "path",
+            "required": true,
+            "description": "ID do WABA (obtido via Listar WABAs)",
+            "schema": {
+              "type": "string",
+              "example": "428083093730937"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTemplateRequest"
+              },
+              "examples": {
+                "utility": {
+                  "summary": "Utility - Atualização de pedido",
+                  "value": {
+                    "name": "atualizacao_pedido_v1",
+                    "category": "UTILITY",
+                    "language": "pt_BR",
+                    "components": [
+                      {
+                        "type": "BODY",
+                        "text": "Olá {{1}}, seu pedido {{2}} foi atualizado para {{3}}, até logo.",
+                        "example": {
+                          "body_text": [
+                            [
+                              "Ana",
+                              "PED-1024",
+                              "em transporte"
+                            ]
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "marketing": {
+                  "summary": "Marketing - Campanha de desconto",
+                  "value": {
+                    "name": "campanha_desconto_v1",
+                    "category": "MARKETING",
+                    "language": "pt_BR",
+                    "components": [
+                      {
+                        "type": "BODY",
+                        "text": "Aproveite {{1}} de desconto no plano {{2}} até {{3}}.",
+                        "example": {
+                          "body_text": [
+                            [
+                              "20%",
+                              "Premium",
+                              "30/04"
+                            ]
+                          ]
+                        }
+                      },
+                      {
+                        "type": "BUTTONS",
+                        "buttons": [
+                          {
+                            "type": "URL",
+                            "text": "Ver oferta",
+                            "url": "https://site.exemplo.com/oferta"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "authentication": {
+                  "summary": "Authentication - Código OTP",
+                  "value": {
+                    "name": "otp_login_v1",
+                    "category": "AUTHENTICATION",
+                    "language": "pt_BR",
+                    "components": [
+                      {
+                        "type": "BODY",
+                        "text": "Seu código de verificação é *{{1}}*. Para sua segurança, não o compartilhe.",
+                        "add_security_recommendation": true,
+                        "example": {
+                          "body_text": [
+                            [
+                              "123456"
+                            ]
+                          ]
+                        }
+                      },
+                      {
+                        "type": "BUTTONS",
+                        "buttons": [
+                          {
+                            "type": "URL",
+                            "text": "Copiar código",
+                            "url": "https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=otp{{1}}",
+                            "example": [
+                              "https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=otp123456"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Template criado e enviado para aprovação",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTemplateResponse"
+                },
+                "example": {
+                  "id": "1613165359891625",
+                  "status": "PENDING",
+                  "category": "UTILITY"
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/MetaError" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/whatsapp/businesses/{wabaId}/templates/{templateId}": {
+      "put": {
+        "summary": "Editar template",
+        "description": "Edita um template existente e reenvia para aprovação da Meta.",
+        "operationId": "updateTemplate",
+        "tags": ["Templates"],
+        "parameters": [
+          {
+            "name": "wabaId",
+            "in": "path",
+            "required": true,
+            "description": "ID do WABA (obtido via Listar WABAs)",
+            "schema": {
+              "type": "string",
+              "example": "428083093730937"
+            }
+          },
+          {
+            "name": "templateId",
+            "in": "path",
+            "required": true,
+            "description": "ID do template (obtido via Listar templates)",
+            "schema": {
+              "type": "string",
+              "example": "1900296177408890"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTemplateRequest"
+              },
+              "example": {
+                "name": "atualizacao_pedido_v1",
+                "category": "UTILITY",
+                "language": "pt_BR",
+                "components": [
+                  {
+                    "type": "BODY",
+                    "text": "Olá {{1}}, seu pedido {{2}} foi atualizado para {{3}}.",
+                    "example": {
+                      "body_text": [["Ana", "PED-1024", "em transporte"]]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Template editado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "example": {
+                  "success": true
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/MetaError" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      },
+      "delete": {
+        "summary": "Deletar template",
+        "description": "Remove um template existente do WABA.",
+        "operationId": "deleteTemplate",
+        "tags": ["Templates"],
+        "parameters": [
+          {
+            "name": "wabaId",
+            "in": "path",
+            "required": true,
+            "description": "ID do WABA (obtido via Listar WABAs)",
+            "schema": {
+              "type": "string",
+              "example": "428083093730937"
+            }
+          },
+          {
+            "name": "templateId",
+            "in": "path",
+            "required": true,
+            "description": "ID do template (obtido via Listar templates)",
+            "schema": {
+              "type": "string",
+              "example": "1900296177408890"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template deletado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "example": {
+                  "success": true
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/whatsapp/businesses/{wabaId}/templates/sync": {
+      "post": {
+        "summary": "Sincronizar templates",
+        "description": "Força a sincronização dos templates com a Meta, atualizando os status (PENDING, APPROVED, REJECTED) e demais informações.",
+        "operationId": "syncTemplates",
+        "tags": [
+          "Templates"
+        ],
+        "parameters": [
+          {
+            "name": "wabaId",
+            "in": "path",
+            "required": true,
+            "description": "ID do WABA (obtido via Listar WABAs)",
+            "schema": {
+              "type": "string",
+              "example": "428083093730937"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sincronização realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncResponse"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "1900296177408890",
+                      "name": "confirm_account",
+                      "status": "APPROVED",
+                      "category": "AUTHENTICATION",
+                      "language": "pt_BR",
+                      "parameter_format": "POSITIONAL",
+                      "message_send_ttl_seconds": 600,
+                      "components": [
+                        {
+                          "type": "BODY",
+                          "text": "Seu código de verificação é *{{1}}*. Para sua segurança, não o compartilhe.",
+                          "add_security_recommendation": true,
+                          "example": {
+                            "body_text": [
+                              [
+                                "123456"
+                              ]
+                            ]
+                          }
+                        },
+                        {
+                          "type": "BUTTONS",
+                          "buttons": [
+                            {
+                              "type": "URL",
+                              "text": "Copiar código",
+                              "url": "https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=otp{{1}}",
+                              "example": [
+                                "https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=otp123456"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "syncedCount": 2,
+                  "synced": true
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "MethodNotAllowed": {
+        "description": "Método não permitido.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": 405,
+              "message": "Method not allowed"
+            }
+          }
+        }
+      },
+      "MetaError": {
+        "description": "Erro retornado pela Meta ao processar a requisição.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MetaError"
+            },
+            "example": {
+              "error": "Newport request failed",
+              "value": {
+                "errors": [
+                  {
+                    "description": "",
+                    "name": "META_WHATSAPP_ERROR",
+                    "message": "Sua mensagem não pode ser enviada pois ela tem conteúdo que outras pessoas no Facebook denunciaram como abusivo.",
+                    "code": "368"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Token inválido ou ausente.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": 401,
+              "message": "Unauthorized"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Business": {
+        "type": "object",
+        "properties": {
+          "businessId": {
+            "type": "string",
+            "description": "ID do WABA (WhatsApp Business Account)"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome do WABA"
+          },
+          "channelsCount": {
+            "type": "integer",
+            "description": "Total de canais vinculados"
+          },
+          "connectedCount": {
+            "type": "integer",
+            "description": "Canais conectados"
+          },
+          "disconnectedCount": {
+            "type": "integer",
+            "description": "Canais desconectados"
+          }
+        }
+      },
+      "CreateTemplateRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "category",
+          "language",
+          "components"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nome do template (snake_case, sem espaços)"
+          },
+          "category": {
+            "type": "string",
+            "description": "Categoria do template",
+            "enum": [
+              "UTILITY",
+              "MARKETING",
+              "AUTHENTICATION"
+            ]
+          },
+          "language": {
+            "type": "string",
+            "description": "Idioma do template (ex: pt_BR, en_US)"
+          },
+          "components": {
+            "type": "array",
+            "description": "Componentes do template (HEADER, BODY, FOOTER, BUTTONS)",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "CreateTemplateResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID do template criado"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status inicial (geralmente PENDING)",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "description": "Categoria do template criado",
+            "enum": [
+              "UTILITY",
+              "MARKETING",
+              "AUTHENTICATION"
+            ]
+          }
+        }
+      },
+      "SyncResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "description": "Lista de templates sincronizados",
+            "items": {
+              "$ref": "#/components/schemas/Template"
+            }
+          },
+          "syncedCount": {
+            "type": "integer",
+            "description": "Quantidade de templates sincronizados"
+          },
+          "synced": {
+            "type": "boolean",
+            "description": "Indica se a sincronização foi realizada com sucesso"
+          }
+        }
+      },
+      "Template": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID do template"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome do template"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status de aprovação",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "description": "Categoria do template",
+            "enum": [
+              "UTILITY",
+              "MARKETING",
+              "AUTHENTICATION"
+            ]
+          },
+          "language": {
+            "type": "string",
+            "description": "Idioma do template (ex: pt_BR, en_US)"
+          },
+          "parameter_format": {
+            "type": "string",
+            "description": "Formato dos parâmetros"
+          },
+          "message_send_ttl_seconds": {
+            "type": "integer",
+            "description": "Tempo de vida da mensagem em segundos"
+          },
+          "components": {
+            "type": "array",
+            "description": "Componentes do template (HEADER, BODY, FOOTER, BUTTONS)",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indica se a operação foi realizada com sucesso"
+          }
+        }
+      },
+      "MetaError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Descrição geral do erro"
+          },
+          "value": {
+            "type": "object",
+            "properties": {
+              "errors": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "description": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Tipo do erro (ex: META_WHATSAPP_ERROR)"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Mensagem de erro da Meta"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "Código de erro da Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "integer",
+            "description": "Código do erro"
+          },
+          "message": {
+            "type": "string",
+            "description": "Descrição do erro"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Secret Key gerada no painel de Segurança do Hub Message"
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+---
+title: "Introduction"
+description: "Understand how message templates work in Hub Message"
+---
+
+import { projectName } from '/snippets/variables.mdx';
+
+## What are templates?
+
+In the official WhatsApp API, you can only send messages freely while the **24-hour conversation window** is open (i.e., when the customer has recently sent you a message).
+
+Outside this window, the only way to start a conversation is through **templates** — pre-defined messages that must be approved by Meta before they can be sent.
+
+<Note>
+  If you're coming from Z-API, this is one of the biggest differences. In Z-API (unofficial connection) you could send any message at any time. In the official API, outside the 24h window, only approved templates work.
+</Note>
+
+## Categories
+
+Each template needs a category that defines the type of communication. Choosing the wrong category can get your template rejected by Meta.
+
+| Category | When to use | Example |
+|---|---|---|
+| **UTILITY** | Transactional and operational communication | Order confirmation, delivery status, account update |
+| **MARKETING** | Promotional communication | Campaign, offer, coupon, product launch |
+| **AUTHENTICATION** | Security and identity validation | OTP code, login confirmation, two-factor verification |
+
+## Template structure
+
+Every template is composed of **components**. Each component has a role:
+
+| Component | Required | What it does |
+|---|---|---|
+| **HEADER** | No | Initial context — can be text, image, video, or document |
+| **BODY** | Yes | Main message content |
+| **FOOTER** | No | Short complementary text (e.g., "Do not reply to this message") |
+| **BUTTONS** | No | User actions (open URL, call, quick reply) |
+
+### Placeholders
+
+You can use dynamic variables in text with `{{1}}`, `{{2}}`, etc. When creating the template, you must send real examples for each placeholder — Meta uses these examples during review.
+
+## Template flow
+
+The API organizes templates by **business** (WABA — WhatsApp Business Account). Each business has its own templates, approval history, and limits.
+
+<Steps>
+  <Step title="Identify your WABA">
+    Use the list WABAs endpoint to get the correct `businessId` for your token.
+  </Step>
+  <Step title="Create the template">
+    Choose the category, build the components with placeholders and examples, and submit for approval.
+  </Step>
+  <Step title="Wait for approval">
+    Meta reviews the template and returns a status: `PENDING`, `APPROVED`, or `REJECTED`.
+  </Step>
+  <Step title="Send messages">
+    With an approved template, you can use it to start conversations with customers outside the 24h window.
+  </Step>
+</Steps>
+
+## Template status
+
+| Status | Meaning |
+|---|---|
+| `PENDING` | Submitted for review, awaiting Meta approval |
+| `APPROVED` | Approved and ready to use |
+| `REJECTED` | Rejected — review the content and category before resubmitting |

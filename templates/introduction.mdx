@@ -1,0 +1,68 @@
+---
+title: "Introdução"
+description: "Entenda como funcionam os templates de mensagem no Hub Message"
+---
+
+import { projectName } from '/snippets/variables.mdx';
+
+## O que são templates?
+
+Na API oficial do WhatsApp, você só pode enviar mensagens livremente enquanto a **janela de conversa de 24 horas** estiver aberta (ou seja, quando o cliente enviou uma mensagem para você recentemente).
+
+Fora dessa janela, a única forma de iniciar uma conversa é através de **templates** — mensagens pré-definidas que passam por aprovação da Meta antes de poderem ser enviadas.
+
+<Note>
+  Se você vem da Z-API, essa é uma das maiores diferenças. Na Z-API (conexão não oficial) você podia enviar qualquer mensagem a qualquer momento. Na API oficial, fora da janela de 24h, só templates aprovados funcionam.
+</Note>
+
+## Categorias
+
+Cada template precisa de uma categoria que define o tipo de comunicação. Escolher a categoria errada pode fazer seu template ser reprovado pela Meta.
+
+| Categoria | Quando usar | Exemplo |
+|---|---|---|
+| **UTILITY** | Comunicação transacional e operacional | Confirmação de pedido, status de entrega, atualização de conta |
+| **MARKETING** | Comunicação promocional | Campanha, oferta, cupom, lançamento de produto |
+| **AUTHENTICATION** | Segurança e validação de identidade | Código OTP, confirmação de login, verificação em duas etapas |
+
+## Estrutura de um template
+
+Todo template é composto por **components**. Cada componente tem um papel:
+
+| Componente | Obrigatório | O que faz |
+|---|---|---|
+| **HEADER** | Não | Contexto inicial — pode ser texto, imagem, vídeo ou documento |
+| **BODY** | Sim | Conteúdo principal da mensagem |
+| **FOOTER** | Não | Texto curto complementar (ex: "Não responda esta mensagem") |
+| **BUTTONS** | Não | Ações para o usuário (abrir URL, ligar, resposta rápida) |
+
+### Placeholders
+
+Você pode usar variáveis dinâmicas no texto com `{{1}}`, `{{2}}`, etc. Ao criar o template, é obrigatório enviar exemplos reais para cada placeholder — a Meta usa esses exemplos na revisão.
+
+## Fluxo de template
+
+A API organiza templates por **business** (WABA — WhatsApp Business Account). Cada business tem seus próprios templates, histórico de aprovação e limites.
+
+<Steps>
+  <Step title="Identifique seu WABA">
+    Use o endpoint de listar WABAs para obter o `businessId` correto para o seu token.
+  </Step>
+  <Step title="Crie o template">
+    Escolha a categoria, monte os components com placeholders e exemplos, e envie para aprovação.
+  </Step>
+  <Step title="Aguarde a aprovação">
+    A Meta revisa o template e retorna um status: `PENDING`, `APPROVED` ou `REJECTED`.
+  </Step>
+  <Step title="Envie mensagens">
+    Com o template aprovado, você pode usá-lo para iniciar conversas com clientes fora da janela de 24h.
+  </Step>
+</Steps>
+
+## Status do template
+
+| Status | Significado |
+|---|---|
+| `PENDING` | Enviado para revisão, aguardando aprovação da Meta |
+| `APPROVED` | Aprovado e pronto para uso |
+| `REJECTED` | Reprovado — revise o conteúdo e a categoria antes de reenviar |

@@ -1,0 +1,19 @@
+---
+title: "Create template"
+description: "Create a new template and submit for Meta approval"
+openapi: "POST /whatsapp/businesses/{wabaId}/templates"
+---
+
+## Overview
+
+Creates a new message template and submits it for Meta approval. The template starts with `PENDING` status and is updated to `APPROVED` or `REJECTED` after review.
+
+Use the [Sync templates](/en/templates/sync-templates) endpoint to force a status update.
+
+<Warning>
+  The template name must be in `snake_case`, with no spaces or special characters. Once created, the name cannot be changed.
+</Warning>
+
+<Note>
+  The `wabaId` is obtained from the [List WABAs](/en/templates/list-businesses) endpoint.
+</Note>

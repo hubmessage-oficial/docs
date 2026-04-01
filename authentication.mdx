@@ -1,0 +1,60 @@
+---
+title: "Autenticação"
+description: "Como gerar e utilizar suas credenciais de API no Hub Message"
+---
+
+import { projectName, frontendUrl, backendUrl } from '/snippets/variables.mdx';
+
+## Credenciais da API
+
+O {projectName} trabalha com um par de chaves: **Public Key** e **Secret Key**. Ambas são geradas no menu **Segurança** do painel: [Segurança]({frontendUrl}/app/security).
+
+---
+
+## Public Key
+
+A Public Key é utilizada **exclusivamente** pelo SDK de conexão de canais. Com ela, você pode conectar canais (como WhatsApp, Telegram, etc.) diretamente dentro do seu sistema, sem precisar acessar o painel do {projectName}.
+
+<Note>
+  A Public Key pode ser exposta no frontend da sua aplicação, pois ela tem permissões limitadas apenas à conexão de canais.
+</Note>
+
+Exemplo de uso com o SDK:
+
+```javascript
+import { HubMessage } from '@hubmessage/connect';
+
+const hub = new HubMessage({
+  publicKey: 'SUA_PUBLIC_KEY'
+});
+```
+
+<Tip>
+  Instale o SDK via npm: [`@hubmessage/connect`](https://www.npmjs.com/package/@hubmessage/connect)
+</Tip>
+
+---
+
+## Secret Key
+
+A Secret Key é utilizada para autenticação em todas as APIs do {projectName}. Ela deve ser enviada no header `Authorization` como Bearer token em toda requisição.
+
+<Warning>
+  A Secret Key **nunca** deve ser exposta no frontend. Utilize-a apenas no backend da sua aplicação.
+</Warning>
+
+Exemplo de uso:
+
+```bash
+curl -X GET https://api.hubmessage.io/whatsapp/businesses \
+  -H "Authorization: Bearer SUA_SECRET_KEY"
+```
+
+---
+
+## Resumo
+
+| Chave | Uso | Onde usar | Pode expor no frontend? |
+|---|---|---|---|
+| **Public Key** | SDK de conexão de canais | Frontend ou backend | Sim |
+| **Secret Key** | Todas as chamadas de API | Apenas backend | Não |

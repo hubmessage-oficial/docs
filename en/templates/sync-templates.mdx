@@ -1,0 +1,15 @@
+---
+title: "Sync templates"
+description: "Force template status update with Meta"
+openapi: "POST /whatsapp/businesses/{wabaId}/templates/sync"
+---
+
+## Overview
+
+Forces template synchronization with Meta, updating statuses (`PENDING`, `APPROVED`, `REJECTED`) and other template information locally.
+
+Useful when you've created or edited a template and want to check if Meta has already updated the approval status.
+
+<Note>
+  The `wabaId` is obtained from the [List WABAs](/en/templates/list-businesses) endpoint.
+</Note>
