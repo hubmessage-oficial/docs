@@ -1,0 +1,95 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Conectar Canal",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/v1/channels/{channelId}/connect": {
+      "post": {
+        "summary": "Conectar canal",
+        "description": "Finaliza a conexão de um canal com os dados retornados pelo SDK.",
+        "operationId": "connectChannel",
+        "tags": ["Canais"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "ID do canal (obtido via Criar canal)",
+            "schema": { "type": "string", "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ConnectChannelRequest" },
+              "example": {
+                "wabaId": "428083093730937",
+                "phoneId": "123456789012345",
+                "code": "ABC123DEF456",
+                "coexistence": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Canal conectado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" },
+                "example": { "success": true }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Unauthorized": {
+        "description": "Token inválido ou ausente.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 401, "message": "Unauthorized" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "ConnectChannelRequest": {
+        "type": "object",
+        "required": ["wabaId", "phoneId", "code", "coexistence"],
+        "properties": {
+          "wabaId": { "type": "string", "description": "ID do WhatsApp Business Account" },
+          "phoneId": { "type": "string", "description": "ID do número de telefone" },
+          "code": { "type": "string", "description": "Código de autorização gerado pelo WhatsApp" },
+          "coexistence": { "type": "boolean", "description": "Se o número está em modo de coexistência" }
+        }
+      },
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "description": "Indica se a operação foi realizada com sucesso" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer", "description": "Secret Key gerada no painel de Segurança do Hub Message" }
+    }
+  }
+}

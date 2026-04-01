@@ -8,7 +8,7 @@
     "dark": "#3347CC"
   },
   "favicon": "/favicon.svg",
-  "openapi": ["/z-api/openapi.json", "/templates/openapi.json", "/messages/openapi.json", "/messages/openapi-image.json", "/messages/openapi-audio.json", "/messages/openapi-video.json", "/messages/openapi-contact.json", "/messages/openapi-sticker.json", "/messages/openapi-interactive-action.json", "/messages/openapi-interactive-button.json", "/messages/openapi-template.json"],
+  "openapi": ["/z-api/openapi.json", "/channels/openapi-create.json", "/channels/openapi-connect.json", "/templates/openapi.json", "/messages/openapi.json", "/messages/openapi-image.json", "/messages/openapi-audio.json", "/messages/openapi-video.json", "/messages/openapi-contact.json", "/messages/openapi-sticker.json", "/messages/openapi-interactive-action.json", "/messages/openapi-interactive-button.json", "/messages/openapi-template.json"],
   "navigation": {
     "languages": [
       {
@@ -23,6 +23,14 @@
                   "index",
                   "authentication",
                   "conversation-window"
+                ]
+              },
+              {
+                "group": "Canais",
+                "pages": [
+                  "channels/introduction",
+                  "channels/create-channel",
+                  "channels/connect-channel"
                 ]
               },
               {
@@ -104,6 +112,14 @@
                   "en/index",
                   "en/authentication",
                   "en/conversation-window"
+                ]
+              },
+              {
+                "group": "Channels",
+                "pages": [
+                  "en/channels/introduction",
+                  "en/channels/create-channel",
+                  "en/channels/connect-channel"
                 ]
               },
               {

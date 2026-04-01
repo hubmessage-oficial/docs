@@ -3,46 +3,51 @@ title: "Introduction"
 description: "Hub Message official documentation"
 ---
 
-import { projectName, projectSlogan, projectDescription, frontendUrl, websiteUrl } from '/snippets/variables.mdx';
+import { projectName, frontendUrl, websiteUrl } from '/snippets/variables.mdx';
 
 ## Welcome to {projectName}
 
 Omnichannel API for Business Communication. Integrate WhatsApp, Telegram, Instagram and more into your system.
 
-{projectName} provides a standardized API to integrate multiple messaging channels into your system. Here you'll find the complete documentation for the {projectName} native API.
+{projectName} provides a standardized API to integrate multiple messaging channels into your system.
 
 <Note>
   Migrating from Z-API? Go to the **Z-API Compatibility** tab for migration-focused documentation, with compatible payloads and a step-by-step guide.
 </Note>
 
-## Getting started
+## Where to start?
+
+<Steps>
+  <Step title="Create your account">
+    Go to the [Dashboard]({frontendUrl}) and create your account.
+  </Step>
+  <Step title="Generate your credentials">
+    In the Security menu, generate your **Public Key** and **Secret Key**. See how at [Authentication](/en/authentication).
+  </Step>
+  <Step title="Create and connect a channel">
+    Create a channel (e.g., WhatsApp) and connect it to your number. See the full flow at [Channels](/en/channels/introduction).
+  </Step>
+  <Step title="Send your first message">
+    With the channel connected, send messages via [free messages](/en/messages/introduction) or [templates](/en/templates/introduction).
+  </Step>
+</Steps>
+
+## Browse the documentation
 
 <CardGroup cols={2}>
-  <Card title="Create your account" icon="user-plus" href={frontendUrl}>
-    Access the Dashboard and create your account to start using the API.
+  <Card title="Authentication" icon="key" href="/en/authentication">
+    How to generate and use your API keys (Public Key and Secret Key).
   </Card>
-  <Card title="Discover Hub Message" icon="globe" href={websiteUrl}>
-    Learn more about the platform and supported channels.
+  <Card title="Channels" icon="plug" href="/en/channels/introduction">
+    Create and connect messaging channels (WhatsApp, Instagram, etc).
   </Card>
-</CardGroup>
-
-## What you'll find here
-
-<CardGroup cols={2}>
-  <Card title="API Reference" icon="code">
-    Complete documentation for all {projectName} native API endpoints, with examples and interactive playground.
+  <Card title="Templates" icon="file-lines" href="/en/templates/introduction">
+    Create and manage templates to send messages outside the 24h window.
   </Card>
-  <Card title="SDKs" icon="puzzle-piece">
-    Official libraries to simplify API integration in multiple languages.
+  <Card title="Free messages" icon="paper-plane" href="/en/messages/introduction">
+    Send text, image, audio, video and more within the conversation window.
   </Card>
-  <Card title="Webhooks" icon="bolt">
-    Receive real-time events about incoming messages, delivery status and more.
-  </Card>
-  <Card title="Guides" icon="book">
-    Tutorials and practical guides for common integration scenarios.
+  <Card title="Conversation window" icon="clock" href="/en/conversation-window">
+    Understand the WhatsApp 24h rule and when to use templates vs free messages.
   </Card>
 </CardGroup>
-
-<Info>
-  The {projectName} native API documentation is under construction. Soon you'll have full access to all endpoints, SDKs and integration guides.
-</Info>

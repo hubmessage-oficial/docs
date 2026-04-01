@@ -13,7 +13,7 @@ Se o cliente enviar outra mensagem, o timer de 24 horas **reinicia**. Ou seja, e
 
 ## Dentro da janela (24h)
 
-Você pode enviar **qualquer mensagem** livremente — sem precisar de templates.
+Você pode enviar **qualquer mensagem** livremente usando os endpoints de [mensagens livres](/messages/introduction) — sem precisar de templates.
 
 As mensagens enviadas dentro da janela são classificadas como **Service** e são **gratuitas e ilimitadas**.
 
@@ -23,7 +23,7 @@ As mensagens enviadas dentro da janela são classificadas como **Service** e sã
 
 ## Fora da janela (após 24h)
 
-Quando a janela fecha, a única forma de enviar mensagem ao cliente é através de **templates aprovados pela Meta**.
+Quando a janela fecha, a única forma de enviar mensagem ao cliente é através de **templates aprovados pela Meta** usando o endpoint [Enviar template](/messages/send-template).
 
 | Categoria | Quando usar | Custo |
 |---|---|---|
@@ -44,7 +44,7 @@ Existem duas formas:
     A forma mais simples. Qualquer mensagem do cliente abre uma nova janela de 24h imediatamente.
   </Step>
   <Step title="Você envia um template">
-    Envie um template aprovado (marketing, utility ou authentication). Quando o cliente **responder**, a janela de 24h reabre e você volta a poder enviar mensagens livremente.
+    Envie um [template aprovado](/messages/send-template) (marketing, utility ou authentication). Quando o cliente **responder**, a janela de 24h reabre e você volta a poder enviar [mensagens livres](/messages/introduction).
   </Step>
 </Steps>
 
@@ -59,3 +59,17 @@ Quando o cliente chega pelo **Click-to-WhatsApp** (anúncio no Facebook/Instagra
 | Cliente enviou mensagem (janela aberta) | Sim | Não | Gratuito |
 | Janela fechada (mais de 24h) | Não | Sim | Depende da categoria |
 | Via anúncio Click-to-WhatsApp | Sim | Não | Gratuito por 72h |
+
+## Próximos passos
+
+<CardGroup cols={2}>
+  <Card title="Mensagens livres" icon="paper-plane" href="/messages/introduction">
+    Envie mensagens dentro da janela de 24h.
+  </Card>
+  <Card title="Enviar template" icon="file-lines" href="/messages/send-template">
+    Envie mensagens fora da janela usando templates.
+  </Card>
+  <Card title="Gerenciar templates" icon="gear" href="/templates/introduction">
+    Crie e gerencie seus templates aprovados.
+  </Card>
+</CardGroup>

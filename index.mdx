@@ -9,40 +9,45 @@ import { projectName, projectSlogan, projectDescription, frontendUrl, websiteUrl
 
 {projectSlogan}. {projectDescription}.
 
-O {projectName} oferece uma API padronizada para integrar múltiplos canais de mensagem ao seu sistema. Aqui você encontra a documentação completa da API nativa do {projectName}.
+O {projectName} oferece uma API padronizada para integrar múltiplos canais de mensagem ao seu sistema.
 
 <Note>
   Está migrando da Z-API? Acesse a aba **Z-API Compatibilidade** para uma documentação focada na migração, com payloads compatíveis e guia passo a passo.
 </Note>
 
-## Primeiros passos
+## Por onde começar?
+
+<Steps>
+  <Step title="Crie sua conta">
+    Acesse o [Dashboard]({frontendUrl}) e crie sua conta.
+  </Step>
+  <Step title="Gere suas credenciais">
+    No menu Segurança, gere sua **Public Key** e **Secret Key**. Veja como em [Autenticação](/authentication).
+  </Step>
+  <Step title="Crie e conecte um canal">
+    Crie um canal (ex: WhatsApp) e conecte ao seu número. Veja o fluxo completo em [Canais](/channels/introduction).
+  </Step>
+  <Step title="Envie sua primeira mensagem">
+    Com o canal conectado, envie mensagens via [mensagens livres](/messages/introduction) ou [templates](/templates/introduction).
+  </Step>
+</Steps>
+
+## Navegue pela documentação
 
 <CardGroup cols={2}>
-  <Card title="Crie sua conta" icon="user-plus" href={frontendUrl}>
-    Acesse o Dashboard e crie sua conta para começar a usar a API.
+  <Card title="Autenticação" icon="key" href="/authentication">
+    Como gerar e usar suas chaves de API (Public Key e Secret Key).
   </Card>
-  <Card title="Conheça o Hub Message" icon="globe" href={websiteUrl}>
-    Saiba mais sobre a plataforma e os canais suportados.
+  <Card title="Canais" icon="plug" href="/channels/introduction">
+    Crie e conecte canais de mensagem (WhatsApp, Instagram, etc).
   </Card>
-</CardGroup>
-
-## O que você encontra aqui
-
-<CardGroup cols={2}>
-  <Card title="API Reference" icon="code">
-    Documentação completa de todos os endpoints da API nativa do {projectName}, com exemplos e playground interativo.
+  <Card title="Templates" icon="file-lines" href="/templates/introduction">
+    Crie e gerencie templates para enviar mensagens fora da janela de 24h.
   </Card>
-  <Card title="SDKs" icon="puzzle-piece">
-    Bibliotecas oficiais para facilitar a integração com a API em diversas linguagens.
+  <Card title="Mensagens livres" icon="paper-plane" href="/messages/introduction">
+    Envie texto, imagem, áudio, vídeo e mais dentro da janela de conversa.
   </Card>
-  <Card title="Webhooks" icon="bolt">
-    Receba eventos em tempo real sobre mensagens recebidas, status de envio e mais.
-  </Card>
-  <Card title="Guias" icon="book">
-    Tutoriais e guias práticos para cenários comuns de integração.
+  <Card title="Janela de conversa" icon="clock" href="/conversation-window">
+    Entenda a regra de 24h do WhatsApp e quando usar templates vs mensagens livres.
   </Card>
 </CardGroup>
-
-<Info>
-  A documentação da API nativa do {projectName} está em construção. Em breve você terá acesso completo a todos os endpoints, SDKs e guias de integração.
-</Info>

@@ -1,0 +1,21 @@
+---
+title: "Criar canal"
+description: "Crie um novo canal via API"
+openapi: "/channels/openapi-create.json POST /v1/channels"
+---
+
+## Conceituação
+
+Cria um novo canal. Após a criação, o canal precisa ser conectado (via painel ou SDK) para começar a enviar e receber mensagens.
+
+O `id` retornado é o `channelId` usado em todas as chamadas de API.
+
+### Tipos disponíveis
+
+| Tipo | Plataforma |
+|---|---|
+| `META_WHATSAPP` | WhatsApp (API Oficial) |
+
+<Note>
+  Novos tipos serão adicionados conforme novas plataformas forem suportadas.
+</Note>

@@ -1,0 +1,43 @@
+---
+title: "Introdução"
+description: "Entenda o que são canais e como funcionam no Hub Message"
+---
+
+import { projectName, frontendUrl } from '/snippets/variables.mdx';
+
+## O que é um canal?
+
+No {projectName}, um **canal** representa uma conexão com uma plataforma de mensagem — como WhatsApp, Instagram, Telegram, entre outros.
+
+Cada canal é vinculado a um número de telefone ou conta específica da plataforma. Por exemplo, se você conecta o número `+55 11 99999-9999` ao WhatsApp, isso cria um canal. Se conecta uma conta do Instagram, cria outro canal.
+
+O `channelId` é o identificador único do canal e é usado em todas as chamadas de API para enviar [mensagens livres](/messages/introduction), [templates](/messages/send-template), etc.
+
+## Fluxo para começar
+
+<Steps>
+  <Step title="Gere suas credenciais">
+    Se ainda não fez, gere sua **Public Key** e **Secret Key** em [Autenticação](/authentication).
+  </Step>
+  <Step title="Crie o canal">
+    Crie um novo canal pelo [Dashboard]({frontendUrl}) ou via API usando o endpoint [Criar canal](/channels/create-channel).
+  </Step>
+  <Step title="Conecte o canal">
+    Conecte o canal ao WhatsApp pelo painel ou integre no seu sistema via SDK + API. Veja o fluxo completo em [Conectar canal](/channels/connect-channel).
+  </Step>
+  <Step title="Envie mensagens">
+    Com o canal conectado, use o `channelId` para enviar [mensagens livres](/messages/introduction) (dentro da janela de 24h) ou [templates](/messages/send-template) (fora da janela).
+  </Step>
+</Steps>
+
+## Plataformas suportadas
+
+| Plataforma | Status |
+|---|---|
+| **WhatsApp** (API Oficial) | Disponível |
+| **Instagram** | Em breve |
+| **Telegram** | Em breve |
+
+<Note>
+  Novas plataformas serão adicionadas conforme a plataforma evolui. A proposta do {projectName} é ser uma única API para todos os canais de mensagem.
+</Note>

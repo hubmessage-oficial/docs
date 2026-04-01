@@ -3,7 +3,7 @@ title: "Authentication"
 description: "How to generate and use your API credentials in Hub Message"
 ---
 
-import { projectName, frontendUrl, backendUrl } from '/snippets/variables.mdx';
+import { projectName, frontendUrl } from '/snippets/variables.mdx';
 
 ## API Credentials
 
@@ -13,25 +13,21 @@ import { projectName, frontendUrl, backendUrl } from '/snippets/variables.mdx';
 
 ## Public Key
 
-The Public Key is used **exclusively** by the channel connection SDK. With it, you can connect channels (such as WhatsApp, Telegram, etc.) directly within your system, without needing to access the {projectName} dashboard.
+The Public Key is used by the channel connection SDK ([`@hubmessage/connect`](https://www.npmjs.com/package/@hubmessage/connect)). With it, you can [connect channels](/en/channels/connect-channel) directly within your system, without needing to access the dashboard.
 
 <Note>
   The Public Key can be exposed in your application's frontend, as it has limited permissions for channel connection only.
 </Note>
 
-Example usage with the SDK:
+Example usage:
 
 ```javascript
-import { HubMessage } from '@hubmessage/connect';
+import HubMessage from '@hubmessage/connect';
 
-const hub = new HubMessage({
+const client = HubMessage.newClient({
   publicKey: 'YOUR_PUBLIC_KEY'
 });
 ```
-
-<Tip>
-  Install the SDK via npm: [`@hubmessage/connect`](https://www.npmjs.com/package/@hubmessage/connect)
-</Tip>
 
 ---
 
@@ -56,5 +52,16 @@ curl -X GET https://api.hubmessage.io/whatsapp/businesses \
 
 | Key | Usage | Where to use | Can expose in frontend? |
 |---|---|---|---|
-| **Public Key** | Channel connection SDK | Frontend or backend | Yes |
-| **Secret Key** | All API calls | Backend only | No |
+| **Public Key** | [Channel connection SDK](/en/channels/connect-channel) | Frontend or backend | Yes |
+| **Secret Key** | All API calls ([channels](/en/channels/introduction), [templates](/en/templates/introduction), [messages](/en/messages/introduction)) | Backend only | No |
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Create a channel" icon="plug" href="/en/channels/create-channel">
+    Create your first channel to start sending messages.
+  </Card>
+  <Card title="Connect channel via SDK" icon="code" href="/en/channels/connect-channel">
+    Integrate the connection flow into your system.
+  </Card>
+</CardGroup>
