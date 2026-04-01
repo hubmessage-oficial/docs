@@ -1,0 +1,106 @@
+---
+title: "Official API Limitations"
+description: "Z-API features not available in the official WhatsApp API"
+---
+
+import { projectName } from '/snippets/variables.mdx';
+
+## About the limitations
+
+The official WhatsApp Business API has some limitations compared to Z-API (which uses an unofficial connection). Some features that existed in Z-API are **not supported** by the official API and, therefore, are not available in {projectName}.
+
+Below we list the affected features so you can assess the impact on your integration before migrating.
+
+---
+
+## Messages
+
+<CardGroup cols={1}>
+  <Card title="Delete message" icon="trash">
+    It is not possible to delete sent or received messages via the official API.
+
+    _Z-API reference: [delete-message](https://developer.z-api.io/message/delete-message)_
+  </Card>
+
+  <Card title="Edit message" icon="pen-to-square">
+    The `editMessageId` attribute in send endpoints is not supported. Sent messages cannot be edited.
+
+    _Z-API reference: `editMessageId` attribute in send endpoints_
+  </Card>
+
+  <Card title="Forward message" icon="share">
+    It is not possible to forward existing messages to other contacts.
+
+    _Z-API reference: [forward-message](https://developer.z-api.io/message/forward-message)_
+  </Card>
+
+  <Card title="Send GIF" icon="film">
+    Sending animated GIFs is not supported by the official API.
+
+    _Z-API reference: [send-message-gif](https://developer.z-api.io/message/send-message-gif)_
+  </Card>
+
+  <Card title="Send PTV (circular video)" icon="circle-play">
+    Sending circular videos (PTV) is not supported.
+
+    _Z-API reference: [send-message-ptv](https://developer.z-api.io/message/send-message-ptv)_
+  </Card>
+
+  <Card title="Edit document description" icon="file-pen">
+    The `editDocumentMessageId` attribute in the document send endpoint is not supported. It is not possible to edit the description of an already sent document.
+
+    _Z-API reference: `editDocumentMessageId` attribute in send-document_
+  </Card>
+
+  <Card title="Send OTP via button" icon="key">
+    Sending OTP via button is no longer possible. In the official API, OTP can only be sent via **message templates** approved by Meta.
+
+    _Z-API reference: [send-button-otp](https://developer.z-api.io/message/send-button-otp)_
+  </Card>
+
+  <Card title="Private reply in group" icon="user-secret">
+    Replying to messages works normally. However, the `privateAnswer` attribute (privately replying to a group message sender) is **not supported** by the official API.
+
+    _Z-API reference: `privateAnswer` attribute in reply-message_
+  </Card>
+
+  <Card title="Polls" icon="square-poll-vertical">
+    It is not possible to send polls or register poll votes via the official API.
+
+    _Z-API reference: [send-poll](https://developer.z-api.io/message/send-poll)_
+  </Card>
+
+  <Card title="Pin message" icon="thumbtack">
+    It is not possible to pin or unpin messages in conversations.
+
+    _Z-API reference: [send-pin-message](https://developer.z-api.io/message/send-pin-message)_
+  </Card>
+
+  <Card title="Events" icon="calendar">
+    It is not possible to send, edit, or reply to events via the official API.
+
+    _Z-API reference: [send-event](https://developer.z-api.io/message/send-event)_
+  </Card>
+
+  <Card title="Channel admin invite" icon="user-plus">
+    It is not possible to send channel (newsletter) admin invites via the official API.
+
+    _Z-API reference: [send-newsletter-admin-invite](https://developer.z-api.io/message/send-newsletter-admin-invite)_
+  </Card>
+</CardGroup>
+
+---
+
+## Contacts
+
+<Card title="Contacts APIs" icon="address-book">
+  Z-API's contacts APIs are not available in the official API. This includes the ability to **check if a number exists on WhatsApp** before sending a message.
+
+  _Z-API reference: [contacts/introduction](https://developer.z-api.io/contacts/introduction)_
+</Card>
+
+---
+
+<Info>
+  These limitations come from the official WhatsApp Business API (Meta) itself, not from {projectName}. If Meta makes these features available in the future, {projectName} will incorporate them.
+</Info>

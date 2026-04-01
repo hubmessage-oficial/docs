@@ -1,0 +1,106 @@
+---
+title: "Limitações da API Oficial"
+description: "Funcionalidades da Z-API que não estão disponíveis na API oficial do WhatsApp"
+---
+
+import { projectName } from '/snippets/variables.mdx';
+
+## Sobre as limitações
+
+A API oficial do WhatsApp Business possui algumas limitações em relação à Z-API (que utiliza conexão não oficial). Algumas funcionalidades que existiam na Z-API **não são suportadas** pela API oficial e, portanto, não estão disponíveis no {projectName}.
+
+Abaixo listamos as funcionalidades afetadas para que você avalie o impacto na sua integração antes de migrar.
+
+---
+
+## Mensagens
+
+<CardGroup cols={1}>
+  <Card title="Deletar mensagem" icon="trash">
+    Não é possível deletar mensagens enviadas ou recebidas via API oficial.
+
+    _Referência Z-API: [delete-message](https://developer.z-api.io/message/delete-message)_
+  </Card>
+
+  <Card title="Editar mensagem" icon="pen-to-square">
+    O atributo `editMessageId` dos endpoints de envio não é suportado. Mensagens enviadas não podem ser editadas.
+
+    _Referência Z-API: atributo `editMessageId` nos endpoints de envio_
+  </Card>
+
+  <Card title="Encaminhar mensagem" icon="share">
+    Não é possível encaminhar mensagens existentes para outros contatos.
+
+    _Referência Z-API: [forward-message](https://developer.z-api.io/message/forward-message)_
+  </Card>
+
+  <Card title="Enviar GIF" icon="film">
+    O envio de GIFs animados não é suportado pela API oficial.
+
+    _Referência Z-API: [send-message-gif](https://developer.z-api.io/message/send-message-gif)_
+  </Card>
+
+  <Card title="Enviar PTV (vídeo circular)" icon="circle-play">
+    O envio de vídeos circulares (PTV) não é suportado.
+
+    _Referência Z-API: [send-message-ptv](https://developer.z-api.io/message/send-message-ptv)_
+  </Card>
+
+  <Card title="Editar descrição de documento" icon="file-pen">
+    O atributo `editDocumentMessageId` do endpoint de envio de documento não é suportado. Não é possível editar a descrição de um documento já enviado.
+
+    _Referência Z-API: atributo `editDocumentMessageId` no send-document_
+  </Card>
+
+  <Card title="Enviar OTP via botão" icon="key">
+    O envio de OTP via botão não é mais possível. Na API oficial, o envio de OTP só é possível via **templates de mensagem** aprovados pela Meta.
+
+    _Referência Z-API: [send-button-otp](https://developer.z-api.io/message/send-button-otp)_
+  </Card>
+
+  <Card title="Resposta privada em grupo" icon="user-secret">
+    Responder mensagens funciona normalmente. Porém, o atributo `privateAnswer` (responder de forma privada ao remetente de uma mensagem em grupo) **não é suportado** pela API oficial.
+
+    _Referência Z-API: atributo `privateAnswer` no reply-message_
+  </Card>
+
+  <Card title="Enquetes" icon="square-poll-vertical">
+    Não é possível enviar enquetes nem registrar votos em enquetes via API oficial.
+
+    _Referência Z-API: [send-poll](https://developer.z-api.io/message/send-poll)_
+  </Card>
+
+  <Card title="Fixar mensagem" icon="thumbtack">
+    Não é possível fixar ou desafixar mensagens em conversas.
+
+    _Referência Z-API: [send-pin-message](https://developer.z-api.io/message/send-pin-message)_
+  </Card>
+
+  <Card title="Eventos" icon="calendar">
+    Não é possível enviar, editar ou responder eventos via API oficial.
+
+    _Referência Z-API: [send-event](https://developer.z-api.io/message/send-event)_
+  </Card>
+
+  <Card title="Convite de admin de canal" icon="user-plus">
+    Não é possível enviar convites de administrador de canal (newsletter) via API oficial.
+
+    _Referência Z-API: [send-newsletter-admin-invite](https://developer.z-api.io/message/send-newsletter-admin-invite)_
+  </Card>
+</CardGroup>
+
+---
+
+## Contatos
+
+<Card title="APIs de contatos" icon="address-book">
+  As APIs de contatos da Z-API não estão disponíveis na API oficial. Isso inclui a funcionalidade de **verificar se um número existe no WhatsApp** antes de enviar uma mensagem.
+
+  _Referência Z-API: [contacts/introduction](https://developer.z-api.io/contacts/introduction)_
+</Card>
+
+---
+
+<Info>
+  Estas limitações são da própria API oficial do WhatsApp Business (Meta) e não do {projectName}. Caso a Meta disponibilize essas funcionalidades futuramente, o {projectName} as incorporará.
+</Info>
