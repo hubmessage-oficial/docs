@@ -15,89 +15,202 @@ Below we list the affected features so you can assess the impact on your integra
 
 ## Messages
 
-<CardGroup cols={1}>
-  <Card title="Delete message" icon="trash">
-    It is not possible to delete sent or received messages via the official API.
-
-    _Z-API reference: [delete-message](https://developer.z-api.io/message/delete-message)_
-  </Card>
-
-  <Card title="Edit message" icon="pen-to-square">
-    The `editMessageId` attribute in send endpoints is not supported. Sent messages cannot be edited.
-
-    _Z-API reference: `editMessageId` attribute in send endpoints_
-  </Card>
-
-  <Card title="Forward message" icon="share">
-    It is not possible to forward existing messages to other contacts.
-
-    _Z-API reference: [forward-message](https://developer.z-api.io/message/forward-message)_
-  </Card>
-
-  <Card title="Send GIF" icon="film">
-    Sending animated GIFs is not supported by the official API.
-
-    _Z-API reference: [send-message-gif](https://developer.z-api.io/message/send-message-gif)_
-  </Card>
-
-  <Card title="Send PTV (circular video)" icon="circle-play">
-    Sending circular videos (PTV) is not supported.
-
-    _Z-API reference: [send-message-ptv](https://developer.z-api.io/message/send-message-ptv)_
-  </Card>
-
-  <Card title="Edit document description" icon="file-pen">
-    The `editDocumentMessageId` attribute in the document send endpoint is not supported. It is not possible to edit the description of an already sent document.
-
-    _Z-API reference: `editDocumentMessageId` attribute in send-document_
-  </Card>
-
-  <Card title="Send OTP via button" icon="key">
-    Sending OTP via button is no longer possible. In the official API, OTP can only be sent via **message templates** approved by Meta.
-
-    _Z-API reference: [send-button-otp](https://developer.z-api.io/message/send-button-otp)_
-  </Card>
-
-  <Card title="Private reply in group" icon="user-secret">
-    Replying to messages works normally. However, the `privateAnswer` attribute (privately replying to a group message sender) is **not supported** by the official API.
-
-    _Z-API reference: `privateAnswer` attribute in reply-message_
-  </Card>
-
-  <Card title="Polls" icon="square-poll-vertical">
-    It is not possible to send polls or register poll votes via the official API.
-
-    _Z-API reference: [send-poll](https://developer.z-api.io/message/send-poll)_
-  </Card>
-
-  <Card title="Pin message" icon="thumbtack">
-    It is not possible to pin or unpin messages in conversations.
-
-    _Z-API reference: [send-pin-message](https://developer.z-api.io/message/send-pin-message)_
-  </Card>
-
-  <Card title="Events" icon="calendar">
-    It is not possible to send, edit, or reply to events via the official API.
-
-    _Z-API reference: [send-event](https://developer.z-api.io/message/send-event)_
-  </Card>
-
-  <Card title="Channel admin invite" icon="user-plus">
-    It is not possible to send channel (newsletter) admin invites via the official API.
-
-    _Z-API reference: [send-newsletter-admin-invite](https://developer.z-api.io/message/send-newsletter-admin-invite)_
-  </Card>
-</CardGroup>
-
----
+| Feature | Z-API Route | Status |
+|---|---|---|
+| Delete message | [`DELETE /messages`](https://developer.z-api.io/message/delete-message) | ❌ Not supported |
+| Edit message | `editMessageId` attribute in send endpoints | ❌ Not supported |
+| Forward message | [`POST /forward-message`](https://developer.z-api.io/message/forward-message) | ❌ Not supported |
+| Send GIF | [`POST /send-gif`](https://developer.z-api.io/message/send-message-gif) | ❌ Not supported |
+| Send PTV (circular video) | [`POST /send-ptv`](https://developer.z-api.io/message/send-message-ptv) | ❌ Not supported |
+| Edit document description | `editDocumentMessageId` attribute in send-document | ❌ Not supported |
+| Send OTP via button | [`POST /send-button-otp`](https://developer.z-api.io/message/send-button-otp) | ⚠️ Template only |
+| Private reply in group | `privateAnswer` attribute in reply-message | ❌ Not supported |
+| Send poll / vote | [`POST /send-poll`](https://developer.z-api.io/message/send-poll) | ❌ Not supported |
+| Pin message | [`POST /pin-message`](https://developer.z-api.io/message/send-pin-message) | ❌ Not supported |
+| Send / edit / reply event | [`POST /send-event`](https://developer.z-api.io/message/send-event) | ❌ Not supported |
+| Channel admin invite | [`POST /send-newsletter-admin-invite`](https://developer.z-api.io/message/send-newsletter-admin-invite) | ❌ Not supported |
 
 ## Contacts
 
-<Card title="Contacts APIs" icon="address-book">
-  Z-API's contacts APIs are not available in the official API. This includes the ability to **check if a number exists on WhatsApp** before sending a message.
+| Feature | Z-API Route | Status |
+|---|---|---|
+| List contacts | [`GET /contacts?page=&pageSize=`](https://developer.z-api.io/contacts/get-contacts) | ❌ Not supported |
+| Add contacts | [`POST /contacts/add`](https://developer.z-api.io/contacts/add-contacts) | ❌ Not supported |
+| Remove contacts | [`DELETE /contacts/remove`](https://developer.z-api.io/contacts/remove-contacts) | ❌ Not supported |
+| Contact metadata | [`GET /contacts/{phone}`](https://developer.z-api.io/contacts/get-metadata-contact) | ❌ Not supported |
+| Profile picture | [`GET /profile-picture?phone={phone}`](https://developer.z-api.io/contacts/get-profile-picture) | ❌ Not supported |
+| Check WhatsApp number | [`GET /phone-exists/{phone}`](https://developer.z-api.io/contacts/get-iswhatsapp) | ❌ Not supported |
+| Check numbers in batch | [`POST /phone-exists-batch`](https://developer.z-api.io/contacts/get-iswhatsapp-batch) | ❌ Not supported |
+| Block / unblock contact | [`POST /contacts/modify-blocked`](https://developer.z-api.io/contacts/block-contact) | ❌ Not supported |
+| Report contact | [`POST /contacts/{phone}/report`](https://developer.z-api.io/contacts/report-contact) | ❌ Not supported |
 
-  _Z-API reference: [contacts/introduction](https://developer.z-api.io/contacts/introduction)_
-</Card>
+## Groups
+
+<Info>
+  The official WhatsApp API supports groups, but with limited features compared to Z-API. Features supported by the official API are marked as **In development** and will be available soon in {projectName}.
+</Info>
+
+| Feature | Z-API Route | Status |
+|---|---|---|
+| Create group | [`POST /create-group`](https://developer.z-api.io/group/create-group) | 🔧 **In development** |
+| Group metadata | [`GET /group-metadata/{phone}`](https://developer.z-api.io/group/metadata-group) | 🔧 **In development** |
+| Remove participants | [`POST /remove-participant`](https://developer.z-api.io/group/remove-participant) | 🔧 **In development** |
+| Approve participants | [`POST /approve-participant`](https://developer.z-api.io/group/approve-participant) | 🔧 **In development** |
+| Reject participants | [`POST /reject-participant`](https://developer.z-api.io/group/reject-participant) | 🔧 **In development** |
+| Get invite link | [`GET /group-invitation-link/{id}`](https://developer.z-api.io/group/get-invitation-link) | 🔧 **In development** |
+| Redefine invite link | [`POST /redefine-invitation-link/{id}`](https://developer.z-api.io/group/redefine-invitation-link) | 🔧 **In development** |
+| Update description | [`POST /update-group-description`](https://developer.z-api.io/group/update-group-description) | 🔧 **In development** |
+| Update group name | [`POST /update-group-name`](https://developer.z-api.io/group/update-group-name) | 🔧 **In development** |
+| Update group photo | [`POST /update-group-photo`](https://developer.z-api.io/group/update-group-photo) | 🔧 **In development** |
+| List groups | [`GET /groups`](https://developer.z-api.io/group/get-groups) | ❌ Not supported |
+| Group metadata (light) | [`GET /light-group-metadata/{phone}`](https://developer.z-api.io/group/light-group-metadata) | ❌ Not supported |
+| Group settings | [`POST /update-group-settings`](https://developer.z-api.io/group/update-group-settings) | ❌ Not supported |
+| Add participants | [`POST /add-participant`](https://developer.z-api.io/group/add-participant) | ❌ Not supported |
+| Promote admin | [`POST /add-admin`](https://developer.z-api.io/group/add-admin) | ❌ Not supported |
+| Remove admin | [`POST /remove-admin`](https://developer.z-api.io/group/remove-admin) | ❌ Not supported |
+| Leave group | [`POST /leave-group`](https://developer.z-api.io/group/leave-group) | ❌ Not supported |
+| Mention member | [`POST /send-text`](https://developer.z-api.io/group/mention-participant) | ❌ Not supported |
+| Mention group | [`POST /send-text`](https://developer.z-api.io/group/mention-group) | ❌ Not supported |
+| Metadata by invite | [`GET /group-invitation-metadata?url=`](https://developer.z-api.io/group/group-invitation-metadata) | ❌ Not supported |
+| Accept invite | [`GET /accept-invite-group?url=`](https://developer.z-api.io/group/accept-group-invite) | ❌ Not supported |
+
+## Business
+
+### Company profile
+
+| Feature | Z-API Route | Status |
+|---|---|---|
+| Business profile data | [`GET /business/profile`](https://developer.z-api.io/business/profile) | 🔧 **In development** |
+| Update company description | [`POST /business/company-description`](https://developer.z-api.io/business/company-description) | 🔧 **In development** |
+| Update company email | [`POST /business/company-email`](https://developer.z-api.io/business/company-email) | 🔧 **In development** |
+| Update business address | [`POST /business/company-address`](https://developer.z-api.io/business/company-address) | 🔧 **In development** |
+| Update company websites | [`POST /business/company-websites`](https://developer.z-api.io/business/company-websites) | 🔧 **In development** |
+| Assign categories | [`POST /business/categories`](https://developer.z-api.io/business/company-categories) | 🔧 **In development** |
+
+### Catalog and products
+
+| Feature | Z-API Route | Status |
+|---|---|---|
+| Create/edit product | [`POST /products`](https://developer.z-api.io/business/edit-product) | 🔧 **In development** |
+| List products | [`GET /catalogs`](https://developer.z-api.io/business/get-products) | 🔧 **In development** |
+| Get product by ID | [`GET /products/{productId}`](https://developer.z-api.io/business/get-product-id) | 🔧 **In development** |
+| Delete product | [`DELETE /products/{productId}`](https://developer.z-api.io/business/delete-product) | 🔧 **In development** |
+| Catalog config | [`POST /catalogs/config`](https://developer.z-api.io/business/save-catalog-config) | 🔧 **In development** |
+| Create collection | [`POST /catalogs/collection`](https://developer.z-api.io/business/create-collection) | 🔧 **In development** |
+| List collections | [`GET /catalogs/collection`](https://developer.z-api.io/business/list-collections) | 🔧 **In development** |
+| Delete collection | [`DELETE /catalogs/collection/{id}`](https://developer.z-api.io/business/delete-collection) | 🔧 **In development** |
+| Edit collection | [`POST /catalogs/collection-edit/{id}`](https://developer.z-api.io/business/edit-collection) | 🔧 **In development** |
+| List collection products | [`GET /catalogs/collection-products/{phone}`](https://developer.z-api.io/business/list-collection-products) | 🔧 **In development** |
+| Add product to collection | [`POST /catalogs/collection/add-product`](https://developer.z-api.io/business/add-product-to-collection) | 🔧 **In development** |
+| Remove product from collection | [`POST /catalogs/collection/remove-product`](https://developer.z-api.io/business/remove-product-from-collection) | 🔧 **In development** |
+| List products (phone) | [`GET /catalogs/{phone}`](https://developer.z-api.io/business/get-products-phone) | ❌ Not supported |
+| List products V2 | [`POST /catalogs`](https://developer.z-api.io/business/get-products-v2) | ❌ Not supported |
+| List products V2 (phone) | [`POST /catalogs/{phone}`](https://developer.z-api.io/business/get-products-phone-v2) | ❌ Not supported |
+
+### Labels
+
+| Feature | Z-API Route | Status |
+|---|---|---|
+| List tags | [`GET /tags`](https://developer.z-api.io/business/tags) | ❌ Not supported |
+| Create tag | [`POST /business/create-tag`](https://developer.z-api.io/business/create-tag) | ❌ Not supported |
+| Edit tag | [`POST /business/edit-tag/{tagId}`](https://developer.z-api.io/business/edit-tag) | ❌ Not supported |
+| Delete tag | [`DELETE /business/tag/{tagId}`](https://developer.z-api.io/business/delete-tag) | ❌ Not supported |
+| Assign tag to chat | [`PUT /chats/{phone}/tags/{tag}/add`](https://developer.z-api.io/business/tags-add) | ❌ Not supported |
+| Remove tag from chat | [`PUT /chats/{phone}/tags/{tag}/remove`](https://developer.z-api.io/business/tags-remove) | ❌ Not supported |
+| Tag colors | [`GET /business/tags/colors`](https://developer.z-api.io/business/tags-colors) | ❌ Not supported |
+
+### Other
+
+| Feature | Z-API Route | Status |
+|---|---|---|
+| Chat notes | [`POST /chats/{phone}/notes`](https://developer.z-api.io/business/chats-notes) | ❌ Not supported |
+| Update business hours | [`POST /business/hours`](https://developer.z-api.io/business/business-hours) | ❌ Not supported |
+| List categories | [`GET /business/available-categories`](https://developer.z-api.io/business/available-categories) | ❌ Not supported |
+
+## Status
+
+| Feature | Z-API Route | Status |
+|---|---|---|
+| Send text status | [`POST /send-text-status`](https://developer.z-api.io/status/send-text-status) | ❌ Not supported |
+| Send image status | [`POST /send-image-status`](https://developer.z-api.io/status/send-image-status) | ❌ Not supported |
+| Send video status | [`POST /send-video-status`](https://developer.z-api.io/status/send-video-status) | ❌ Not supported |
+| Reply status with text | [`POST /reply-status-text`](https://developer.z-api.io/status/reply-status-text) | ❌ Not supported |
+| Reply status with GIF | [`POST /reply-status-gif`](https://developer.z-api.io/status/reply-status-gif) | ❌ Not supported |
+| Reply status with sticker | [`POST /reply-status-sticker`](https://developer.z-api.io/status/reply-status-sticker) | ❌ Not supported |
+
+## Channels (Newsletter)
+
+| Feature | Z-API Route | Status |
+|---|---|---|
+| Create channel | [`POST /create-newsletter`](https://developer.z-api.io/newsletter/create-newsletter) | ❌ Not supported |
+| Update channel picture | [`POST /update-newsletter-picture`](https://developer.z-api.io/newsletter/update-newsletter-picture) | ❌ Not supported |
+| Update channel name | [`POST /update-newsletter-name`](https://developer.z-api.io/newsletter/update-newsletter-name) | ❌ Not supported |
+| Update channel description | [`POST /update-newsletter-description`](https://developer.z-api.io/newsletter/update-newsletter-description) | ❌ Not supported |
+| Follow channel | [`PUT /follow-newsletter`](https://developer.z-api.io/newsletter/follow-newsletter) | ❌ Not supported |
+| Unfollow channel | [`PUT /unfollow-newsletter`](https://developer.z-api.io/newsletter/unfollow-newsletter) | ❌ Not supported |
+| Mute channel | [`PUT /mute-newsletter`](https://developer.z-api.io/newsletter/mute-newsletter) | ❌ Not supported |
+| Unmute channel | [`PUT /unmute-newsletter`](https://developer.z-api.io/newsletter/unmute-newsletter) | ❌ Not supported |
+| Delete channel | [`DELETE /delete-newsletter`](https://developer.z-api.io/newsletter/delete-newsletter) | ❌ Not supported |
+| Channel metadata | [`GET /newsletter/metadata/{id}`](https://developer.z-api.io/newsletter/newsletter-metadata) | ❌ Not supported |
+| List channels | [`GET /newsletter`](https://developer.z-api.io/newsletter/newsletter-list) | ❌ Not supported |
+| Search channels | [`POST /search-newsletter`](https://developer.z-api.io/newsletter/search-newsletter) | ❌ Not supported |
+| Channel settings | [`POST /newsletter/settings/{id}`](https://developer.z-api.io/newsletter/update-newsletter-config) | ❌ Not supported |
+| Accept admin invite | [`POST /newsletter/accept-admin-invite/{id}`](https://developer.z-api.io/newsletter/accept-newsletter-admin-invite) | ❌ Not supported |
+| Remove channel admin | [`POST /newsletter/remove-admin/{id}`](https://developer.z-api.io/newsletter/newsletter-remove-admin) | ❌ Not supported |
+| Revoke admin invite | [`POST /newsletter/revoke-admin-invite/{id}`](https://developer.z-api.io/newsletter/newsletter-revoke-admin-invite) | ❌ Not supported |
+| Transfer ownership | [`POST /newsletter/transfer-ownership/{id}`](https://developer.z-api.io/newsletter/transfer-newsletter-ownership) | ❌ Not supported |
+
+## Chats
+
+| Feature | Z-API Route | Status |
+|---|---|---|
+| List chats | [`GET /chats`](https://developer.z-api.io/chats/get-chats) | ❌ Not supported |
+| Chat metadata | [`GET /chats/{phone}`](https://developer.z-api.io/chats/get-metadata-chat) | ❌ Not supported |
+| Read chat | [`POST /modify-chat`](https://developer.z-api.io/chats/read-chat) | ❌ Not supported |
+| Archive chat | [`POST /modify-chat`](https://developer.z-api.io/chats/archive-chat) | ❌ Not supported |
+| Pin chat | [`POST /modify-chat`](https://developer.z-api.io/chats/pin-chat) | ❌ Not supported |
+| Mute chat | [`POST /modify-chat`](https://developer.z-api.io/chats/mute-chat) | ❌ Not supported |
+| Clear chat | [`POST /modify-chat`](https://developer.z-api.io/chats/clear-chat) | ❌ Not supported |
+| Delete chat | [`POST /modify-chat`](https://developer.z-api.io/chats/delete-chat) | ❌ Not supported |
+| Chat expiration | [`POST /send-chat-expiration`](https://developer.z-api.io/chats/send-chat-expiration) | ❌ Not supported |
+
+## Communities
+
+| Feature | Z-API Route | Status |
+|---|---|---|
+| Create community | [`POST /communities`](https://developer.z-api.io/communities/create-community) | ❌ Not supported |
+| List communities | [`GET /communities`](https://developer.z-api.io/communities/list-communities) | ❌ Not supported |
+| Link groups | [`POST /communities/link`](https://developer.z-api.io/communities/link-groups) | ❌ Not supported |
+| Unlink groups | [`POST /communities/unlink`](https://developer.z-api.io/communities/unlink-groups) | ❌ Not supported |
+| Community metadata | [`GET /communities-metadata/{id}`](https://developer.z-api.io/communities/community-metadata) | ❌ Not supported |
+| Redefine invitation link | [`POST /redefine-invitation-link/{id}`](https://developer.z-api.io/communities/redefine-invitation-link) | ❌ Not supported |
+| Add participants | [`POST /add-participant`](https://developer.z-api.io/communities/add-community-participant) | ❌ Not supported |
+| Remove participants | [`POST /remove-participant`](https://developer.z-api.io/communities/remove-community-participant) | ❌ Not supported |
+| Promote admin | [`POST /add-admin`](https://developer.z-api.io/communities/add-community-admin) | ❌ Not supported |
+| Remove admin | [`POST /remove-admin`](https://developer.z-api.io/communities/remove-community-admin) | ❌ Not supported |
+| Community settings | [`POST /communities/settings`](https://developer.z-api.io/communities/community-settings) | ❌ Not supported |
+| Deactivate community | [`DELETE /communities/{id}`](https://developer.z-api.io/communities/deactivate-community) | ❌ Not supported |
+| Update description | [`POST /update-community-description`](https://developer.z-api.io/communities/update-community-description) | ❌ Not supported |
+
+## Calls
+
+| Feature | Z-API Route | Status |
+|---|---|---|
+| Make call | [`POST /send-call`](https://developer.z-api.io/calls/send-call) | ❌ Not supported |
+| Generate call token | [`GET /call-token`](https://developer.z-api.io/calls/call-token) | ❌ Not supported |
+
+## Privacy
+
+| Feature | Z-API Route | Status |
+|---|---|---|
+| Disallowed contacts | [`GET /privacy/disallowed-contacts`](https://developer.z-api.io/privacy/get-disallowed-contacts) | ❌ Not supported |
+| Last seen | [`POST /privacy/last-seen`](https://developer.z-api.io/privacy/set-last-seen) | ❌ Not supported |
+| Profile picture visibility | [`POST /privacy/photo`](https://developer.z-api.io/privacy/set-photo-visualization) | ❌ Not supported |
+| About visibility | [`POST /privacy/description`](https://developer.z-api.io/privacy/set-privacy-description) | ❌ Not supported |
+| Group add permission | [`POST /privacy/group-add`](https://developer.z-api.io/privacy/set-group-add-permission) | ❌ Not supported |
+| Online visibility | [`POST /privacy/online`](https://developer.z-api.io/privacy/set-privacy-online) | ❌ Not supported |
+| Read receipts | [`POST /privacy/read-receipts`](https://developer.z-api.io/privacy/set-read-receipts) | ❌ Not supported |
+| Messages duration | [`POST /privacy/messages-duration`](https://developer.z-api.io/privacy/set-messages-duration) | ❌ Not supported |
 
 ---
 
