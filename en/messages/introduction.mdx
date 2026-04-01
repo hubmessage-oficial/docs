@@ -1,0 +1,51 @@
+---
+title: "Introduction"
+description: "Understand how free messages work in Hub Message"
+---
+
+import { projectName } from '/snippets/variables.mdx';
+
+## What are free messages?
+
+Free messages are messages you send **without needing an approved template**. You can send text, image, audio, video, document — any supported format — with complete freedom of content.
+
+The only condition: the [conversation window](/en/conversation-window) of **24 hours** must be open.
+
+## When can I use them?
+
+The window opens when the **customer sends you a message**. From that moment, you have 24 hours to send free messages. Each new message from the customer resets the timer.
+
+```
+Customer sends message → Window opens (24h) → You send free messages
+```
+
+## What if the window is closed?
+
+If the customer hasn't sent a message in the last 24 hours, the window is closed. In this case, the only option is to send a **Meta-approved template** through the [Send template](/en/messages/send-template) endpoint.
+
+After the customer **replies** to the template, the window reopens and you can use free messages again.
+
+```
+Window closed → Send template → Customer replies → Window reopens (24h)
+```
+
+<Info>
+  Need to send a template? See how at [Send template](/en/messages/send-template). To create and manage your templates, go to the [Templates](/en/templates/introduction) section.
+</Info>
+
+## Available types
+
+All endpoints in this section use the same route:
+
+`POST /v1/channels/{channelId}/messages`
+
+What changes is the `content.type` field:
+
+| Type | Description |
+|---|---|
+| `TEXT` | Simple text message |
+| `IMAGE` | Image message |
+
+<Note>
+  New types will be added as the platform evolves.
+</Note>

@@ -1,0 +1,15 @@
+---
+title: "Enviar vídeo"
+description: "Envie mensagens com vídeo"
+openapi: "/messages/openapi-video.json POST /v1/channels/{channelId}/messages"
+---
+
+## Conceituação
+
+Envia uma mensagem com vídeo para um contato. O campo `content.type` deve ser `VIDEO` e o vídeo é enviado via URL no array `attachments`.
+
+Opcionalmente, você pode incluir uma `caption` (legenda) junto ao vídeo.
+
+<Note>
+  Este endpoint só funciona quando a [janela de conversa](/conversation-window) de 24 horas estiver aberta.
+</Note>

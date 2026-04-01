@@ -1,0 +1,15 @@
+---
+title: "Send image"
+description: "Send image messages"
+openapi: "/messages/openapi-image.json POST /v1/channels/{channelId}/messages"
+---
+
+## Overview
+
+Sends an image message to a contact. The `type` field must be `IMAGE` and the image is sent via URL in the `attachments` array.
+
+Optionally, you can include a `caption` with the image.
+
+<Note>
+  This endpoint only works when the [conversation window](/en/conversation-window) is open (24 hours).
+</Note>

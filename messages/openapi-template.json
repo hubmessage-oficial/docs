@@ -1,0 +1,259 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Enviar Template",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.hubmessage.io"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/v1/channels/{channelId}/messages": {
+      "post": {
+        "summary": "Enviar template",
+        "description": "Envia um template de mensagem aprovado pela Meta.",
+        "operationId": "sendTemplateMessage",
+        "tags": ["Mensagens"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "ID do canal",
+            "schema": {
+              "type": "string",
+              "example": "SEU_CHANNEL_ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendTemplateRequest"
+              },
+              "examples": {
+                "sem_parametros": {
+                  "summary": "Sem parâmetros",
+                  "value": {
+                    "recipient": {
+                      "identifier": "5511999999999"
+                    },
+                    "content": {
+                      "type": "TEMPLATE",
+                      "attachments": [
+                        {
+                          "template": {
+                            "name": "boas_vindas_v2",
+                            "language": {
+                              "policy": "deterministic",
+                              "code": "pt_BR"
+                            },
+                            "components": [
+                              {
+                                "type": "body",
+                                "parameters": []
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                "com_parametros": {
+                  "summary": "Com parâmetros",
+                  "value": {
+                    "recipient": {
+                      "identifier": "5511999999999"
+                    },
+                    "content": {
+                      "type": "TEMPLATE",
+                      "attachments": [
+                        {
+                          "template": {
+                            "name": "atualizacao_pedido_v1",
+                            "language": {
+                              "policy": "deterministic",
+                              "code": "pt_BR"
+                            },
+                            "components": [
+                              {
+                                "type": "body",
+                                "parameters": [
+                                  { "type": "text", "text": "Ana" },
+                                  { "type": "text", "text": "PED-1024" },
+                                  { "type": "text", "text": "em transporte" }
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mensagem enviada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                },
+                "example": {
+                  "messageId": "wamid.HBgNNTU0NDk3MDUwNzg1FQIAERgSM0"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": 401,
+                  "message": "Unauthorized"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SendTemplateRequest": {
+        "type": "object",
+        "required": ["recipient", "content"],
+        "properties": {
+          "recipient": {
+            "type": "object",
+            "required": ["identifier"],
+            "properties": {
+              "identifier": {
+                "type": "string",
+                "description": "Telefone do destinatário (DDI + DDD + número)",
+                "example": "5511999999999"
+              }
+            }
+          },
+          "content": {
+            "type": "object",
+            "required": ["type", "attachments"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Tipo da mensagem",
+                "enum": ["TEMPLATE"]
+              },
+              "attachments": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "template": {
+                      "type": "object",
+                      "required": ["name", "language", "components"],
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "Nome do template aprovado"
+                        },
+                        "language": {
+                          "type": "object",
+                          "properties": {
+                            "policy": {
+                              "type": "string",
+                              "description": "Política de idioma",
+                              "enum": ["deterministic"]
+                            },
+                            "code": {
+                              "type": "string",
+                              "description": "Código do idioma (ex: pt_BR, en_US)"
+                            }
+                          }
+                        },
+                        "components": {
+                          "type": "array",
+                          "description": "Componentes com parâmetros dinâmicos",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "description": "Tipo do componente (body, header, button)"
+                              },
+                              "parameters": {
+                                "type": "array",
+                                "description": "Valores dos placeholders",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string"
+                                    },
+                                    "text": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "messageId": {
+            "type": "string",
+            "description": "ID da mensagem enviada"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Secret Key gerada no painel de Segurança do Hub Message"
+      }
+    }
+  }
+}

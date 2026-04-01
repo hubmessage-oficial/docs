@@ -1,0 +1,13 @@
+---
+title: "Enviar sticker"
+description: "Envie stickers (figurinhas) via WhatsApp"
+openapi: "/messages/openapi-sticker.json POST /v1/channels/{channelId}/messages"
+---
+
+## Conceituação
+
+Envia um sticker (figurinha) para um contato. O campo `content.type` deve ser `STICKER` e o sticker é enviado via URL no array `attachments`.
+
+<Note>
+  Este endpoint só funciona quando a [janela de conversa](/conversation-window) de 24 horas estiver aberta.
+</Note>

@@ -1,0 +1,13 @@
+---
+title: "Enviar contato"
+description: "Envie contatos via WhatsApp"
+openapi: "/messages/openapi-contact.json POST /v1/channels/{channelId}/messages"
+---
+
+## Conceituação
+
+Envia um contato para um destinatário. O campo `content.type` deve ser `CONTACT`. Você pode enviar múltiplos telefones no array `phones`.
+
+<Note>
+  Este endpoint só funciona quando a [janela de conversa](/conversation-window) de 24 horas estiver aberta.
+</Note>

@@ -1,0 +1,20 @@
+---
+title: "Send action buttons"
+description: "Send messages with action buttons (URL and call)"
+openapi: "/messages/openapi-interactive-action.json POST /v1/channels/{channelId}/messages"
+---
+
+## Overview
+
+Sends a message with action buttons to a contact. The `type` field must be `INTERACTIVE_ACTION`.
+
+Available button types:
+
+- **URL** — Opens a link when clicked
+- **CALL** — Calls a number when clicked
+
+The `header` and `footer` fields are optional.
+
+<Note>
+  This endpoint only works when the [conversation window](/en/conversation-window) is open (24 hours).
+</Note>

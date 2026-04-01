@@ -1,0 +1,13 @@
+---
+title: "Send audio"
+description: "Send audio messages"
+openapi: "/messages/openapi-audio.json POST /v1/channels/{channelId}/messages"
+---
+
+## Overview
+
+Sends an audio message to a contact. The `type` field must be `AUDIO` and the audio is sent via URL in the `attachments` array.
+
+<Note>
+  This endpoint only works when the [conversation window](/en/conversation-window) is open (24 hours).
+</Note>

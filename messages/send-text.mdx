@@ -1,0 +1,13 @@
+---
+title: "Enviar texto"
+description: "Envie mensagens de texto simples"
+openapi: "/messages/openapi.json POST /v1/channels/{channelId}/messages"
+---
+
+## Conceituação
+
+Envia uma mensagem de texto simples para um contato. O campo `content.type` deve ser `TEXT`.
+
+<Note>
+  Este endpoint só funciona quando a [janela de conversa](/conversation-window) de 24 horas estiver aberta.
+</Note>

@@ -1,0 +1,184 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Enviar Botões de Ação",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/v1/channels/{channelId}/messages": {
+      "post": {
+        "summary": "Enviar botões de ação",
+        "description": "Envia uma mensagem com botões de ação (URL e/ou ligar).",
+        "operationId": "sendInteractiveActionMessage",
+        "tags": ["Mensagens"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "ID do canal",
+            "schema": { "type": "string", "example": "SEU_CHANNEL_ID" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendInteractiveActionRequest" },
+              "examples": {
+                "url_e_call": {
+                  "summary": "URL + Ligar",
+                  "value": {
+                    "recipient": { "identifier": "5511999999999" },
+                    "content": {
+                      "type": "INTERACTIVE_ACTION",
+                      "body": { "message": "Como podemos ajudar?" },
+                      "header": { "message": "Hub Message" },
+                      "footer": { "message": "Escolha uma opção" },
+                      "attachments": [
+                        {
+                          "id": "1",
+                          "title": "Visite nosso site",
+                          "name": "URL",
+                          "url": "https://www.hubmessage.io"
+                        },
+                        {
+                          "id": "2",
+                          "title": "Fale conosco",
+                          "name": "CALL",
+                          "phones": ["5511999999999"]
+                        }
+                      ]
+                    }
+                  }
+                },
+                "apenas_url": {
+                  "summary": "Apenas URL",
+                  "value": {
+                    "recipient": { "identifier": "5511999999999" },
+                    "content": {
+                      "type": "INTERACTIVE_ACTION",
+                      "body": { "message": "Confira nosso site" },
+                      "attachments": [
+                        {
+                          "id": "1",
+                          "title": "Acessar site",
+                          "name": "URL",
+                          "url": "https://www.hubmessage.io"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "MessageSuccess": {
+        "description": "Mensagem enviada com sucesso",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/MessageResponse" },
+            "example": { "messageId": "wamid.HBgNNTU0NDk3MDUwNzg1FQIAERgSM0" }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Token inválido ou ausente.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 401, "message": "Unauthorized" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "SendInteractiveActionRequest": {
+        "type": "object",
+        "required": ["recipient", "content"],
+        "properties": {
+          "recipient": {
+            "type": "object",
+            "required": ["identifier"],
+            "properties": {
+              "identifier": { "type": "string", "description": "Telefone do destinatário (DDI + DDD + número)", "example": "5511999999999" }
+            }
+          },
+          "content": {
+            "type": "object",
+            "required": ["type", "body", "attachments"],
+            "properties": {
+              "type": { "type": "string", "description": "Tipo da mensagem", "enum": ["INTERACTIVE_ACTION"] },
+              "body": {
+                "type": "object",
+                "required": ["message"],
+                "properties": {
+                  "message": { "type": "string", "description": "Texto principal da mensagem" }
+                }
+              },
+              "header": {
+                "type": "object",
+                "properties": {
+                  "message": { "type": "string", "description": "Título da mensagem" }
+                }
+              },
+              "footer": {
+                "type": "object",
+                "properties": {
+                  "message": { "type": "string", "description": "Rodapé da mensagem" }
+                }
+              },
+              "attachments": {
+                "type": "array",
+                "description": "Lista de botões de ação",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "title", "name"],
+                  "properties": {
+                    "id": { "type": "string", "description": "Identificador do botão" },
+                    "title": { "type": "string", "description": "Texto exibido no botão" },
+                    "name": { "type": "string", "description": "Tipo do botão", "enum": ["URL", "CALL"] },
+                    "url": { "type": "string", "description": "URL para botões do tipo URL" },
+                    "phones": {
+                      "type": "array",
+                      "description": "Telefone para botões do tipo CALL",
+                      "items": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "messageId": { "type": "string", "description": "ID da mensagem enviada" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer", "description": "Secret Key gerada no painel de Segurança do Hub Message" }
+    }
+  }
+}

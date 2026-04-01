@@ -8,7 +8,7 @@
     "dark": "#3347CC"
   },
   "favicon": "/favicon.svg",
-  "openapi": ["/z-api/openapi.json", "/templates/openapi.json"],
+  "openapi": ["/z-api/openapi.json", "/templates/openapi.json", "/messages/openapi.json", "/messages/openapi-image.json", "/messages/openapi-audio.json", "/messages/openapi-video.json", "/messages/openapi-contact.json", "/messages/openapi-sticker.json", "/messages/openapi-interactive-action.json", "/messages/openapi-interactive-button.json", "/messages/openapi-template.json"],
   "navigation": {
     "languages": [
       {
@@ -34,7 +34,22 @@
                   "templates/sync-templates",
                   "templates/create-template",
                   "templates/update-template",
-                  "templates/delete-template"
+                  "templates/delete-template",
+                  "messages/send-template"
+                ]
+              },
+              {
+                "group": "Mensagens livres",
+                "pages": [
+                  "messages/introduction",
+                  "messages/send-text",
+                  "messages/send-image",
+                  "messages/send-audio",
+                  "messages/send-video",
+                  "messages/send-contact",
+                  "messages/send-sticker",
+                  "messages/send-interactive-action",
+                  "messages/send-interactive-button"
                 ]
               }
             ]
@@ -100,7 +115,22 @@
                   "en/templates/sync-templates",
                   "en/templates/create-template",
                   "en/templates/update-template",
-                  "en/templates/delete-template"
+                  "en/templates/delete-template",
+                  "en/messages/send-template"
+                ]
+              },
+              {
+                "group": "Free messages",
+                "pages": [
+                  "en/messages/introduction",
+                  "en/messages/send-text",
+                  "en/messages/send-image",
+                  "en/messages/send-audio",
+                  "en/messages/send-video",
+                  "en/messages/send-contact",
+                  "en/messages/send-sticker",
+                  "en/messages/send-interactive-action",
+                  "en/messages/send-interactive-button"
                 ]
               }
             ]

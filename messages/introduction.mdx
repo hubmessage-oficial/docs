@@ -1,0 +1,51 @@
+---
+title: "Introdução"
+description: "Entenda como funcionam as mensagens livres no Hub Message"
+---
+
+import { projectName } from '/snippets/variables.mdx';
+
+## O que são mensagens livres?
+
+Mensagens livres são mensagens que você envia **sem precisar de um template aprovado**. Você pode enviar texto, imagem, áudio, vídeo, documento — qualquer formato suportado — com total liberdade de conteúdo.
+
+A única condição: a [janela de conversa](/conversation-window) de **24 horas** precisa estar aberta.
+
+## Quando posso usar?
+
+A janela abre quando o **cliente envia uma mensagem para você**. A partir desse momento, você tem 24 horas para enviar mensagens livres. Cada nova mensagem do cliente reinicia o timer.
+
+```
+Cliente envia mensagem → Janela abre (24h) → Você envia mensagens livres
+```
+
+## E se a janela estiver fechada?
+
+Se o cliente não enviou mensagem nas últimas 24 horas, a janela está fechada. Nesse caso, a única opção é enviar um **template aprovado pela Meta** através do endpoint [Enviar template](/messages/send-template).
+
+Depois que o cliente **responder** o template, a janela reabre e você volta a poder usar mensagens livres.
+
+```
+Janela fechada → Enviar template → Cliente responde → Janela reabre (24h)
+```
+
+<Info>
+  Precisa enviar um template? Veja como na página [Enviar template](/messages/send-template). Para criar e gerenciar seus templates, acesse a seção [Templates](/templates/introduction).
+</Info>
+
+## Tipos disponíveis
+
+Todos os endpoints desta seção utilizam a mesma rota:
+
+`POST /v1/channels/{channelId}/messages`
+
+O que muda é o campo `content.type`:
+
+| Tipo | Descrição |
+|---|---|
+| `TEXT` | Mensagem de texto simples |
+| `IMAGE` | Mensagem com imagem |
+
+<Note>
+  Novos tipos serão adicionados conforme a plataforma evolui.
+</Note>

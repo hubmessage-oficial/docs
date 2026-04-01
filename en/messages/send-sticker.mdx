@@ -1,0 +1,13 @@
+---
+title: "Send sticker"
+description: "Send stickers via WhatsApp"
+openapi: "/messages/openapi-sticker.json POST /v1/channels/{channelId}/messages"
+---
+
+## Overview
+
+Sends a sticker to a contact. The `type` field must be `STICKER` and the sticker is sent via URL in the `attachments` array.
+
+<Note>
+  This endpoint only works when the [conversation window](/en/conversation-window) is open (24 hours).
+</Note>

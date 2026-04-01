@@ -1,0 +1,13 @@
+---
+title: "Send contact"
+description: "Send contacts via WhatsApp"
+openapi: "/messages/openapi-contact.json POST /v1/channels/{channelId}/messages"
+---
+
+## Overview
+
+Sends a contact to a recipient. The `type` field must be `CONTACT`. You can send multiple phone numbers in the `phones` array.
+
+<Note>
+  This endpoint only works when the [conversation window](/en/conversation-window) is open (24 hours).
+</Note>

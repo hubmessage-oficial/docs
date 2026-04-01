@@ -1,0 +1,174 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Enviar Texto com Botões",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/v1/channels/{channelId}/messages": {
+      "post": {
+        "summary": "Enviar texto com botões",
+        "description": "Envia uma mensagem de texto com botões de resposta rápida.",
+        "operationId": "sendInteractiveButtonMessage",
+        "tags": ["Mensagens"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "ID do canal",
+            "schema": { "type": "string", "example": "SEU_CHANNEL_ID" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendInteractiveButtonRequest" },
+              "examples": {
+                "texto": {
+                  "summary": "Texto com botões",
+                  "value": {
+                    "recipient": { "identifier": "5511999999999" },
+                    "content": {
+                      "type": "INTERACTIVE_BUTTON",
+                      "body": { "message": "Como você avalia nosso atendimento?" },
+                      "attachments": [
+                        { "id": "1", "title": "Ótimo" },
+                        { "id": "2", "title": "Bom" },
+                        { "id": "3", "title": "Regular" }
+                      ]
+                    }
+                  }
+                },
+                "com_imagem": {
+                  "summary": "Com imagem",
+                  "value": {
+                    "recipient": { "identifier": "5511999999999" },
+                    "content": {
+                      "type": "INTERACTIVE_BUTTON",
+                      "body": {
+                        "message": "Confira nossa oferta!",
+                        "thumbnail": "https://exemplo.com/imagem.jpg",
+                        "mimeType": "image/jpeg"
+                      },
+                      "attachments": [
+                        { "id": "1", "title": "Tenho interesse" },
+                        { "id": "2", "title": "Não, obrigado" }
+                      ]
+                    }
+                  }
+                },
+                "com_video": {
+                  "summary": "Com vídeo",
+                  "value": {
+                    "recipient": { "identifier": "5511999999999" },
+                    "content": {
+                      "type": "INTERACTIVE_BUTTON",
+                      "body": {
+                        "message": "Assista e escolha",
+                        "thumbnail": "https://exemplo.com/video.mp4",
+                        "mimeType": "video/mp4"
+                      },
+                      "attachments": [
+                        { "id": "1", "title": "Opção A" },
+                        { "id": "2", "title": "Opção B" }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "MessageSuccess": {
+        "description": "Mensagem enviada com sucesso",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/MessageResponse" },
+            "example": { "messageId": "wamid.HBgNNTU0NDk3MDUwNzg1FQIAERgSM0" }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Token inválido ou ausente.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 401, "message": "Unauthorized" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "SendInteractiveButtonRequest": {
+        "type": "object",
+        "required": ["recipient", "content"],
+        "properties": {
+          "recipient": {
+            "type": "object",
+            "required": ["identifier"],
+            "properties": {
+              "identifier": { "type": "string", "description": "Telefone do destinatário (DDI + DDD + número)", "example": "5511999999999" }
+            }
+          },
+          "content": {
+            "type": "object",
+            "required": ["type", "body", "attachments"],
+            "properties": {
+              "type": { "type": "string", "description": "Tipo da mensagem", "enum": ["INTERACTIVE_BUTTON"] },
+              "body": {
+                "type": "object",
+                "required": ["message"],
+                "properties": {
+                  "message": { "type": "string", "description": "Texto da mensagem" },
+                  "thumbnail": { "type": "string", "description": "URL de uma imagem ou vídeo (opcional)", "nullable": true },
+                  "mimeType": { "type": "string", "description": "Tipo de mídia do thumbnail (ex: image/jpeg, video/mp4)" }
+                }
+              },
+              "attachments": {
+                "type": "array",
+                "description": "Lista de botões de resposta rápida (máximo 3)",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "title"],
+                  "properties": {
+                    "id": { "type": "string", "description": "Identificador do botão" },
+                    "title": { "type": "string", "description": "Texto exibido no botão" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "messageId": { "type": "string", "description": "ID da mensagem enviada" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer", "description": "Secret Key gerada no painel de Segurança do Hub Message" }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+---
+title: "Enviar imagem"
+description: "Envie mensagens com imagem"
+openapi: "/messages/openapi-image.json POST /v1/channels/{channelId}/messages"
+---
+
+## Conceituação
+
+Envia uma mensagem com imagem para um contato. O campo `content.type` deve ser `IMAGE` e a imagem é enviada via URL no array `attachments`.
+
+Opcionalmente, você pode incluir uma `caption` (legenda) junto à imagem.
+
+<Note>
+  Este endpoint só funciona quando a [janela de conversa](/conversation-window) de 24 horas estiver aberta.
+</Note>

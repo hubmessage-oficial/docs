@@ -1,0 +1,124 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Enviar Imagem",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/v1/channels/{channelId}/messages": {
+      "post": {
+        "summary": "Enviar imagem",
+        "description": "Envia uma mensagem com imagem.",
+        "operationId": "sendImageMessage",
+        "tags": ["Mensagens"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "ID do canal",
+            "schema": { "type": "string", "example": "SEU_CHANNEL_ID" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendImageRequest" },
+              "example": {
+                "recipient": { "identifier": "5511999999999" },
+                "content": {
+                  "type": "IMAGE",
+                  "attachments": [
+                    {
+                      "url": "https://exemplo.com/imagem.jpg",
+                      "caption": "Legenda da imagem"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "MessageSuccess": {
+        "description": "Mensagem enviada com sucesso",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/MessageResponse" },
+            "example": { "messageId": "wamid.HBgNNTU0NDk3MDUwNzg1FQIAERgSM0" }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Token inválido ou ausente.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 401, "message": "Unauthorized" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "SendImageRequest": {
+        "type": "object",
+        "required": ["recipient", "content"],
+        "properties": {
+          "recipient": {
+            "type": "object",
+            "required": ["identifier"],
+            "properties": {
+              "identifier": { "type": "string", "description": "Telefone do destinatário (DDI + DDD + número)", "example": "5511999999999" }
+            }
+          },
+          "content": {
+            "type": "object",
+            "required": ["type", "attachments"],
+            "properties": {
+              "type": { "type": "string", "description": "Tipo da mensagem", "enum": ["IMAGE"] },
+              "attachments": {
+                "type": "array",
+                "description": "Lista de anexos",
+                "items": {
+                  "type": "object",
+                  "required": ["url"],
+                  "properties": {
+                    "url": { "type": "string", "description": "URL da imagem" },
+                    "caption": { "type": "string", "description": "Legenda da imagem" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "messageId": { "type": "string", "description": "ID da mensagem enviada" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer", "description": "Secret Key gerada no painel de Segurança do Hub Message" }
+    }
+  }
+}

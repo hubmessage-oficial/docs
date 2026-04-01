@@ -1,0 +1,15 @@
+---
+title: "Send template"
+description: "Send Meta-approved templates"
+openapi: "/messages/openapi-template.json POST /v1/channels/{channelId}/messages"
+---
+
+## Overview
+
+Sends a Meta-approved message template to a contact. This is the **only way** to send messages outside the [conversation window](/en/conversation-window) (24 hours).
+
+The `content.type` field must be `TEMPLATE` and the template is sent within `attachments`.
+
+<Warning>
+  The template must have `APPROVED` status to work. Use the [Templates](/en/templates/introduction) endpoints to create and manage your templates.
+</Warning>

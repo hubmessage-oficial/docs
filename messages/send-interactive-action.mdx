@@ -1,0 +1,20 @@
+---
+title: "Enviar botões de ação"
+description: "Envie mensagens com botões de ação (URL e ligar)"
+openapi: "/messages/openapi-interactive-action.json POST /v1/channels/{channelId}/messages"
+---
+
+## Conceituação
+
+Envia uma mensagem com botões de ação para um contato. O campo `content.type` deve ser `INTERACTIVE_ACTION`.
+
+Tipos de botão disponíveis:
+
+- **URL** — Abre um link ao clicar
+- **CALL** — Liga para um número ao clicar
+
+Os campos `header` e `footer` são opcionais.
+
+<Note>
+  Este endpoint só funciona quando a [janela de conversa](/conversation-window) de 24 horas estiver aberta.
+</Note>
