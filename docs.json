@@ -20,8 +20,7 @@
               {
                 "group": "Introdução",
                 "pages": [
-                  "index",
-                  "quickstart"
+                  "index"
                 ]
               }
             ]
@@ -73,8 +72,7 @@
               {
                 "group": "Introduction",
                 "pages": [
-                  "index",
-                  "quickstart"
+                  "en/index"
                 ]
               }
             ]
