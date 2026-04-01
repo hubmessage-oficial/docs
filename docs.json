@@ -33,7 +33,8 @@
                 "group": "Introdução",
                 "pages": [
                   "z-api/introduction",
-                  "z-api/authentication"
+                  "z-api/authentication",
+                  "z-api/limitations"
                 ]
               },
               {
@@ -85,7 +86,8 @@
                 "group": "Introduction",
                 "pages": [
                   "en/z-api/introduction",
-                  "en/z-api/authentication"
+                  "en/z-api/authentication",
+                  "en/z-api/limitations"
                 ]
               },
               {

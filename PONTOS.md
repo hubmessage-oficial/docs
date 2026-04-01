@@ -31,18 +31,19 @@ o que precisamos arrumar:
 
 Envios que não temos:
 
-- deletar mensagem não existe na api oficial.
+- deletar mensagem não existe na api oficial. (https://developer.z-api.io/message/delete-message)
 - edição de mensagem nao não existe. (editMessageId) dos envios.
-- Encaminhar mensagem não existe.
-- Envio de gif não existe.
-- Enviar PTV não existe.
+- Encaminhar mensagem não existe. (https://developer.z-api.io/message/forward-message)
+- Envio de gif não existe. (https://developer.z-api.io/message/send-message-gif)
+- Enviar PTV não existe. (https://developer.z-api.io/message/send-message-ptv)
 - no envio de documento não tem a opcao para editar descricao o atributo editDocumentMessageId do send-document.
-- envio de otp agora só é possivel via template
+- envio de otp agora só é possivel via template (https://developer.z-api.io/message/send-button-otp)
 - responder mensagens funciona, apenas responder mensagens privado da pessoa quando é mensagem em grupo, ai nao funciona.
-- enviar enquete, voto de enquete não existe na api oficial.
-- fixar mensagens não existe.
-- enviar, editar, responder evento não existe.
-- enviar convite de admin do canal
+- enviar enquete, voto de enquete não existe na api oficial. (https://developer.z-api.io/message/send-poll)
+- fixar mensagens não existe. (https://developer.z-api.io/message/send-pin-message)
+- enviar, editar, responder evento não existe. (https://developer.z-api.io/message/send-event)
+- enviar convite de admin do canal (https://developer.z-api.io/message/send-newsletter-admin-invite)
+- apis de contatos tb nao existe, principalmente a parte de validar se um numero existe ou nao no whatsapp (https://developer.z-api.io/contacts/introduction)
 
 oq nao teve como validar pois documentacao da meta nao mostra e ta com bug:
 
