@@ -8,7 +8,7 @@
     "dark": "#3347CC"
   },
   "favicon": "/favicon.svg",
-  "openapi": ["/z-api/openapi.json", "/channels/openapi-create.json", "/channels/openapi-connect.json", "/templates/openapi.json", "/messages/openapi.json", "/messages/openapi-image.json", "/messages/openapi-audio.json", "/messages/openapi-video.json", "/messages/openapi-contact.json", "/messages/openapi-sticker.json", "/messages/openapi-interactive-action.json", "/messages/openapi-interactive-button.json", "/messages/openapi-template.json"],
+  "openapi": ["/z-api/openapi.json", "/channels/openapi-create.json", "/channels/openapi-connect.json", "/channels/openapi-create-channel.json", "/channels/openapi-disconnect.json", "/channels/openapi-subscribe.json", "/channels/openapi-cancel.json", "/templates/openapi.json", "/messages/openapi.json", "/messages/openapi-image.json", "/messages/openapi-audio.json", "/messages/openapi-video.json", "/messages/openapi-contact.json", "/messages/openapi-sticker.json", "/messages/openapi-interactive-action.json", "/messages/openapi-interactive-button.json", "/messages/openapi-template.json", "/webhooks/openapi.json"],
   "navigation": {
     "languages": [
       {
@@ -30,7 +30,10 @@
                 "pages": [
                   "channels/introduction",
                   "channels/create-channel",
-                  "channels/connect-channel"
+                  "channels/connect-channel",
+                  "channels/disconnect",
+                  "channels/subscribe-channel",
+                  "channels/cancel-subscription"
                 ]
               },
               {
@@ -58,6 +61,18 @@
                   "messages/send-sticker",
                   "messages/send-interactive-action",
                   "messages/send-interactive-button"
+                ]
+              },
+              {
+                "group": "Webhooks",
+                "pages": [
+                  "webhooks/introduction",
+                  "webhooks/payloads",
+                  "webhooks/create-webhook",
+                  "webhooks/list-webhooks",
+                  "webhooks/get-webhook",
+                  "webhooks/update-webhook",
+                  "webhooks/delete-webhook"
                 ]
               }
             ]
@@ -119,7 +134,10 @@
                 "pages": [
                   "en/channels/introduction",
                   "en/channels/create-channel",
-                  "en/channels/connect-channel"
+                  "en/channels/connect-channel",
+                  "en/channels/disconnect",
+                  "en/channels/subscribe-channel",
+                  "en/channels/cancel-subscription"
                 ]
               },
               {
@@ -147,6 +165,18 @@
                   "en/messages/send-sticker",
                   "en/messages/send-interactive-action",
                   "en/messages/send-interactive-button"
+                ]
+              },
+              {
+                "group": "Webhooks",
+                "pages": [
+                  "en/webhooks/introduction",
+                  "en/webhooks/payloads",
+                  "en/webhooks/create-webhook",
+                  "en/webhooks/list-webhooks",
+                  "en/webhooks/get-webhook",
+                  "en/webhooks/update-webhook",
+                  "en/webhooks/delete-webhook"
                 ]
               }
             ]
@@ -202,7 +232,7 @@
     "links": [
       {
         "label": "Suporte",
-        "href": "mailto:suporte@hubmessage.io"
+        "href": "https://api.whatsapp.com/send?phone=5544999300032&text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20o%20suporte%20do%20HubMessage."
       }
     ],
     "primary": {

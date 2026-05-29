@@ -1,0 +1,119 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Assinar Canal",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/v1/channels/{channelId}/subscribe": {
+      "get": {
+        "summary": "Assinar canal (ENTERPRISE)",
+        "description": "Vincula o canal à assinatura Stripe ativa da conta. O canal é adicionado automaticamente à assinatura existente e uma cobrança proporcional ao período restante é incluída na próxima fatura. O pagamento deve ter sido concluído previamente pelo usuário no painel do Hub Message. Requer role **ENTERPRISE**.",
+        "operationId": "subscribeChannel",
+        "tags": ["Canais"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "ID do canal (obtido via Criar canal)",
+            "schema": { "type": "string", "example": "019E4C54B1B375A28970B605CA9B03C3" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Canal vinculado à assinatura com sucesso",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SubscribeResponse" },
+                "example": {
+                  "type": "SUBSCRIPTION_UPDATED",
+                  "message": "Canal ativo. Cobrança proporcional será incluída na próxima fatura."
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": {
+            "description": "Canal não encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 404, "message": "Channel not found" }
+              }
+            }
+          },
+          "422": {
+            "description": "Regra de negócio violada. Possíveis causas:\n\n- `ENTERPRISE role required` — conta sem role ENTERPRISE\n- `CREDIT_LIMIT_EXCEEDED` — limite de crédito da conta atingido\n- `SUBSCRIPTION_TERMINATED` — assinatura encerrada, não é possível adicionar canais",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "examples": {
+                  "enterprise_required": {
+                    "summary": "Conta sem role ENTERPRISE",
+                    "value": { "error": 422, "message": "This action requires ENTERPRISE role" }
+                  },
+                  "credit_limit": {
+                    "summary": "Limite de crédito atingido",
+                    "value": { "error": 422, "message": "CREDIT_LIMIT_EXCEEDED" }
+                  },
+                  "terminated": {
+                    "summary": "Assinatura encerrada",
+                    "value": { "error": 422, "message": "SUBSCRIPTION_TERMINATED" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Unauthorized": {
+        "description": "Token inválido ou ausente.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 401, "message": "Unauthorized" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "SubscribeResponse": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["SUBSCRIPTION_UPDATED"],
+            "description": "Indica que o canal foi adicionado à assinatura com sucesso",
+            "example": "SUBSCRIPTION_UPDATED"
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensagem informativa para exibir ao usuário",
+            "example": "Canal ativo. Cobrança proporcional será incluída na próxima fatura."
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Secret Key gerada no painel de Segurança do Hub Message"
+      }
+    }
+  }
+}

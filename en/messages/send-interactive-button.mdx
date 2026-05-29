@@ -6,7 +6,7 @@ openapi: "/messages/openapi-interactive-button.json POST /v1/channels/{channelId
 
 ## Overview
 
-Sends a text message with quick reply buttons. The `type` field must be `INTERACTIVE_BUTTON`. The recipient can choose from the presented options.
+Sends a text message with quick reply buttons. The `content.type` field must be `INTERACTIVE_BUTTON`. The recipient can choose from the presented options.
 
 Optionally, you can include an **image** or **video** with the message using the `thumbnail` and `mimeType` fields inside `body`.
 

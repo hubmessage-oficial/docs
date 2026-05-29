@@ -1,0 +1,124 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Parceiro: Criar Canal",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/v1/channels": {
+      "post": {
+        "summary": "Criar canal (Parceiro)",
+        "description": "Cria um novo canal no workspace autenticado. Requer role ENTERPRISE.",
+        "operationId": "partnerCreateChannel",
+        "tags": ["Parceiros"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateChannelRequest" },
+              "examples": {
+                "whatsapp_meta": {
+                  "summary": "WhatsApp Oficial (Meta)",
+                  "value": {
+                    "name": "Canal de Vendas",
+                    "type": "META_WHATSAPP"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Canal criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CreateChannelResponse" },
+                "example": {
+                  "id": "019E4C54B1B375A28970B605CA9B03C3"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida — campo obrigatório ausente ou tipo inválido",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 400, "message": "Validation error" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "422": {
+            "description": "Regra de negócio violada — conta sem role ENTERPRISE",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 422, "message": "This action requires ENTERPRISE role" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Unauthorized": {
+        "description": "Token inválido ou ausente.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 401, "message": "Unauthorized" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "CreateChannelRequest": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nome do canal",
+            "example": "Canal de Vendas"
+          },
+          "type": {
+            "type": "string",
+            "description": "Tipo do canal (plataforma)",
+            "enum": ["META_WHATSAPP"],
+            "example": "META_WHATSAPP"
+          }
+        }
+      },
+      "CreateChannelResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único do canal criado. Use como `channelId` em todos os outros endpoints.",
+            "example": "019E4C54B1B375A28970B605CA9B03C3"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Secret Key gerada no painel de Segurança do Hub Message"
+      }
+    }
+  }
+}

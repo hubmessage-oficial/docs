@@ -1,0 +1,30 @@
+---
+title: "Assinar canal"
+description: "Adicione um canal à assinatura existente após o pagamento ser concluído no painel"
+openapi: "/channels/openapi-subscribe.json GET /v1/channels/{channelId}/subscribe"
+---
+
+## Conceituação
+
+Vincula um canal à assinatura Stripe ativa da conta. O canal é **adicionado automaticamente** à assinatura existente e uma cobrança proporcional ao período restante do ciclo é incluída na próxima fatura.
+
+<Note>
+  O pagamento é realizado previamente pelo usuário no painel do {projectName}. Este endpoint deve ser chamado após a conclusão do checkout no painel para ativar o canal via API.
+</Note>
+
+<Warning>
+  Este endpoint requer a role **ENTERPRISE** na sua conta.
+</Warning>
+
+Exemplo de resposta:
+
+```json
+{
+  "type": "SUBSCRIPTION_UPDATED",
+  "message": "Canal ativo. Cobrança proporcional será incluída na próxima fatura."
+}
+```
+
+<Note>
+  O `channelId` é obtido através do endpoint [Criar canal](/channels/create-channel).
+</Note>

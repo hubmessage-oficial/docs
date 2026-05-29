@@ -1,0 +1,32 @@
+---
+title: "Cancel subscription"
+description: "Cancel a channel subscription programmatically"
+openapi: "/channels/openapi-cancel.json DELETE /v1/channels/{channelId}/cancel"
+---
+
+## Overview
+
+Requests the cancellation of a channel subscription. Cancellation is not immediate — the channel enters `CANCELLATION_PROCESS` status and remains active until the end of the already-paid period. After that period, the status changes to `CANCELED`.
+
+The `cancel=true` query parameter is required as an explicit cancellation confirmation.
+
+The `cancelReason` field in the body is optional, but recommended for auditing purposes.
+
+<Warning>
+  This endpoint requires the **ENTERPRISE** role on your account.
+</Warning>
+
+### Status after cancellation
+
+| Status | Description |
+|---|---|
+| `CANCELLATION_PROCESS` | Cancellation requested, channel still active until end of period |
+| `CANCELED` | Channel effectively cancelled and deactivated |
+
+<Warning>
+  Cancellation cannot be undone via API. To reactivate the channel, a new subscription must be initiated via [Subscribe channel](/en/channels/subscribe-channel).
+</Warning>
+
+<Note>
+  The `channelId` is obtained from the [Create channel](/en/channels/create-channel) endpoint.
+</Note>

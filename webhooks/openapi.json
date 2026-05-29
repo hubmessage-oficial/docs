@@ -1,0 +1,779 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Webhooks API",
+    "description": "API para criar e gerenciar endpoints de webhook por canal. Requer role ENTERPRISE.",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/v1/channels/{channelId}/webhooks": {
+      "post": {
+        "summary": "Criar webhook",
+        "description": "Registra um novo endpoint de webhook no canal. A partir da criação, os eventos configurados passam a ser entregues na URL informada.",
+        "operationId": "createWebhook",
+        "tags": ["Webhooks"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "ID do canal",
+            "schema": { "type": "string", "example": "019E4C54B1B375A28970B605CA9B03C3" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateWebhookRequest" },
+              "examples": {
+                "basico": {
+                  "summary": "Básico — receber mensagens",
+                  "value": {
+                    "url": "https://app.suaempresa.com/webhooks/hubmessage",
+                    "events": ["MESSAGE_RECEIVED"]
+                  }
+                },
+                "com_assinatura": {
+                  "summary": "Com assinatura HMAC",
+                  "value": {
+                    "url": "https://app.suaempresa.com/webhooks/hubmessage",
+                    "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
+                    "signing": true
+                  }
+                },
+                "com_auth_bearer": {
+                  "summary": "Com autenticação Bearer",
+                  "value": {
+                    "url": "https://app.suaempresa.com/webhooks/hubmessage",
+                    "events": ["MESSAGE_RECEIVED", "CONNECTED", "DISCONNECTED"],
+                    "auth": {
+                      "type": "BEARER",
+                      "token": "meu-token-secreto"
+                    }
+                  }
+                },
+                "com_auth_basic": {
+                  "summary": "Com autenticação Basic",
+                  "value": {
+                    "url": "https://app.suaempresa.com/webhooks/hubmessage",
+                    "events": ["MESSAGE_RECEIVED"],
+                    "auth": {
+                      "type": "BASIC",
+                      "username": "webhook-user",
+                      "password": "senha-secreta"
+                    }
+                  }
+                },
+                "com_header_customizado": {
+                  "summary": "Com header customizado",
+                  "value": {
+                    "url": "https://app.suaempresa.com/webhooks/hubmessage",
+                    "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
+                    "auth": {
+                      "type": "CUSTOM_HEADER",
+                      "headerName": "X-Api-Key",
+                      "headerValue": "minha-chave-api"
+                    }
+                  }
+                },
+                "formato_zapi": {
+                  "summary": "Formato Z-API (compatibilidade)",
+                  "value": {
+                    "url": "https://app.suaempresa.com/webhooks/zapi",
+                    "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS", "CONNECTED", "DISCONNECTED"],
+                    "payloadFormat": "Z_API",
+                    "signing": true
+                  }
+                },
+                "todos_os_eventos": {
+                  "summary": "Todos os eventos com HMAC + Bearer",
+                  "value": {
+                    "url": "https://app.suaempresa.com/webhooks/hubmessage",
+                    "description": "Webhook principal de produção",
+                    "events": [
+                      "MESSAGE_RECEIVED",
+                      "MESSAGE_DELIVERY",
+                      "MESSAGE_STATUS",
+                      "CONNECTED",
+                      "DISCONNECTED"
+                    ],
+                    "signing": true,
+                    "auth": {
+                      "type": "BEARER",
+                      "token": "meu-token-secreto"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Webhook criado com sucesso. O campo `secret` é retornado **apenas nesta resposta** quando `signing` é `true` — armazene-o com segurança.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/WebhookCreatedResponse" },
+                "examples": {
+                  "com_signing": {
+                    "summary": "Com assinatura HMAC habilitada",
+                    "value": {
+                      "id": "A1B2C3D4E5F6789012345678901234AB",
+                      "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
+                      "url": "https://app.suaempresa.com/webhooks/hubmessage",
+                      "description": null,
+                      "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
+                      "status": "ENABLED",
+                      "signing": true,
+                      "secret": "a3f1c2d4e5b6789012345678901234abcdef0123456789abcdef0123456789ab",
+                      "auth": { "type": "NONE", "configured": false },
+                      "payloadFormat": "DEFAULT",
+                      "customAttributes": {},
+                      "createdAt": "2025-01-15T10:30:00.000+0000",
+                      "updatedAt": "2025-01-15T10:30:00.000+0000"
+                    }
+                  },
+                  "sem_signing": {
+                    "summary": "Sem assinatura HMAC",
+                    "value": {
+                      "id": "B2C3D4E5F6789012345678901234AB12",
+                      "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
+                      "url": "https://app.suaempresa.com/webhooks/hubmessage",
+                      "description": "Webhook principal de produção",
+                      "events": ["MESSAGE_RECEIVED", "CONNECTED", "DISCONNECTED"],
+                      "status": "ENABLED",
+                      "signing": false,
+                      "auth": { "type": "BEARER", "configured": true },
+                      "payloadFormat": "DEFAULT",
+                      "customAttributes": {},
+                      "createdAt": "2025-01-15T10:30:00.000+0000",
+                      "updatedAt": "2025-01-15T10:30:00.000+0000"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida — url ou events ausentes",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 400, "message": "url is required" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "422": {
+            "description": "Regra de negócio violada — conta sem role ENTERPRISE",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 422, "message": "This action requires ENTERPRISE role" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Listar webhooks",
+        "description": "Retorna todos os webhooks cadastrados no canal. Credenciais de autenticação e o `secret` HMAC não são retornados por segurança.",
+        "operationId": "listWebhooks",
+        "tags": ["Webhooks"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "ID do canal",
+            "schema": { "type": "string", "example": "019E4C54B1B375A28970B605CA9B03C3" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de webhooks do canal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/WebhookResponse" }
+                },
+                "example": [
+                  {
+                    "id": "A1B2C3D4E5F6789012345678901234AB",
+                    "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
+                    "url": "https://app.suaempresa.com/webhooks/hubmessage",
+                    "description": "Webhook principal de produção",
+                    "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
+                    "status": "ENABLED",
+                    "signing": true,
+                    "auth": { "type": "BEARER", "configured": true },
+                    "payloadFormat": "DEFAULT",
+                    "customAttributes": {},
+                    "createdAt": "2025-01-15T10:30:00.000+0000",
+                    "updatedAt": "2025-01-15T10:30:00.000+0000"
+                  },
+                  {
+                    "id": "B2C3D4E5F6789012345678901234AB12",
+                    "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
+                    "url": "https://app.suaempresa.com/webhooks/eventos-conexao",
+                    "description": "Eventos de conexão",
+                    "events": ["CONNECTED", "DISCONNECTED"],
+                    "status": "ENABLED",
+                    "signing": false,
+                    "auth": { "type": "NONE", "configured": false },
+                    "payloadFormat": "DEFAULT",
+                    "customAttributes": {},
+                    "createdAt": "2025-01-16T08:00:00.000+0000",
+                    "updatedAt": "2025-01-16T08:00:00.000+0000"
+                  }
+                ]
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "422": {
+            "description": "Regra de negócio violada — conta sem role ENTERPRISE",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 422, "message": "This action requires ENTERPRISE role" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/channels/{channelId}/webhooks/{webhookId}": {
+      "get": {
+        "summary": "Buscar webhook",
+        "description": "Retorna os dados de um webhook específico. Credenciais e `secret` não são retornados.",
+        "operationId": "getWebhook",
+        "tags": ["Webhooks"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "ID do canal",
+            "schema": { "type": "string", "example": "019E4C54B1B375A28970B605CA9B03C3" }
+          },
+          {
+            "name": "webhookId",
+            "in": "path",
+            "required": true,
+            "description": "ID do webhook",
+            "schema": { "type": "string", "example": "A1B2C3D4E5F6789012345678901234AB" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dados do webhook",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/WebhookResponse" },
+                "example": {
+                  "id": "A1B2C3D4E5F6789012345678901234AB",
+                  "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
+                  "url": "https://app.suaempresa.com/webhooks/hubmessage",
+                  "description": "Webhook principal de produção",
+                  "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
+                  "status": "ENABLED",
+                  "signing": true,
+                  "auth": { "type": "BEARER", "configured": true },
+                  "payloadFormat": "DEFAULT",
+                  "customAttributes": {},
+                  "createdAt": "2025-01-15T10:30:00.000+0000",
+                  "updatedAt": "2025-01-15T10:30:00.000+0000"
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": {
+            "description": "Webhook não encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 404, "message": "Webhook not found" }
+              }
+            }
+          },
+          "422": {
+            "description": "Regra de negócio violada — conta sem role ENTERPRISE",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 422, "message": "This action requires ENTERPRISE role" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Atualizar webhook",
+        "description": "Atualiza parcialmente a configuração do webhook. Apenas os campos enviados são atualizados.",
+        "operationId": "updateWebhook",
+        "tags": ["Webhooks"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "ID do canal",
+            "schema": { "type": "string", "example": "019E4C54B1B375A28970B605CA9B03C3" }
+          },
+          {
+            "name": "webhookId",
+            "in": "path",
+            "required": true,
+            "description": "ID do webhook",
+            "schema": { "type": "string", "example": "A1B2C3D4E5F6789012345678901234AB" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateWebhookRequest" },
+              "examples": {
+                "desabilitar": {
+                  "summary": "Desabilitar webhook",
+                  "value": { "status": "DISABLED" }
+                },
+                "reabilitar": {
+                  "summary": "Reabilitar webhook",
+                  "value": { "status": "ENABLED" }
+                },
+                "atualizar_url_e_eventos": {
+                  "summary": "Atualizar URL e eventos",
+                  "value": {
+                    "url": "https://nova-url.suaempresa.com/webhooks/hubmessage",
+                    "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS", "CONNECTED", "DISCONNECTED"]
+                  }
+                },
+                "habilitar_assinatura": {
+                  "summary": "Habilitar / rotacionar assinatura HMAC",
+                  "value": { "signing": true }
+                },
+                "atualizar_auth": {
+                  "summary": "Atualizar autenticação para Bearer",
+                  "value": {
+                    "auth": {
+                      "type": "BEARER",
+                      "token": "novo-token-secreto"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook atualizado com sucesso. O campo `secret` é retornado **apenas** quando `signing` foi habilitado nesta atualização.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/WebhookCreatedResponse" },
+                "examples": {
+                  "apos_habilitar_signing": {
+                    "summary": "Após habilitar assinatura (secret retornado)",
+                    "value": {
+                      "id": "A1B2C3D4E5F6789012345678901234AB",
+                      "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
+                      "url": "https://app.suaempresa.com/webhooks/hubmessage",
+                      "description": "Webhook principal de produção",
+                      "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
+                      "status": "ENABLED",
+                      "signing": true,
+                      "secret": "d4e5f6789012345678901234abcdef0123456789abcdef0123456789ab12c3d4",
+                      "auth": { "type": "BEARER", "configured": true },
+                      "payloadFormat": "DEFAULT",
+                      "customAttributes": {},
+                      "createdAt": "2025-01-15T10:30:00.000+0000",
+                      "updatedAt": "2025-01-20T14:00:00.000+0000"
+                    }
+                  },
+                  "apos_desabilitar": {
+                    "summary": "Após desabilitar (sem secret)",
+                    "value": {
+                      "id": "A1B2C3D4E5F6789012345678901234AB",
+                      "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
+                      "url": "https://app.suaempresa.com/webhooks/hubmessage",
+                      "description": "Webhook principal de produção",
+                      "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
+                      "status": "DISABLED",
+                      "signing": true,
+                      "auth": { "type": "BEARER", "configured": true },
+                      "payloadFormat": "DEFAULT",
+                      "customAttributes": {},
+                      "createdAt": "2025-01-15T10:30:00.000+0000",
+                      "updatedAt": "2025-01-20T15:00:00.000+0000"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 400, "message": "Validation error" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": {
+            "description": "Webhook não encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 404, "message": "Webhook not found" }
+              }
+            }
+          },
+          "422": {
+            "description": "Regra de negócio violada — conta sem role ENTERPRISE",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 422, "message": "This action requires ENTERPRISE role" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletar webhook",
+        "description": "Remove permanentemente o webhook. A partir da exclusão, nenhum evento é mais entregue na URL configurada.",
+        "operationId": "deleteWebhook",
+        "tags": ["Webhooks"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "ID do canal",
+            "schema": { "type": "string", "example": "019E4C54B1B375A28970B605CA9B03C3" }
+          },
+          {
+            "name": "webhookId",
+            "in": "path",
+            "required": true,
+            "description": "ID do webhook",
+            "schema": { "type": "string", "example": "A1B2C3D4E5F6789012345678901234AB" }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Webhook deletado com sucesso. Nenhum conteúdo retornado."
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": {
+            "description": "Webhook não encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 404, "message": "Webhook not found" }
+              }
+            }
+          },
+          "422": {
+            "description": "Regra de negócio violada — conta sem role ENTERPRISE",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 422, "message": "This action requires ENTERPRISE role" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Unauthorized": {
+        "description": "Token inválido ou ausente.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 401, "message": "Unauthorized" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "CreateWebhookRequest": {
+        "type": "object",
+        "required": ["url", "events"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "URL de destino dos eventos (máx. 2048 caracteres)",
+            "example": "https://app.suaempresa.com/webhooks/hubmessage"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição opcional do webhook",
+            "example": "Webhook principal de produção"
+          },
+          "events": {
+            "type": "array",
+            "description": "Tipos de evento a receber. Pelo menos um obrigatório.",
+            "items": {
+              "type": "string",
+              "enum": [
+                "MESSAGE_RECEIVED",
+                "MESSAGE_DELIVERY",
+                "MESSAGE_STATUS",
+                "RECEIVED_STATUS",
+                "RECEIVED_AND_DELIVERY",
+                "CONNECTED",
+                "DISCONNECTED",
+                "PRESENCE_CHAT",
+                "INITIAL_DATA",
+                "BLOCK"
+              ]
+            },
+            "example": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"]
+          },
+          "signing": {
+            "type": "boolean",
+            "description": "Habilita assinatura HMAC-SHA256. Quando `true`, um `secret` de 64 caracteres hex é gerado e retornado **apenas na criação/atualização**. Use-o para verificar a autenticidade das requisições recebidas.",
+            "default": false,
+            "example": true
+          },
+          "auth": {
+            "$ref": "#/components/schemas/WebhookAuth"
+          },
+          "payloadFormat": {
+            "type": "string",
+            "enum": ["DEFAULT", "Z_API"],
+            "description": "Formato do payload entregue ao webhook. `Z_API` mantém compatibilidade com sistemas integrados via Z-API.",
+            "default": "DEFAULT",
+            "example": "DEFAULT"
+          },
+          "customAttributes": {
+            "type": "object",
+            "description": "Atributos extras",
+            "additionalProperties": true,
+            "example": {}
+          }
+        }
+      },
+      "UpdateWebhookRequest": {
+        "type": "object",
+        "description": "Todos os campos são opcionais — apenas os campos enviados são atualizados.",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Nova URL de destino",
+            "example": "https://nova-url.suaempresa.com/webhooks/hubmessage"
+          },
+          "description": {
+            "type": "string",
+            "description": "Nova descrição"
+          },
+          "events": {
+            "type": "array",
+            "description": "Nova lista de eventos — substitui todos os eventos existentes",
+            "items": {
+              "type": "string",
+              "enum": [
+                "MESSAGE_RECEIVED",
+                "MESSAGE_DELIVERY",
+                "MESSAGE_STATUS",
+                "RECEIVED_STATUS",
+                "RECEIVED_AND_DELIVERY",
+                "CONNECTED",
+                "DISCONNECTED",
+                "PRESENCE_CHAT",
+                "INITIAL_DATA",
+                "BLOCK"
+              ]
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": ["ENABLED", "DISABLED"],
+            "description": "`DISABLED` pausa a entrega de eventos sem excluir o webhook"
+          },
+          "signing": {
+            "type": "boolean",
+            "description": "Habilita ou rotaciona a assinatura HMAC. Gera um novo `secret` retornado na resposta."
+          },
+          "auth": {
+            "$ref": "#/components/schemas/WebhookAuth"
+          },
+          "payloadFormat": {
+            "type": "string",
+            "enum": ["DEFAULT", "Z_API"]
+          },
+          "customAttributes": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "WebhookAuth": {
+        "type": "object",
+        "description": "Configura como o Hub Message se autentica ao chamar sua URL",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["NONE", "BEARER", "API_KEY", "BASIC", "CUSTOM_HEADER"],
+            "description": "Tipo de autenticação",
+            "example": "BEARER"
+          },
+          "token": {
+            "type": "string",
+            "description": "Token para autenticação `BEARER` — enviado no header `Authorization: Bearer <token>`",
+            "example": "meu-token-secreto"
+          },
+          "key": {
+            "type": "string",
+            "description": "Chave para autenticação `API_KEY`"
+          },
+          "username": {
+            "type": "string",
+            "description": "Usuário para autenticação `BASIC`"
+          },
+          "password": {
+            "type": "string",
+            "description": "Senha para autenticação `BASIC`"
+          },
+          "headerName": {
+            "type": "string",
+            "description": "Nome do header para `CUSTOM_HEADER`",
+            "example": "X-Api-Key"
+          },
+          "headerValue": {
+            "type": "string",
+            "description": "Valor do header para `CUSTOM_HEADER`"
+          }
+        }
+      },
+      "WebhookAuthInfo": {
+        "type": "object",
+        "description": "Resumo da autenticação configurada — credenciais não são retornadas por segurança",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["NONE", "BEARER", "API_KEY", "BASIC", "CUSTOM_HEADER"],
+            "example": "BEARER"
+          },
+          "configured": {
+            "type": "boolean",
+            "description": "`true` quando credenciais estão configuradas",
+            "example": true
+          }
+        }
+      },
+      "WebhookResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único do webhook",
+            "example": "A1B2C3D4E5F6789012345678901234AB"
+          },
+          "instanceId": {
+            "type": "string",
+            "description": "ID do canal ao qual o webhook pertence",
+            "example": "019E4C54B1B375A28970B605CA9B03C3"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL de destino dos eventos",
+            "example": "https://app.suaempresa.com/webhooks/hubmessage"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Descrição do webhook",
+            "example": "Webhook principal de produção"
+          },
+          "events": {
+            "type": "array",
+            "description": "Tipos de evento configurados",
+            "items": { "type": "string" },
+            "example": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["ENABLED", "DISABLED"],
+            "description": "Status atual do webhook",
+            "example": "ENABLED"
+          },
+          "signing": {
+            "type": "boolean",
+            "description": "Indica se a assinatura HMAC está habilitada",
+            "example": true
+          },
+          "auth": {
+            "$ref": "#/components/schemas/WebhookAuthInfo"
+          },
+          "payloadFormat": {
+            "type": "string",
+            "enum": ["DEFAULT", "Z_API"],
+            "description": "Formato do payload entregue",
+            "example": "DEFAULT"
+          },
+          "customAttributes": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Atributos extras configurados",
+            "example": {}
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação",
+            "example": "2025-01-15T10:30:00.000+0000"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data da última atualização",
+            "example": "2025-01-15T10:30:00.000+0000"
+          }
+        }
+      },
+      "WebhookCreatedResponse": {
+        "allOf": [
+          { "$ref": "#/components/schemas/WebhookResponse" },
+          {
+            "type": "object",
+            "properties": {
+              "secret": {
+                "type": "string",
+                "description": "Segredo HMAC de 64 caracteres hex — retornado **apenas** quando `signing` é habilitado no create ou update. Armazene-o com segurança; não poderá ser recuperado depois.",
+                "example": "a3f1c2d4e5b6789012345678901234abcdef0123456789abcdef0123456789ab"
+              }
+            }
+          }
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Secret Key gerada no painel de Segurança do Hub Message"
+      }
+    }
+  }
+}

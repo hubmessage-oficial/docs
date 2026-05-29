@@ -1,0 +1,15 @@
+---
+title: "Listar webhooks"
+description: "Liste todos os webhooks de um canal"
+openapi: "/webhooks/openapi.json GET /v1/channels/{channelId}/webhooks"
+---
+
+## Conceituação
+
+Retorna todos os webhooks cadastrados em um canal. O campo `auth.configured` indica se credenciais de autenticação estão definidas, mas as credenciais em si **não são retornadas** por segurança.
+
+O campo `secret` (assinatura HMAC) também **não é retornado** na listagem — ele só está disponível no momento da criação ou atualização com `signing: true`.
+
+<Note>
+  Este endpoint requer a role **ENTERPRISE** na sua conta.
+</Note>

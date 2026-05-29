@@ -1,0 +1,32 @@
+---
+title: "Cancelar assinatura"
+description: "Cancele a assinatura de um canal programaticamente"
+openapi: "/channels/openapi-cancel.json DELETE /v1/channels/{channelId}/cancel"
+---
+
+## Conceituação
+
+Solicita o cancelamento da assinatura de um canal. O cancelamento não é imediato — o canal entra no status `CANCELLATION_PROCESS` e permanece ativo até o fim do período já pago. Após esse período, o status muda para `CANCELED`.
+
+O parâmetro de query `cancel=true` é obrigatório como confirmação explícita do cancelamento.
+
+O campo `cancelReason` no body é opcional, mas recomendado para fins de auditoria.
+
+<Warning>
+  Este endpoint requer a role **ENTERPRISE** na sua conta.
+</Warning>
+
+### Status após o cancelamento
+
+| Status | Descrição |
+|---|---|
+| `CANCELLATION_PROCESS` | Cancelamento solicitado, canal ainda ativo até o fim do período |
+| `CANCELED` | Canal efetivamente cancelado e desativado |
+
+<Warning>
+  O cancelamento não pode ser desfeito via API. Para reativar o canal, é necessário iniciar uma nova assinatura via [Assinar canal](/channels/subscribe-channel).
+</Warning>
+
+<Note>
+  O `channelId` é obtido através do endpoint [Criar canal](/channels/create-channel).
+</Note>

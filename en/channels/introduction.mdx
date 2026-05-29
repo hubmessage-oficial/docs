@@ -1,17 +1,23 @@
 ---
 title: "Introduction"
-description: "Understand what channels are and how they work in Hub Message"
+description: "Create, connect, and manage messaging channels in Hub Message"
 ---
 
 import { projectName, frontendUrl } from '/snippets/variables.mdx';
 
 ## What is a channel?
 
-In {projectName}, a **channel** represents a connection to a messaging platform — such as WhatsApp, Instagram, Telegram, and others.
+In {projectName}, a **channel** represents a connection to WhatsApp via the Meta Official API.
 
-Each channel is linked to a specific phone number or platform account. For example, if you connect the number `+55 11 99999-9999` to WhatsApp, that creates a channel. If you connect an Instagram account, that creates another channel.
+Each channel is linked to a WhatsApp Business phone number. For example, connecting the number `+55 11 99999-9999` creates a channel with a unique `channelId` used in all API calls.
 
-The `channelId` is the unique identifier for the channel and is used in all API calls to send [free messages](/en/messages/introduction), [templates](/en/messages/send-template), etc.
+The `channelId` is the unique identifier for the channel and is used in all API calls to send [free messages](/en/messages/introduction), [templates](/en/messages/send-template), webhooks, etc.
+
+## Supported platform
+
+| Platform | Type | Status |
+|---|---|---|
+| **WhatsApp** (Meta Official API) | `META_WHATSAPP` | Available |
 
 ## Flow to get started
 
@@ -23,21 +29,41 @@ The `channelId` is the unique identifier for the channel and is used in all API 
     Create a new channel via the [Dashboard]({frontendUrl}) or via API using the [Create channel](/en/channels/create-channel) endpoint.
   </Step>
   <Step title="Connect the channel">
-    Connect the channel to WhatsApp via the dashboard or integrate into your system via SDK + API. See the full flow at [Connect channel](/en/channels/connect-channel).
+    Use the [SDK + API connection flow](/en/channels/connect-channel), which integrates with the official Meta authentication.
+  </Step>
+  <Step title="Activate subscription (ENTERPRISE accounts)">
+    Partners and resellers with the ENTERPRISE role must activate the channel subscription via [Subscribe channel](/en/channels/subscribe-channel) before use.
   </Step>
   <Step title="Send messages">
     With the channel connected, use the `channelId` to send [free messages](/en/messages/introduction) (within the 24h window) or [templates](/en/messages/send-template) (outside the window).
   </Step>
 </Steps>
 
-## Supported platforms
+## Channel endpoints
 
-| Platform | Status |
-|---|---|
-| **WhatsApp** (Official API) | Available |
-| **Instagram** | Coming soon |
-| **Telegram** | Coming soon |
+<CardGroup cols={2}>
+  <Card title="Create channel" icon="plus" href="/en/channels/create-channel">
+    Create a new channel via API.
+  </Card>
+  <Card title="Connect channel" icon="link" href="/en/channels/connect-channel">
+    Connect a channel via Meta SDK + API.
+  </Card>
+  <Card title="Disconnect channel" icon="link-slash" href="/en/channels/disconnect">
+    Permanently disconnect a channel.
+  </Card>
+</CardGroup>
+
+## Subscription management (ENTERPRISE)
 
 <Note>
-  New platforms will be added as the platform evolves. The {projectName} proposal is to be a single API for all messaging channels.
+  The subscription endpoints below require the **ENTERPRISE** role on your account. Contact support to enable it.
 </Note>
+
+<CardGroup cols={2}>
+  <Card title="Subscribe channel" icon="credit-card" href="/en/channels/subscribe-channel">
+    Activate a channel subscription or add it to an existing one.
+  </Card>
+  <Card title="Cancel subscription" icon="xmark" href="/en/channels/cancel-subscription">
+    Cancel a channel subscription programmatically.
+  </Card>
+</CardGroup>

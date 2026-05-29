@@ -1,0 +1,15 @@
+---
+title: "Desconectar canal Meta WhatsApp"
+description: "Desconecte um canal META_WHATSAPP da API Oficial do WhatsApp"
+openapi: "/channels/openapi-disconnect.json PUT /v1/channels/{channelId}/disconnect"
+---
+
+## Conceituação
+
+Desconecta um canal **`META_WHATSAPP`** da API Oficial do WhatsApp e limpa todos os dados de conexão associados (WABA ID, phone ID, número conectado e coexistência).
+
+Use este endpoint quando o usuário quiser desconectar intencionalmente o número — por exemplo, ao trocar de número ou encerrar o uso do canal.
+
+<Warning>
+  Após a desconexão, o canal **não receberá mais mensagens**. Para voltar a funcionar, o canal precisará ser [reconectado](/channels/connect-channel).
+</Warning>
