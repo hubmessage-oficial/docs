@@ -35,13 +35,13 @@
             "application/json": {
               "schema": { "$ref": "#/components/schemas/CancelRequest" },
               "examples": {
-                "com_motivo": {
+                "withReason": {
                   "summary": "Com motivo de cancelamento",
                   "value": {
                     "cancelReason": "Cliente encerrou a empresa"
                   }
                 },
-                "sem_motivo": {
+                "withoutReason": {
                   "summary": "Sem motivo (body omitido)",
                   "value": {}
                 }

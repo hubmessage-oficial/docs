@@ -29,14 +29,14 @@
             "application/json": {
               "schema": { "$ref": "#/components/schemas/CreateWebhookRequest" },
               "examples": {
-                "basico": {
+                "basic": {
                   "summary": "Básico — receber mensagens",
                   "value": {
                     "url": "https://app.suaempresa.com/webhooks/hubmessage",
                     "events": ["MESSAGE_RECEIVED"]
                   }
                 },
-                "com_assinatura": {
+                "withSignature": {
                   "summary": "Com assinatura HMAC",
                   "value": {
                     "url": "https://app.suaempresa.com/webhooks/hubmessage",
@@ -44,7 +44,7 @@
                     "signing": true
                   }
                 },
-                "com_auth_bearer": {
+                "withBearerAuth": {
                   "summary": "Com autenticação Bearer",
                   "value": {
                     "url": "https://app.suaempresa.com/webhooks/hubmessage",
@@ -55,7 +55,7 @@
                     }
                   }
                 },
-                "com_auth_basic": {
+                "withBasicAuth": {
                   "summary": "Com autenticação Basic",
                   "value": {
                     "url": "https://app.suaempresa.com/webhooks/hubmessage",
@@ -67,7 +67,7 @@
                     }
                   }
                 },
-                "com_header_customizado": {
+                "withCustomHeader": {
                   "summary": "Com header customizado",
                   "value": {
                     "url": "https://app.suaempresa.com/webhooks/hubmessage",
@@ -79,7 +79,7 @@
                     }
                   }
                 },
-                "formato_zapi": {
+                "zapiFormat": {
                   "summary": "Formato Z-API (compatibilidade)",
                   "value": {
                     "url": "https://app.suaempresa.com/webhooks/zapi",
@@ -88,7 +88,7 @@
                     "signing": true
                   }
                 },
-                "todos_os_eventos": {
+                "allEvents": {
                   "summary": "Todos os eventos com HMAC + Bearer",
                   "value": {
                     "url": "https://app.suaempresa.com/webhooks/hubmessage",
@@ -118,7 +118,7 @@
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/WebhookCreatedResponse" },
                 "examples": {
-                  "com_signing": {
+                  "withSigning": {
                     "summary": "Com assinatura HMAC habilitada",
                     "value": {
                       "id": "A1B2C3D4E5F6789012345678901234AB",
@@ -136,7 +136,7 @@
                       "updatedAt": "2025-01-15T10:30:00.000+0000"
                     }
                   },
-                  "sem_signing": {
+                  "withoutSigning": {
                     "summary": "Sem assinatura HMAC",
                     "value": {
                       "id": "B2C3D4E5F6789012345678901234AB12",
@@ -340,26 +340,26 @@
             "application/json": {
               "schema": { "$ref": "#/components/schemas/UpdateWebhookRequest" },
               "examples": {
-                "desabilitar": {
+                "disable": {
                   "summary": "Desabilitar webhook",
                   "value": { "status": "DISABLED" }
                 },
-                "reabilitar": {
+                "reenable": {
                   "summary": "Reabilitar webhook",
                   "value": { "status": "ENABLED" }
                 },
-                "atualizar_url_e_eventos": {
+                "updateUrlAndEvents": {
                   "summary": "Atualizar URL e eventos",
                   "value": {
                     "url": "https://nova-url.suaempresa.com/webhooks/hubmessage",
                     "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS", "CONNECTED", "DISCONNECTED"]
                   }
                 },
-                "habilitar_assinatura": {
+                "enableSignature": {
                   "summary": "Habilitar / rotacionar assinatura HMAC",
                   "value": { "signing": true }
                 },
-                "atualizar_auth": {
+                "updateAuth": {
                   "summary": "Atualizar autenticação para Bearer",
                   "value": {
                     "auth": {
@@ -379,7 +379,7 @@
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/WebhookCreatedResponse" },
                 "examples": {
-                  "apos_habilitar_signing": {
+                  "afterEnableSigning": {
                     "summary": "Após habilitar assinatura (secret retornado)",
                     "value": {
                       "id": "A1B2C3D4E5F6789012345678901234AB",
@@ -397,7 +397,7 @@
                       "updatedAt": "2025-01-20T14:00:00.000+0000"
                     }
                   },
-                  "apos_desabilitar": {
+                  "afterDisable": {
                     "summary": "Após desabilitar (sem secret)",
                     "value": {
                       "id": "A1B2C3D4E5F6789012345678901234AB",
