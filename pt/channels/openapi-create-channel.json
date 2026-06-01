@@ -19,7 +19,7 @@
             "application/json": {
               "schema": { "$ref": "#/components/schemas/CreateChannelRequest" },
               "examples": {
-                "whatsapp_meta": {
+                "whatsappMeta": {
                   "summary": "WhatsApp Oficial (Meta)",
                   "value": {
                     "name": "Canal de Vendas",

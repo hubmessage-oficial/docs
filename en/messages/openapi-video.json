@@ -1,0 +1,124 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Send Video",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/v1/channels/{channelId}/messages": {
+      "post": {
+        "summary": "Send video",
+        "description": "Sends a message with a video.",
+        "operationId": "sendVideoMessage",
+        "tags": ["Messages"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "Channel ID",
+            "schema": { "type": "string", "example": "YOUR_CHANNEL_ID" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendVideoRequest" },
+              "example": {
+                "recipient": { "identifier": "5511999999999" },
+                "content": {
+                  "type": "VIDEO",
+                  "attachments": [
+                    {
+                      "url": "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4",
+                      "caption": "Check out this video!"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "MessageSuccess": {
+        "description": "Message sent successfully",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/MessageResponse" },
+            "example": { "messageId": "wamid.HBgNNTU0NDk3MDUwNzg1FQIAERgSM0" }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Invalid or missing token.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 401, "message": "Unauthorized" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "SendVideoRequest": {
+        "type": "object",
+        "required": ["recipient", "content"],
+        "properties": {
+          "recipient": {
+            "type": "object",
+            "required": ["identifier"],
+            "properties": {
+              "identifier": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" }
+            }
+          },
+          "content": {
+            "type": "object",
+            "required": ["type", "attachments"],
+            "properties": {
+              "type": { "type": "string", "description": "Message type", "enum": ["VIDEO"] },
+              "attachments": {
+                "type": "array",
+                "description": "List of attachments",
+                "items": {
+                  "type": "object",
+                  "required": ["url"],
+                  "properties": {
+                    "url": { "type": "string", "description": "Video URL" },
+                    "caption": { "type": "string", "description": "Video caption" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "messageId": { "type": "string", "description": "Sent message ID" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer", "description": "Secret Key generated in the Hub Message Security panel" }
+    }
+  }
+}

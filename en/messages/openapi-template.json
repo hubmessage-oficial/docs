@@ -1,0 +1,186 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Send Template",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/v1/channels/{channelId}/messages": {
+      "post": {
+        "summary": "Send template",
+        "description": "Sends a Meta-approved message template.",
+        "operationId": "sendTemplateMessage",
+        "tags": ["Messages"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "Channel ID",
+            "schema": { "type": "string", "example": "YOUR_CHANNEL_ID" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendTemplateRequest" },
+              "examples": {
+                "withoutParams": {
+                  "summary": "Without parameters",
+                  "value": {
+                    "recipient": { "identifier": "5511999999999" },
+                    "content": {
+                      "type": "TEMPLATE",
+                      "attachments": [
+                        {
+                          "template": {
+                            "name": "welcome_v2",
+                            "language": { "policy": "deterministic", "code": "en_US" },
+                            "components": [{ "type": "body", "parameters": [] }]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                "withParams": {
+                  "summary": "With parameters",
+                  "value": {
+                    "recipient": { "identifier": "5511999999999" },
+                    "content": {
+                      "type": "TEMPLATE",
+                      "attachments": [
+                        {
+                          "template": {
+                            "name": "order_update_v1",
+                            "language": { "policy": "deterministic", "code": "en_US" },
+                            "components": [
+                              {
+                                "type": "body",
+                                "parameters": [
+                                  { "type": "text", "text": "Ana" },
+                                  { "type": "text", "text": "ORD-1024" },
+                                  { "type": "text", "text": "in transit" }
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Message sent successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" },
+                "example": { "messageId": "wamid.HBgNNTU0NDk3MDUwNzg1FQIAERgSM0" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid or missing token.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 401, "message": "Unauthorized" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SendTemplateRequest": {
+        "type": "object",
+        "required": ["recipient", "content"],
+        "properties": {
+          "recipient": {
+            "type": "object",
+            "required": ["identifier"],
+            "properties": {
+              "identifier": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" }
+            }
+          },
+          "content": {
+            "type": "object",
+            "required": ["type", "attachments"],
+            "properties": {
+              "type": { "type": "string", "description": "Message type", "enum": ["TEMPLATE"] },
+              "attachments": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "template": {
+                      "type": "object",
+                      "required": ["name", "language", "components"],
+                      "properties": {
+                        "name": { "type": "string", "description": "Approved template name" },
+                        "language": {
+                          "type": "object",
+                          "properties": {
+                            "policy": { "type": "string", "description": "Language policy", "enum": ["deterministic"] },
+                            "code": { "type": "string", "description": "Language code (e.g. en_US, pt_BR)" }
+                          }
+                        },
+                        "components": {
+                          "type": "array",
+                          "description": "Components with dynamic parameters",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "type": { "type": "string", "description": "Component type (body, header, button)" },
+                              "parameters": {
+                                "type": "array",
+                                "description": "Placeholder values",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": { "type": "string" },
+                                    "text": { "type": "string" }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "messageId": { "type": "string", "description": "Sent message ID" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer", "description": "Secret Key generated in the Hub Message Security panel" }
+    }
+  }
+}

@@ -41,7 +41,7 @@
                 "$ref": "#/components/schemas/SendTemplateRequest"
               },
               "examples": {
-                "sem_parametros": {
+                "withoutParams": {
                   "summary": "Sem parâmetros",
                   "value": {
                     "recipient": {
@@ -69,7 +69,7 @@
                     }
                   }
                 },
-                "com_parametros": {
+                "withParams": {
                   "summary": "Com parâmetros",
                   "value": {
                     "recipient": {

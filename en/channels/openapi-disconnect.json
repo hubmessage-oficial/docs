@@ -1,0 +1,87 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Disconnect Channel",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/v1/channels/{channelId}/disconnect": {
+      "put": {
+        "summary": "Disconnect Meta WhatsApp channel",
+        "description": "Disconnects a **META_WHATSAPP** channel from the WhatsApp Official API. Clears all connection data (WABA, phone ID, coexistence) and marks the channel as disconnected. For Z-API channels, use `POST /zapi/disconnect`.",
+        "operationId": "disconnectMetaChannel",
+        "tags": ["Channels"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "Channel ID",
+            "schema": { "type": "string", "example": "019E4C54B1B375A28970B605CA9B03C3" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Channel disconnected successfully",
+            "content": {
+              "application/json": {
+                "schema": { "type": "boolean" },
+                "example": true
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": {
+            "description": "Channel not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 404, "message": "Channel not found" }
+              }
+            }
+          },
+          "502": {
+            "description": "External service integration error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 502, "message": "Integration error" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Unauthorized": {
+        "description": "Invalid or missing token.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 401, "message": "Unauthorized" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Secret Key generated in the Hub Message Security panel"
+      }
+    }
+  }
+}

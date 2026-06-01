@@ -1,0 +1,119 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Subscribe Channel",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/v1/channels/{channelId}/subscribe": {
+      "get": {
+        "summary": "Subscribe channel (ENTERPRISE)",
+        "description": "Links the channel to the account's active Stripe subscription. The channel is automatically added to the existing subscription and a prorated charge for the remaining period is included in the next invoice. Payment must have been completed previously by the user in the Hub Message dashboard. Requires **ENTERPRISE** role.",
+        "operationId": "subscribeChannel",
+        "tags": ["Channels"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "Channel ID (obtained via Create channel)",
+            "schema": { "type": "string", "example": "019E4C54B1B375A28970B605CA9B03C3" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Channel linked to subscription successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SubscribeResponse" },
+                "example": {
+                  "type": "SUBSCRIPTION_UPDATED",
+                  "message": "Channel active. Prorated charge will be included in the next invoice."
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": {
+            "description": "Channel not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 404, "message": "Channel not found" }
+              }
+            }
+          },
+          "422": {
+            "description": "Business rule violation. Possible causes:\n\n- `ENTERPRISE role required` — account does not have ENTERPRISE role\n- `CREDIT_LIMIT_EXCEEDED` — account credit limit reached\n- `SUBSCRIPTION_TERMINATED` — subscription terminated, cannot add channels",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "examples": {
+                  "enterpriseRequired": {
+                    "summary": "Account without ENTERPRISE role",
+                    "value": { "error": 422, "message": "This action requires ENTERPRISE role" }
+                  },
+                  "creditLimit": {
+                    "summary": "Credit limit reached",
+                    "value": { "error": 422, "message": "CREDIT_LIMIT_EXCEEDED" }
+                  },
+                  "terminated": {
+                    "summary": "Subscription terminated",
+                    "value": { "error": 422, "message": "SUBSCRIPTION_TERMINATED" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Unauthorized": {
+        "description": "Invalid or missing token.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 401, "message": "Unauthorized" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "SubscribeResponse": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["SUBSCRIPTION_UPDATED"],
+            "description": "Indicates the channel was successfully added to the subscription",
+            "example": "SUBSCRIPTION_UPDATED"
+          },
+          "message": {
+            "type": "string",
+            "description": "Informational message to display to the user",
+            "example": "Channel active. Prorated charge will be included in the next invoice."
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Secret Key generated in the Hub Message Security panel"
+      }
+    }
+  }
+}

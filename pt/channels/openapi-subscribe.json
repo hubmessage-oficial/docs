@@ -51,11 +51,11 @@
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/Error" },
                 "examples": {
-                  "enterprise_required": {
+                  "enterpriseRequired": {
                     "summary": "Conta sem role ENTERPRISE",
                     "value": { "error": 422, "message": "This action requires ENTERPRISE role" }
                   },
-                  "credit_limit": {
+                  "creditLimit": {
                     "summary": "Limite de crédito atingido",
                     "value": { "error": 422, "message": "CREDIT_LIMIT_EXCEEDED" }
                   },

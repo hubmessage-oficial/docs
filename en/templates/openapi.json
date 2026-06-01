@@ -1,0 +1,523 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Templates API",
+    "description": "API for managing WhatsApp Business message templates",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/whatsapp/businesses": {
+      "get": {
+        "summary": "List WABAs",
+        "description": "Returns the list of WABAs (WhatsApp Business Accounts) available for the authenticated token.",
+        "operationId": "listBusinesses",
+        "tags": ["Templates"],
+        "responses": {
+          "200": {
+            "description": "List of WABAs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Business" }
+                },
+                "example": [
+                  {
+                    "businessId": "428083093730937",
+                    "name": "Demo",
+                    "channelsCount": 1,
+                    "connectedCount": 1,
+                    "disconnectedCount": 0
+                  }
+                ]
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/whatsapp/businesses/{wabaId}/templates": {
+      "get": {
+        "summary": "List templates",
+        "description": "Returns the list of templates for a WABA. The structure of `components` varies depending on the category and configuration of each template.",
+        "operationId": "listTemplates",
+        "tags": ["Templates"],
+        "parameters": [
+          {
+            "name": "wabaId",
+            "in": "path",
+            "required": true,
+            "description": "WABA ID (obtained via List WABAs)",
+            "schema": { "type": "string", "example": "428083093730937" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of templates",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Template" }
+                    }
+                  }
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "1900296177408890",
+                      "name": "confirm_account",
+                      "status": "APPROVED",
+                      "category": "AUTHENTICATION",
+                      "language": "en_US",
+                      "parameter_format": "POSITIONAL",
+                      "message_send_ttl_seconds": 600,
+                      "components": [
+                        {
+                          "type": "BODY",
+                          "text": "Your verification code is *{{1}}*. For your security, do not share it.",
+                          "add_security_recommendation": true,
+                          "example": { "body_text": [["123456"]] }
+                        },
+                        {
+                          "type": "BUTTONS",
+                          "buttons": [
+                            {
+                              "type": "URL",
+                              "text": "Copy code",
+                              "url": "https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=otp{{1}}",
+                              "example": ["https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=otp123456"]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      },
+      "post": {
+        "summary": "Create template",
+        "description": "Creates a new message template and submits it for Meta approval.",
+        "operationId": "createTemplate",
+        "tags": ["Templates"],
+        "parameters": [
+          {
+            "name": "wabaId",
+            "in": "path",
+            "required": true,
+            "description": "WABA ID (obtained via List WABAs)",
+            "schema": { "type": "string", "example": "428083093730937" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateTemplateRequest" },
+              "examples": {
+                "utility": {
+                  "summary": "Utility - Order update",
+                  "value": {
+                    "name": "order_update_v1",
+                    "category": "UTILITY",
+                    "language": "en_US",
+                    "components": [
+                      {
+                        "type": "BODY",
+                        "text": "Hello {{1}}, your order {{2}} has been updated to {{3}}, see you soon.",
+                        "example": { "body_text": [["Ana", "ORD-1024", "in transit"]] }
+                      }
+                    ]
+                  }
+                },
+                "marketing": {
+                  "summary": "Marketing - Discount campaign",
+                  "value": {
+                    "name": "discount_campaign_v1",
+                    "category": "MARKETING",
+                    "language": "en_US",
+                    "components": [
+                      {
+                        "type": "BODY",
+                        "text": "Enjoy {{1}} off on the {{2}} plan until {{3}}.",
+                        "example": { "body_text": [["20%", "Premium", "04/30"]] }
+                      },
+                      {
+                        "type": "BUTTONS",
+                        "buttons": [
+                          { "type": "URL", "text": "View offer", "url": "https://example.com/offer" }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "authentication": {
+                  "summary": "Authentication - OTP code",
+                  "value": {
+                    "name": "otp_login_v1",
+                    "category": "AUTHENTICATION",
+                    "language": "en_US",
+                    "components": [
+                      {
+                        "type": "BODY",
+                        "text": "Your verification code is *{{1}}*. For your security, do not share it.",
+                        "add_security_recommendation": true,
+                        "example": { "body_text": [["123456"]] }
+                      },
+                      {
+                        "type": "BUTTONS",
+                        "buttons": [
+                          {
+                            "type": "URL",
+                            "text": "Copy code",
+                            "url": "https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=otp{{1}}",
+                            "example": ["https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=otp123456"]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Template created and submitted for approval",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CreateTemplateResponse" },
+                "example": { "id": "1613165359891625", "status": "PENDING", "category": "UTILITY" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/MetaError" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/whatsapp/businesses/{wabaId}/templates/{templateId}": {
+      "put": {
+        "summary": "Edit template",
+        "description": "Edits an existing template and resubmits it for Meta approval.",
+        "operationId": "updateTemplate",
+        "tags": ["Templates"],
+        "parameters": [
+          {
+            "name": "wabaId",
+            "in": "path",
+            "required": true,
+            "description": "WABA ID (obtained via List WABAs)",
+            "schema": { "type": "string", "example": "428083093730937" }
+          },
+          {
+            "name": "templateId",
+            "in": "path",
+            "required": true,
+            "description": "Template ID (obtained via List templates)",
+            "schema": { "type": "string", "example": "1900296177408890" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateTemplateRequest" },
+              "example": {
+                "name": "order_update_v1",
+                "category": "UTILITY",
+                "language": "en_US",
+                "components": [
+                  {
+                    "type": "BODY",
+                    "text": "Hello {{1}}, your order {{2}} has been updated to {{3}}.",
+                    "example": { "body_text": [["Ana", "ORD-1024", "in transit"]] }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Template edited successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" },
+                "example": { "success": true }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/MetaError" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      },
+      "delete": {
+        "summary": "Delete template",
+        "description": "Removes an existing template from the WABA.",
+        "operationId": "deleteTemplate",
+        "tags": ["Templates"],
+        "parameters": [
+          {
+            "name": "wabaId",
+            "in": "path",
+            "required": true,
+            "description": "WABA ID (obtained via List WABAs)",
+            "schema": { "type": "string", "example": "428083093730937" }
+          },
+          {
+            "name": "templateId",
+            "in": "path",
+            "required": true,
+            "description": "Template ID (obtained via List templates)",
+            "schema": { "type": "string", "example": "1900296177408890" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" },
+                "example": { "success": true }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/whatsapp/businesses/{wabaId}/templates/sync": {
+      "post": {
+        "summary": "Sync templates",
+        "description": "Forces synchronization of templates with Meta, updating statuses (PENDING, APPROVED, REJECTED) and other information.",
+        "operationId": "syncTemplates",
+        "tags": ["Templates"],
+        "parameters": [
+          {
+            "name": "wabaId",
+            "in": "path",
+            "required": true,
+            "description": "WABA ID (obtained via List WABAs)",
+            "schema": { "type": "string", "example": "428083093730937" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Synchronization completed successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SyncResponse" },
+                "example": {
+                  "data": [
+                    {
+                      "id": "1900296177408890",
+                      "name": "confirm_account",
+                      "status": "APPROVED",
+                      "category": "AUTHENTICATION",
+                      "language": "en_US",
+                      "parameter_format": "POSITIONAL",
+                      "message_send_ttl_seconds": 600,
+                      "components": [
+                        {
+                          "type": "BODY",
+                          "text": "Your verification code is *{{1}}*. For your security, do not share it.",
+                          "add_security_recommendation": true,
+                          "example": { "body_text": [["123456"]] }
+                        }
+                      ]
+                    }
+                  ],
+                  "syncedCount": 2,
+                  "synced": true
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "MethodNotAllowed": {
+        "description": "Method not allowed.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 405, "message": "Method not allowed" }
+          }
+        }
+      },
+      "MetaError": {
+        "description": "Error returned by Meta when processing the request.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/MetaError" },
+            "example": {
+              "error": "Newport request failed",
+              "value": {
+                "errors": [
+                  {
+                    "description": "",
+                    "name": "META_WHATSAPP_ERROR",
+                    "message": "Your message could not be sent because it contains content that other people on Facebook have reported as abusive.",
+                    "code": "368"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Invalid or missing token.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 401, "message": "Unauthorized" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Business": {
+        "type": "object",
+        "properties": {
+          "businessId": { "type": "string", "description": "WABA ID (WhatsApp Business Account)" },
+          "name": { "type": "string", "description": "WABA name" },
+          "channelsCount": { "type": "integer", "description": "Total linked channels" },
+          "connectedCount": { "type": "integer", "description": "Connected channels" },
+          "disconnectedCount": { "type": "integer", "description": "Disconnected channels" }
+        }
+      },
+      "CreateTemplateRequest": {
+        "type": "object",
+        "required": ["name", "category", "language", "components"],
+        "properties": {
+          "name": { "type": "string", "description": "Template name (snake_case, no spaces)" },
+          "category": {
+            "type": "string",
+            "description": "Template category",
+            "enum": ["UTILITY", "MARKETING", "AUTHENTICATION"]
+          },
+          "language": { "type": "string", "description": "Template language (e.g. en_US, pt_BR)" },
+          "components": {
+            "type": "array",
+            "description": "Template components (HEADER, BODY, FOOTER, BUTTONS)",
+            "items": { "type": "object" }
+          }
+        }
+      },
+      "CreateTemplateResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "Created template ID" },
+          "status": {
+            "type": "string",
+            "description": "Initial status (usually PENDING)",
+            "enum": ["PENDING", "APPROVED", "REJECTED"]
+          },
+          "category": {
+            "type": "string",
+            "description": "Created template category",
+            "enum": ["UTILITY", "MARKETING", "AUTHENTICATION"]
+          }
+        }
+      },
+      "SyncResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "description": "List of synced templates",
+            "items": { "$ref": "#/components/schemas/Template" }
+          },
+          "syncedCount": { "type": "integer", "description": "Number of synced templates" },
+          "synced": { "type": "boolean", "description": "Indicates whether the synchronization was successful" }
+        }
+      },
+      "Template": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "Template ID" },
+          "name": { "type": "string", "description": "Template name" },
+          "status": {
+            "type": "string",
+            "description": "Approval status",
+            "enum": ["PENDING", "APPROVED", "REJECTED"]
+          },
+          "category": {
+            "type": "string",
+            "description": "Template category",
+            "enum": ["UTILITY", "MARKETING", "AUTHENTICATION"]
+          },
+          "language": { "type": "string", "description": "Template language (e.g. en_US, pt_BR)" },
+          "parameter_format": { "type": "string", "description": "Parameter format" },
+          "message_send_ttl_seconds": { "type": "integer", "description": "Message time-to-live in seconds" },
+          "components": {
+            "type": "array",
+            "description": "Template components (HEADER, BODY, FOOTER, BUTTONS)",
+            "items": { "type": "object" }
+          }
+        }
+      },
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "description": "Indicates whether the operation was successful" }
+        }
+      },
+      "MetaError": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string", "description": "General error description" },
+          "value": {
+            "type": "object",
+            "properties": {
+              "errors": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "description": { "type": "string" },
+                    "name": { "type": "string", "description": "Error type (e.g. META_WHATSAPP_ERROR)" },
+                    "message": { "type": "string", "description": "Meta error message" },
+                    "code": { "type": "string", "description": "Meta error code" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer", "description": "Error code" },
+          "message": { "type": "string", "description": "Error description" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Secret Key generated in the Hub Message Security panel"
+      }
+    }
+  }
+}
