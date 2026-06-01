@@ -1,14 +1,15 @@
 ---
-title: "Connect channel"
-description: "Complete flow to connect a channel to WhatsApp"
-openapi: "/channels/openapi-connect.json POST /v1/channels/{channelId}/connect"
+title: "Connect Meta WhatsApp channel"
+description: "Complete flow to connect a META_WHATSAPP channel to the WhatsApp Official API"
+openapi: "/en/channels/openapi-connect.json POST /v1/channels/{channelId}/connect"
 ---
 
 import { projectName, frontendUrl } from '/snippets/variables.mdx';
 
+
 ## Overview
 
-After [creating a channel](/en/channels/create-channel), you need to **connect it** to a WhatsApp number. There are two ways:
+After [creating a channel](/en/channels/create-channel) of type `META_WHATSAPP`, you need to **connect it** to a WhatsApp Business number. There are two ways:
 
 - **Via dashboard** — Guided flow directly in the [Dashboard]({frontendUrl})
 - **Via SDK + API** — Integrate the connection flow into your system

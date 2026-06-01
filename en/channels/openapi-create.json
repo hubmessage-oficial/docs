@@ -1,0 +1,94 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Create Channel",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/v1/channels": {
+      "post": {
+        "summary": "Create channel",
+        "description": "Creates a new channel.",
+        "operationId": "createChannel",
+        "tags": ["Channels"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateChannelRequest" },
+              "example": {
+                "name": "My WhatsApp channel",
+                "type": "META_WHATSAPP"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Channel created successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CreateChannelResponse" },
+                "example": {
+                  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Unauthorized": {
+        "description": "Invalid or missing token.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 401, "message": "Unauthorized" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "CreateChannelRequest": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Channel name"
+          },
+          "type": {
+            "type": "string",
+            "description": "Channel type (platform)",
+            "enum": ["META_WHATSAPP"]
+          }
+        }
+      },
+      "CreateChannelResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Created channel ID (channelId)"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer", "description": "Secret Key generated in the Hub Message Security panel" }
+    }
+  }
+}

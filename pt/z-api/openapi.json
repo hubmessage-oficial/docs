@@ -141,7 +141,7 @@
                 "$ref": "#/components/schemas/SendButtonActionsRequest"
               },
               "examples": {
-                "call_url": {
+                "callAndUrl": {
                   "summary": "Botões de ligar e URL",
                   "value": {
                     "phone": "5511999999999",
@@ -203,7 +203,7 @@
                 "$ref": "#/components/schemas/SendButtonListRequest"
               },
               "examples": {
-                "sem_imagem": {
+                "withoutImage": {
                   "summary": "Sem imagem",
                   "value": {
                     "phone": "5511999999999",
@@ -217,7 +217,7 @@
                     }
                   }
                 },
-                "com_imagem": {
+                "withImage": {
                   "summary": "Com imagem",
                   "value": {
                     "phone": "5511999999999",
@@ -232,7 +232,7 @@
                     }
                   }
                 },
-                "com_video": {
+                "withVideo": {
                   "summary": "Com vídeo",
                   "value": {
                     "phone": "5511999999999",

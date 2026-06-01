@@ -28,7 +28,7 @@
             "application/json": {
               "schema": { "$ref": "#/components/schemas/SendInteractiveButtonRequest" },
               "examples": {
-                "texto": {
+                "text": {
                   "summary": "Texto com botões",
                   "value": {
                     "recipient": { "identifier": "5511999999999" },
@@ -43,7 +43,7 @@
                     }
                   }
                 },
-                "com_imagem": {
+                "withImage": {
                   "summary": "Com imagem",
                   "value": {
                     "recipient": { "identifier": "5511999999999" },
@@ -61,7 +61,7 @@
                     }
                   }
                 },
-                "com_video": {
+                "withVideo": {
                   "summary": "Com vídeo",
                   "value": {
                     "recipient": { "identifier": "5511999999999" },

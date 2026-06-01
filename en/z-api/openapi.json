@@ -1,0 +1,900 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Z-API Compatibility",
+    "description": "Z-API compatible API to facilitate migration to Hub Message",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://zapi.hubmessage.io/channels/{channel_id}/token/{channel_token}",
+      "variables": {
+        "channel_id": {
+          "description": "Channel ID (equivalent to Z-API instance_id)",
+          "default": "YOUR_CHANNEL"
+        },
+        "channel_token": {
+          "description": "Channel token (equivalent to Z-API token)",
+          "default": "YOUR_TOKEN"
+        }
+      }
+    }
+  ],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/send-text": {
+      "post": {
+        "summary": "Send text",
+        "description": "Sends a plain text message. Supports WhatsApp formatting, emojis and line breaks (`\\n`, `\\r`, `\\r\\n` or `%0a`).",
+        "operationId": "sendText",
+        "tags": ["Messages"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendTextRequest" },
+              "example": {
+                "phone": "5511999999999",
+                "message": "Welcome to *Hub Message*!"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" }
+        }
+      }
+    },
+    "/send-image": {
+      "post": {
+        "summary": "Send image",
+        "description": "Sends a message with an image. Accepts URL or Base64 (with `data:image/png;base64,` prefix).",
+        "operationId": "sendImage",
+        "tags": ["Messages"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendImageRequest" },
+              "examples": {
+                "url": {
+                  "summary": "Send by URL",
+                  "value": {
+                    "phone": "5511999999999",
+                    "image": "https://example.com/image.png",
+                    "caption": "Check out this image!",
+                    "viewOnce": false
+                  }
+                },
+                "base64": {
+                  "summary": "Send by Base64",
+                  "value": {
+                    "phone": "5511999999999",
+                    "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAAMg...",
+                    "caption": "Check out this image!",
+                    "viewOnce": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" }
+        }
+      }
+    },
+    "/send-link": {
+      "post": {
+        "summary": "Send link",
+        "description": "Sends a message with link preview (image, title and description).",
+        "operationId": "sendLink",
+        "tags": ["Messages"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendLinkRequest" },
+              "example": {
+                "phone": "5511999999999",
+                "message": "Check out our website: https://www.hubmessage.io",
+                "image": "https://www.hubmessage.io/logo.png",
+                "linkUrl": "https://www.hubmessage.io",
+                "title": "Hub Message",
+                "linkDescription": "Omnichannel API for Business Communication"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" }
+        }
+      }
+    },
+    "/send-button-actions": {
+      "post": {
+        "summary": "Send action buttons",
+        "description": "Sends a text message with action buttons (call, open URL or quick reply).",
+        "operationId": "sendButtonActions",
+        "tags": ["Messages"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendButtonActionsRequest" },
+              "examples": {
+                "callAndUrl": {
+                  "summary": "Call and URL buttons",
+                  "value": {
+                    "phone": "5511999999999",
+                    "message": "Hello! How can we help?",
+                    "title": "Hub Message",
+                    "footer": "Choose an option",
+                    "buttonActions": [
+                      { "id": "1", "type": "CALL", "phone": "5511999999999", "label": "Contact us" },
+                      { "id": "2", "type": "URL", "url": "https://www.hubmessage.io", "label": "Visit our website" }
+                    ]
+                  }
+                },
+                "reply": {
+                  "summary": "Quick reply button",
+                  "value": {
+                    "phone": "5511999999999",
+                    "message": "Need help?",
+                    "buttonActions": [
+                      { "id": "3", "type": "REPLY", "label": "Talk to an agent" }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" }
+        }
+      }
+    },
+    "/send-button-list": {
+      "post": {
+        "summary": "Send button list",
+        "description": "Sends a text message with quick-selection buttons.",
+        "operationId": "sendButtonList",
+        "tags": ["Messages"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendButtonListRequest" },
+              "examples": {
+                "withoutImage": {
+                  "summary": "Without image",
+                  "value": {
+                    "phone": "5511999999999",
+                    "message": "How would you rate our service?",
+                    "buttonList": {
+                      "buttons": [
+                        { "id": "1", "label": "Excellent" },
+                        { "id": "2", "label": "Good" },
+                        { "id": "3", "label": "Average" }
+                      ]
+                    }
+                  }
+                },
+                "withImage": {
+                  "summary": "With image",
+                  "value": {
+                    "phone": "5511999999999",
+                    "message": "How would you rate our service?",
+                    "buttonList": {
+                      "image": "https://example.com/image.png",
+                      "buttons": [
+                        { "id": "1", "label": "Excellent" },
+                        { "id": "2", "label": "Good" },
+                        { "id": "3", "label": "Average" }
+                      ]
+                    }
+                  }
+                },
+                "withVideo": {
+                  "summary": "With video",
+                  "value": {
+                    "phone": "5511999999999",
+                    "message": "How would you rate our service?",
+                    "buttonList": {
+                      "video": "https://example.com/video.mp4",
+                      "buttons": [
+                        { "id": "1", "label": "Excellent" },
+                        { "id": "2", "label": "Good" },
+                        { "id": "3", "label": "Average" }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" }
+        }
+      }
+    },
+    "/send-contact": {
+      "post": {
+        "summary": "Send contact",
+        "description": "Sends a contact via WhatsApp. The contact does not need to be saved in your address book.",
+        "operationId": "sendContact",
+        "tags": ["Messages"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendContactRequest" },
+              "example": {
+                "phone": "5511999999999",
+                "contactName": "Hub Message Support",
+                "contactPhone": "5511888888888"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" }
+        }
+      }
+    },
+    "/send-document/{extension}": {
+      "post": {
+        "summary": "Send document",
+        "description": "Sends a document (PDF, DOC, XLS, etc). The file extension must be provided in the path. Accepts URL or Base64.",
+        "operationId": "sendDocument",
+        "tags": ["Messages"],
+        "parameters": [
+          {
+            "name": "extension",
+            "in": "path",
+            "required": true,
+            "description": "File extension (e.g. pdf, docx, xlsx)",
+            "schema": { "type": "string", "example": "pdf" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendDocumentRequest" },
+              "examples": {
+                "url": {
+                  "summary": "Send by URL",
+                  "value": {
+                    "phone": "5511999999999",
+                    "document": "https://example.com/file.pdf",
+                    "fileName": "My document"
+                  }
+                },
+                "base64": {
+                  "summary": "Send by Base64",
+                  "value": {
+                    "phone": "5511999999999",
+                    "document": "data:application/pdf;base64,JVBERiN0YXJ0eHJlZg...",
+                    "fileName": "My document"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" }
+        }
+      }
+    },
+    "/send-video": {
+      "post": {
+        "summary": "Send video",
+        "description": "Sends a message with a video. Accepts URL or Base64 (with `data:video/mp4;base64,` prefix).",
+        "operationId": "sendVideo",
+        "tags": ["Messages"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendVideoRequest" },
+              "examples": {
+                "url": {
+                  "summary": "Send by URL",
+                  "value": {
+                    "phone": "5511999999999",
+                    "video": "https://example.com/video.mp4",
+                    "caption": "Check out this video!",
+                    "viewOnce": false
+                  }
+                },
+                "base64": {
+                  "summary": "Send by Base64",
+                  "value": {
+                    "phone": "5511999999999",
+                    "video": "data:video/mp4;base64,AAYXJ0eHJlZgIGZ0eXBtc0eH...",
+                    "caption": "Check out this video!",
+                    "viewOnce": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" }
+        }
+      }
+    },
+    "/send-audio": {
+      "post": {
+        "summary": "Send audio",
+        "description": "Sends an audio message (voice message). Accepts URL or Base64 (with `data:audio/mpeg;base64,` prefix).",
+        "operationId": "sendAudio",
+        "tags": ["Messages"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendAudioRequest" },
+              "examples": {
+                "url": {
+                  "summary": "Send by URL",
+                  "value": {
+                    "phone": "5511999999999",
+                    "audio": "https://example.com/audio.mp3",
+                    "viewOnce": false
+                  }
+                },
+                "base64": {
+                  "summary": "Send by Base64",
+                  "value": {
+                    "phone": "5511999999999",
+                    "audio": "data:audio/mpeg;base64,SUQzAwAAA...",
+                    "viewOnce": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" }
+        }
+      }
+    },
+    "/send-sticker": {
+      "post": {
+        "summary": "Send sticker",
+        "description": "Sends a sticker. Accepts URL or Base64 (with `data:image/png;base64,` prefix).",
+        "operationId": "sendSticker",
+        "tags": ["Messages"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendStickerRequest" },
+              "examples": {
+                "url": {
+                  "summary": "Send by URL",
+                  "value": {
+                    "phone": "5511999999999",
+                    "sticker": "https://example.com/sticker.png",
+                    "stickerAuthor": "Hub Message"
+                  }
+                },
+                "base64": {
+                  "summary": "Send by Base64",
+                  "value": {
+                    "phone": "5511999999999",
+                    "sticker": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAAMg...",
+                    "stickerAuthor": "Hub Message"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" }
+        }
+      }
+    },
+    "/send-carousel": {
+      "post": {
+        "summary": "Send carousel",
+        "description": "Sends a message with a carousel of cards, each with an image, text and action buttons.",
+        "operationId": "sendCarousel",
+        "tags": ["Messages"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendCarouselRequest" },
+              "example": {
+                "phone": "5511999999999",
+                "message": "Check out our products:",
+                "carousel": [
+                  {
+                    "text": "Product A",
+                    "image": "https://example.com/product-a.png",
+                    "buttons": [
+                      { "id": "1", "type": "URL", "label": "View details", "url": "https://www.hubmessage.io" },
+                      { "id": "2", "type": "REPLY", "label": "I'm interested" }
+                    ]
+                  },
+                  {
+                    "text": "Product B",
+                    "image": "https://example.com/product-b.png",
+                    "buttons": [
+                      { "id": "3", "type": "URL", "label": "View details", "url": "https://www.hubmessage.io" },
+                      { "id": "4", "type": "REPLY", "label": "I'm interested" }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" }
+        }
+      }
+    },
+    "/send-button-pix": {
+      "post": {
+        "summary": "Send Pix button",
+        "description": "Sends a message with a Pix payment button.",
+        "operationId": "sendButtonPix",
+        "tags": ["Messages"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendButtonPixRequest" },
+              "example": {
+                "phone": "5511999999999",
+                "pixKey": "12345678900",
+                "type": "CPF",
+                "merchantName": "Hub Message"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" }
+        }
+      }
+    },
+    "/send-catalog": {
+      "post": {
+        "summary": "Send catalog",
+        "description": "Sends the WhatsApp Business product catalog.",
+        "operationId": "sendCatalog",
+        "tags": ["Messages"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendCatalogRequest" },
+              "example": {
+                "phone": "5511999999999",
+                "catalogPhone": "5511999999999",
+                "translation": "EN",
+                "message": "Follow this link to view our catalog on WhatsApp:",
+                "title": "View the product catalog on WhatsApp",
+                "catalogDescription": "Learn more about this company's products and services."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" }
+        }
+      }
+    },
+    "/send-product": {
+      "post": {
+        "summary": "Send product",
+        "description": "Sends a product from the WhatsApp Business catalog.",
+        "operationId": "sendProduct",
+        "tags": ["Messages"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendProductRequest" },
+              "example": {
+                "phone": "5511999999999",
+                "catalogPhone": "5511999999999",
+                "productId": "7190654897637620"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" }
+        }
+      }
+    },
+    "/send-reaction": {
+      "post": {
+        "summary": "Send reaction",
+        "description": "Sends a reaction (emoji) to an existing message. Works for both sent and received messages.",
+        "operationId": "sendReaction",
+        "tags": ["Messages"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendReactionRequest" },
+              "example": {
+                "phone": "5511999999999",
+                "reaction": "❤️",
+                "messageId": "D241XXXX732339502B68"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" }
+        }
+      }
+    },
+    "/send-remove-reaction": {
+      "post": {
+        "summary": "Remove reaction",
+        "description": "Removes a reaction (emoji) from an existing message.",
+        "operationId": "sendRemoveReaction",
+        "tags": ["Messages"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendRemoveReactionRequest" },
+              "example": {
+                "phone": "5511999999999",
+                "messageId": "D241XXXX732339502B68"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "415": { "$ref": "#/components/responses/UnsupportedMediaType" }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "MessageSuccess": {
+        "description": "Message sent successfully",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/MessageResponse" },
+            "example": {
+              "zaapId": "3999984263738042930CD6ECDE9VDWSA",
+              "messageId": "D241XXXX732339502B68",
+              "id": "D241XXXX732339502B68"
+            }
+          }
+        }
+      },
+      "MethodNotAllowed": {
+        "description": "Method not allowed. Make sure you are using POST.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 405, "message": "Method not allowed" }
+          }
+        }
+      },
+      "UnsupportedMediaType": {
+        "description": "Invalid Content-Type. Send `Content-Type: application/json`.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 415, "message": "Unsupported media type" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "SendTextRequest": {
+        "type": "object",
+        "required": ["phone", "message"],
+        "properties": {
+          "phone": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" },
+          "message": { "type": "string", "description": "Message text", "example": "Welcome to *Hub Message*!" },
+          "delayMessage": { "type": "integer", "description": "Delay in seconds before sending (1-15)", "minimum": 1, "maximum": 15 },
+          "delayTyping": { "type": "integer", "description": "Seconds to display \"typing\" status (1-15)", "minimum": 1, "maximum": 15 },
+          "editMessageId": { "type": "string", "description": "ID of a previously sent message to edit" }
+        }
+      },
+      "SendImageRequest": {
+        "type": "object",
+        "required": ["phone", "image"],
+        "properties": {
+          "phone": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" },
+          "image": { "type": "string", "description": "Image URL or Base64 data" },
+          "caption": { "type": "string", "description": "Image caption" },
+          "messageId": { "type": "string", "description": "ID of an existing message to reply to" },
+          "delayMessage": { "type": "integer", "description": "Delay in seconds before sending (1-15)", "minimum": 1, "maximum": 15 },
+          "viewOnce": { "type": "boolean", "description": "Send as view-once message", "default": false }
+        }
+      },
+      "SendLinkRequest": {
+        "type": "object",
+        "required": ["phone", "message", "image", "linkUrl", "title", "linkDescription"],
+        "properties": {
+          "phone": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" },
+          "message": { "type": "string", "description": "Message text. Must include the link URL at the end" },
+          "image": { "type": "string", "description": "Link preview image URL" },
+          "linkUrl": { "type": "string", "description": "Link URL" },
+          "title": { "type": "string", "description": "Link title" },
+          "linkDescription": { "type": "string", "description": "Link description" },
+          "linkType": { "type": "string", "description": "Preview size: SMALL, MEDIUM or LARGE", "enum": ["SMALL", "MEDIUM", "LARGE"], "default": "SMALL" },
+          "delayMessage": { "type": "integer", "description": "Delay in seconds before sending (1-15)", "minimum": 1, "maximum": 15 },
+          "delayTyping": { "type": "integer", "description": "Seconds to display \"typing\" status (1-15)", "minimum": 1, "maximum": 15 }
+        }
+      },
+      "SendButtonActionsRequest": {
+        "type": "object",
+        "required": ["phone", "message", "buttonActions"],
+        "properties": {
+          "phone": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" },
+          "message": { "type": "string", "description": "Message text" },
+          "title": { "type": "string", "description": "Message title" },
+          "footer": { "type": "string", "description": "Message footer" },
+          "buttonActions": {
+            "type": "array",
+            "description": "List of action buttons",
+            "items": {
+              "type": "object",
+              "required": ["type", "label"],
+              "properties": {
+                "id": { "type": "string", "description": "Button identifier" },
+                "type": { "type": "string", "description": "Button type", "enum": ["CALL", "URL", "REPLY"] },
+                "label": { "type": "string", "description": "Text displayed on the button" },
+                "phone": { "type": "string", "description": "Phone number for CALL-type buttons" },
+                "url": { "type": "string", "description": "URL for URL-type buttons (must start with http:// or https://)" }
+              }
+            }
+          },
+          "delayMessage": { "type": "integer", "description": "Delay in seconds before sending (1-15)", "minimum": 1, "maximum": 15 }
+        }
+      },
+      "SendButtonListRequest": {
+        "type": "object",
+        "required": ["phone", "message", "buttonList"],
+        "properties": {
+          "phone": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" },
+          "message": { "type": "string", "description": "Message text (required, cannot be empty)" },
+          "buttonList": {
+            "type": "object",
+            "description": "Button configuration",
+            "required": ["buttons"],
+            "properties": {
+              "image": { "type": "string", "description": "URL or Base64 of an image to display alongside the buttons" },
+              "video": { "type": "string", "description": "URL or Base64 of a video to display alongside the buttons" },
+              "buttons": {
+                "type": "array",
+                "description": "List of buttons",
+                "items": {
+                  "type": "object",
+                  "required": ["label"],
+                  "properties": {
+                    "id": { "type": "string", "description": "Button identifier" },
+                    "label": { "type": "string", "description": "Text displayed on the button" }
+                  }
+                }
+              }
+            }
+          },
+          "delayMessage": { "type": "integer", "description": "Delay in seconds before sending (1-15)", "minimum": 1, "maximum": 15 }
+        }
+      },
+      "SendContactRequest": {
+        "type": "object",
+        "required": ["phone", "contactName", "contactPhone"],
+        "properties": {
+          "phone": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" },
+          "contactName": { "type": "string", "description": "Name of the contact to share" },
+          "contactPhone": { "type": "string", "description": "Phone number of the contact to share" },
+          "contactBusinessDescription": { "type": "string", "description": "Contact description (not displayed in WhatsApp Web)" },
+          "messageId": { "type": "string", "description": "ID of an existing message to reply to" },
+          "delayMessage": { "type": "integer", "description": "Delay in seconds before sending (1-15)", "minimum": 1, "maximum": 15 }
+        }
+      },
+      "SendDocumentRequest": {
+        "type": "object",
+        "required": ["phone", "document"],
+        "properties": {
+          "phone": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" },
+          "document": { "type": "string", "description": "Document URL or Base64 data" },
+          "fileName": { "type": "string", "description": "File name" },
+          "caption": { "type": "string", "description": "Document description" },
+          "messageId": { "type": "string", "description": "ID of an existing message to reply to" },
+          "delayMessage": { "type": "integer", "description": "Delay in seconds before sending (1-15)", "minimum": 1, "maximum": 15 }
+        }
+      },
+      "SendVideoRequest": {
+        "type": "object",
+        "required": ["phone", "video"],
+        "properties": {
+          "phone": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" },
+          "video": { "type": "string", "description": "Video URL or Base64 data" },
+          "caption": { "type": "string", "description": "Video caption" },
+          "messageId": { "type": "string", "description": "ID of an existing message to reply to" },
+          "delayMessage": { "type": "integer", "description": "Delay in seconds before sending (1-15)", "minimum": 1, "maximum": 15 },
+          "viewOnce": { "type": "boolean", "description": "Send as view-once message", "default": false }
+        }
+      },
+      "SendAudioRequest": {
+        "type": "object",
+        "required": ["phone", "audio"],
+        "properties": {
+          "phone": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" },
+          "audio": { "type": "string", "description": "Audio URL or Base64 data" },
+          "viewOnce": { "type": "boolean", "description": "Send as view-once message", "default": false },
+          "delayMessage": { "type": "integer", "description": "Delay in seconds before sending (1-15)", "minimum": 1, "maximum": 15 },
+          "delayTyping": { "type": "integer", "description": "Seconds to display \"Recording audio...\" status (1-15)", "minimum": 1, "maximum": 15 }
+        }
+      },
+      "SendStickerRequest": {
+        "type": "object",
+        "required": ["phone", "sticker"],
+        "properties": {
+          "phone": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" },
+          "sticker": { "type": "string", "description": "Sticker URL or Base64 data" },
+          "stickerAuthor": { "type": "string", "description": "Sticker author name" },
+          "messageId": { "type": "string", "description": "ID of an existing message to reply to" },
+          "delayMessage": { "type": "integer", "description": "Delay in seconds before sending (1-15)", "minimum": 1, "maximum": 15 }
+        }
+      },
+      "SendReactionRequest": {
+        "type": "object",
+        "required": ["phone", "reaction", "messageId"],
+        "properties": {
+          "phone": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" },
+          "reaction": { "type": "string", "description": "Reaction emoji", "example": "❤️" },
+          "messageId": { "type": "string", "description": "ID of the message to react to" },
+          "delayMessage": { "type": "integer", "description": "Delay in seconds before sending (1-15)", "minimum": 1, "maximum": 15 }
+        }
+      },
+      "SendCarouselRequest": {
+        "type": "object",
+        "required": ["phone", "message", "carousel"],
+        "properties": {
+          "phone": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" },
+          "message": { "type": "string", "description": "Message text" },
+          "carousel": {
+            "type": "array",
+            "description": "List of carousel cards",
+            "items": {
+              "type": "object",
+              "required": ["text", "image"],
+              "properties": {
+                "text": { "type": "string", "description": "Card text" },
+                "image": { "type": "string", "description": "Card image URL" },
+                "buttons": {
+                  "type": "array",
+                  "description": "Card action buttons",
+                  "items": {
+                    "type": "object",
+                    "required": ["type", "label"],
+                    "properties": {
+                      "id": { "type": "string", "description": "Button identifier" },
+                      "type": { "type": "string", "description": "Button type", "enum": ["CALL", "URL", "REPLY"] },
+                      "label": { "type": "string", "description": "Text displayed on the button" },
+                      "phone": { "type": "string", "description": "Phone number for CALL-type buttons" },
+                      "url": { "type": "string", "description": "URL for URL-type buttons" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "delayMessage": { "type": "integer", "description": "Delay in seconds before sending (1-15)", "minimum": 1, "maximum": 15 }
+        }
+      },
+      "SendButtonPixRequest": {
+        "type": "object",
+        "required": ["phone", "pixKey", "type"],
+        "properties": {
+          "phone": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" },
+          "pixKey": { "type": "string", "description": "Pix key" },
+          "type": { "type": "string", "description": "Pix key type", "enum": ["CPF", "CNPJ", "PHONE", "EMAIL", "EVP"] },
+          "merchantName": { "type": "string", "description": "Button title. Default: \"Pix\"" }
+        }
+      },
+      "SendCatalogRequest": {
+        "type": "object",
+        "required": ["phone", "catalogPhone"],
+        "properties": {
+          "phone": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" },
+          "catalogPhone": { "type": "string", "description": "Phone number of the business account that owns the catalog" },
+          "translation": { "type": "string", "description": "Catalog card language", "enum": ["EN", "PT"] },
+          "message": { "type": "string", "description": "Message accompanying the catalog card" },
+          "title": { "type": "string", "description": "Catalog card title" },
+          "catalogDescription": { "type": "string", "description": "Catalog card description" }
+        }
+      },
+      "SendProductRequest": {
+        "type": "object",
+        "required": ["phone", "catalogPhone", "productId"],
+        "properties": {
+          "phone": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" },
+          "catalogPhone": { "type": "string", "description": "Phone number of the business account that owns the product" },
+          "productId": { "type": "string", "description": "Product ID in the catalog" }
+        }
+      },
+      "SendRemoveReactionRequest": {
+        "type": "object",
+        "required": ["phone", "messageId"],
+        "properties": {
+          "phone": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" },
+          "messageId": { "type": "string", "description": "ID of the message whose reaction will be removed" },
+          "delayMessage": { "type": "integer", "description": "Delay in seconds before sending (1-15)", "minimum": 1, "maximum": 15 }
+        }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "zaapId": { "type": "string", "description": "Internal identifier" },
+          "messageId": { "type": "string", "description": "WhatsApp message ID" },
+          "id": { "type": "string", "description": "Same value as messageId (compatibility)" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer", "description": "Error code" },
+          "message": { "type": "string", "description": "Error description" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Secret Key generated in the Hub Message Security panel"
+      }
+    }
+  }
+}

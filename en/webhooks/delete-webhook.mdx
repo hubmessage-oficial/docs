@@ -1,0 +1,21 @@
+---
+title: "Delete webhook"
+description: "Permanently remove a webhook from a channel"
+openapi: "/en/webhooks/openapi.json DELETE /v1/channels/{channelId}/webhooks/{webhookId}"
+---
+
+## Overview
+
+Permanently removes a webhook. After deletion, {projectName} immediately stops sending events to the configured URL.
+
+<Warning>
+  Deletion is permanent and immediate. If you only need to pause the webhook temporarily, use the [Update webhook](/en/webhooks/update-webhook) endpoint with `status: "DISABLED"` instead of deleting.
+</Warning>
+
+<Note>
+  This endpoint requires the **ENTERPRISE** role on your account.
+</Note>
+
+<Note>
+  The `webhookId` is obtained from the [Create webhook](/en/webhooks/create-webhook) or [List webhooks](/en/webhooks/list-webhooks) endpoint.
+</Note>

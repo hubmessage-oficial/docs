@@ -1,0 +1,682 @@
+---
+title: "Payload structure"
+description: "Real payload examples received at your webhook for each message type"
+---
+
+import { projectName } from '/snippets/variables.mdx';
+
+## Event envelope
+
+Every request sent to your webhook has the following top-level structure:
+
+```json
+{
+  "message": { ... },
+  "messageEventType": "NEW_MESSAGE"
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `message` | object | Complete message object |
+| `messageEventType` | string | Event type — currently `"NEW_MESSAGE"` for all message events |
+
+## Common message fields
+
+All payloads share the same fields in the `message` object, regardless of content type:
+
+| Field | Type | Description |
+|---|---|---|
+| `_id` | string | Unique message ID |
+| `tenant` | string | Workspace ID |
+| `tenant_owner` | string | Workspace owner email |
+| `channel_id` | string | ID of the channel that received/sent the message |
+| `created_by` | string | Internal message origin |
+| `created` | number | Creation timestamp (epoch ms) |
+| `metadata.from_api` | boolean | `true` when sent via API |
+| `metadata.from_me` | boolean | `true` when sent by the business; `false` when received from the contact |
+| `metadata.middleware` | string | Channel platform (e.g. `"META_WHATSAPP"`) |
+| `metadata.forwarded` | boolean | `true` if the message was forwarded |
+| `sender.identifier` | string | Identifier of the sender |
+| `sender.name` | string | Name of the sender |
+| `recipient.identifier` | string | Recipient phone number (country code + area code + number) |
+| `contents` | array | Text and interactive message contents |
+| `attachments` | array | Media attachments (image, audio, video, sticker) |
+| `webhook_processed` | boolean | Internal processing control flag |
+
+## Content types
+
+The field that differentiates the message type is the `@class` inside each item of `contents` or `attachments`, combined with the `type` field.
+
+---
+
+### TEXT — Text message
+
+The content is in `contents[0]` with `type: "TEXT"`.
+
+```json
+{
+  "message": {
+    "_id": "019E6F1A93FE78DCB54332F9FF0CCAE7",
+    "tenant": "019DCEB3E93B7077B2447616B6DC8B91",
+    "tenant_owner": "email@hubmessage.io",
+    "channel_id": "019E4C54B1B375A28970B605CA9B03C3",
+    "created_by": "BARLING",
+    "created": 1779980473342,
+    "metadata": {
+      "@class": ".Metadata",
+      "forwarded": false,
+      "from_api": true,
+      "from_me": true,
+      "middleware": "META_WHATSAPP",
+      "moment": 1779980473342
+    },
+    "sender": {
+      "@class": ".Sender",
+      "identifier": "BARLING_SYSTEM",
+      "name": "Barling System"
+    },
+    "recipient": {
+      "@class": ".Recipient",
+      "identifier": "5544936181064",
+      "name": "5544936181064"
+    },
+    "contents": [
+      {
+        "@class": ".TextContent",
+        "identifier": "019E6F1A93FE78DCB542303FF18D389A",
+        "internal_information": {},
+        "message": "Hello! We have incredible news waiting for you.",
+        "state_items": [
+          {
+            "@class": ".StateItem",
+            "identifier": "019E6F1A93FE78DCB5418E8D9D007FFB",
+            "integration_message_ids": [],
+            "moment": 1779980473342,
+            "state": { "@class": ".Pending", "name": "PENDING" }
+          }
+        ],
+        "type": "TEXT"
+      }
+    ],
+    "attachments": [],
+    "actions": [],
+    "webhook_processed": false
+  },
+  "messageEventType": "NEW_MESSAGE"
+}
+```
+
+---
+
+### IMAGE — Image with caption
+
+The attachment is in `attachments[0]` with `type: "IMAGE"`. The `caption` field is optional.
+
+```json
+{
+  "message": {
+    "_id": "019E6F1A9553705584AD73DBA1F995A1",
+    "tenant": "019DCEB3E93B7077B2447616B6DC8B91",
+    "tenant_owner": "email@hubmessage.io",
+    "channel_id": "019E4C54B1B375A28970B605CA9B03C3",
+    "created_by": "BARLING",
+    "created": 1779980473683,
+    "metadata": {
+      "@class": ".Metadata",
+      "forwarded": false,
+      "from_api": true,
+      "from_me": true,
+      "middleware": "META_WHATSAPP",
+      "moment": 1779980473683
+    },
+    "sender": {
+      "@class": ".Sender",
+      "identifier": "BARLING_SYSTEM",
+      "name": "Barling System"
+    },
+    "recipient": {
+      "@class": ".Recipient",
+      "identifier": "5544936181064",
+      "name": "5544936181064"
+    },
+    "contents": [],
+    "attachments": [
+      {
+        "@class": ".ImageAttachment",
+        "caption": "Check out our exclusive product line!",
+        "identifier": "019E6F1A9553705584AC33FB12CBAE6B",
+        "internal_information": {},
+        "state_items": [
+          {
+            "@class": ".StateItem",
+            "identifier": "019E6F1A9553705584AB3D1D8510E8C3",
+            "integration_message_ids": [],
+            "moment": 1779980473683,
+            "state": { "@class": ".Pending", "name": "PENDING" }
+          }
+        ],
+        "thumbnail_url": "https://example.com/image-thumb.png",
+        "type": "IMAGE",
+        "url": "https://example.com/image.png"
+      }
+    ],
+    "actions": [],
+    "webhook_processed": false
+  },
+  "messageEventType": "NEW_MESSAGE"
+}
+```
+
+---
+
+### AUDIO — Voice message
+
+The attachment is in `attachments[0]` with `type: "AUDIO"`.
+
+```json
+{
+  "message": {
+    "_id": "019E6F1A96A7748489ECA59E6DCD8D63",
+    "tenant": "019DCEB3E93B7077B2447616B6DC8B91",
+    "tenant_owner": "email@hubmessage.io",
+    "channel_id": "019E4C54B1B375A28970B605CA9B03C3",
+    "created_by": "BARLING",
+    "created": 1779980474023,
+    "metadata": {
+      "@class": ".Metadata",
+      "forwarded": false,
+      "from_api": true,
+      "from_me": true,
+      "middleware": "META_WHATSAPP",
+      "moment": 1779980474023
+    },
+    "sender": {
+      "@class": ".Sender",
+      "identifier": "BARLING_SYSTEM",
+      "name": "Barling System"
+    },
+    "recipient": {
+      "@class": ".Recipient",
+      "identifier": "5544936181064",
+      "name": "5544936181064"
+    },
+    "contents": [],
+    "attachments": [
+      {
+        "@class": ".AudioAttachment",
+        "identifier": "019E6F1A96A7748489EBB11ED108DB51",
+        "internal_information": {},
+        "state_items": [
+          {
+            "@class": ".StateItem",
+            "identifier": "019E6F1A96A7748489EAC89D6BDBDD8A",
+            "integration_message_ids": [],
+            "moment": 1779980474023,
+            "state": { "@class": ".Pending", "name": "PENDING" }
+          }
+        ],
+        "type": "AUDIO",
+        "url": "https://example.com/audio.mp3"
+      }
+    ],
+    "actions": [],
+    "webhook_processed": false
+  },
+  "messageEventType": "NEW_MESSAGE"
+}
+```
+
+---
+
+### VIDEO — Video with caption
+
+The attachment is in `attachments[0]` with `type: "VIDEO"`. The `caption` field is optional.
+
+```json
+{
+  "message": {
+    "_id": "019E6F1A97F57A7BAFA0AF6D2ED9EA55",
+    "tenant": "019DCEB3E93B7077B2447616B6DC8B91",
+    "tenant_owner": "email@hubmessage.io",
+    "channel_id": "019E4C54B1B375A28970B605CA9B03C3",
+    "created_by": "BARLING",
+    "created": 1779980474357,
+    "metadata": {
+      "@class": ".Metadata",
+      "forwarded": false,
+      "from_api": true,
+      "from_me": true,
+      "middleware": "META_WHATSAPP",
+      "moment": 1779980474357
+    },
+    "sender": {
+      "@class": ".Sender",
+      "identifier": "BARLING_SYSTEM",
+      "name": "Barling System"
+    },
+    "recipient": {
+      "@class": ".Recipient",
+      "identifier": "5544936181064",
+      "name": "5544936181064"
+    },
+    "contents": [],
+    "attachments": [
+      {
+        "@class": ".VideoAttachment",
+        "caption": "Watch and discover how we can help you!",
+        "identifier": "019E6F1A97F57A7BAF9F8945CDF9F269",
+        "internal_information": {},
+        "state_items": [
+          {
+            "@class": ".StateItem",
+            "identifier": "019E6F1A97F57A7BAF9E16EF4D180B18",
+            "integration_message_ids": [],
+            "moment": 1779980474357,
+            "state": { "@class": ".Pending", "name": "PENDING" }
+          }
+        ],
+        "type": "VIDEO",
+        "url": "https://example.com/video.mp4"
+      }
+    ],
+    "actions": [],
+    "webhook_processed": false
+  },
+  "messageEventType": "NEW_MESSAGE"
+}
+```
+
+---
+
+### STICKER — Sticker
+
+The attachment is in `attachments[0]` with `type: "STICKER"`. The URL points to a `.webp` file.
+
+```json
+{
+  "message": {
+    "_id": "019E6F1A9A8D74A097E650D75365502A",
+    "tenant": "019DCEB3E93B7077B2447616B6DC8B91",
+    "tenant_owner": "email@hubmessage.io",
+    "channel_id": "019E4C54B1B375A28970B605CA9B03C3",
+    "created_by": "BARLING",
+    "created": 1779980475021,
+    "metadata": {
+      "@class": ".Metadata",
+      "forwarded": false,
+      "from_api": true,
+      "from_me": true,
+      "middleware": "META_WHATSAPP",
+      "moment": 1779980475021
+    },
+    "sender": {
+      "@class": ".Sender",
+      "identifier": "BARLING_SYSTEM",
+      "name": "Barling System"
+    },
+    "recipient": {
+      "@class": ".Recipient",
+      "identifier": "5544936181064",
+      "name": "5544936181064"
+    },
+    "contents": [],
+    "attachments": [
+      {
+        "@class": ".StickerAttachment",
+        "identifier": "019E6F1A9A8D74A097E504E363C5809F",
+        "state_items": [
+          {
+            "@class": ".StateItem",
+            "identifier": "019E6F1A9A8D74A097E4782F3FA0D805",
+            "integration_message_ids": [],
+            "moment": 1779980475021,
+            "state": { "@class": ".Pending", "name": "PENDING" }
+          }
+        ],
+        "type": "STICKER",
+        "url": "https://example.com/sticker.webp"
+      }
+    ],
+    "actions": [],
+    "webhook_processed": false
+  },
+  "messageEventType": "NEW_MESSAGE"
+}
+```
+
+---
+
+### CONTACT_ARRAY — Contact(s)
+
+The content is in `contents[0]` with `type: "CONTACT_ARRAY"`. The `contacts` array can contain multiple contacts, each with `first_name`, `last_name`, `name`, and `phones`.
+
+```json
+{
+  "message": {
+    "_id": "019E6F1A994975239E609D161623D3AD",
+    "tenant": "019DCEB3E93B7077B2447616B6DC8B91",
+    "tenant_owner": "email@hubmessage.io",
+    "channel_id": "019E4C54B1B375A28970B605CA9B03C3",
+    "created_by": "BARLING",
+    "created": 1779980474697,
+    "metadata": {
+      "@class": ".Metadata",
+      "forwarded": false,
+      "from_api": true,
+      "from_me": true,
+      "middleware": "META_WHATSAPP",
+      "moment": 1779980474697
+    },
+    "sender": {
+      "@class": ".Sender",
+      "identifier": "BARLING_SYSTEM",
+      "name": "Barling System"
+    },
+    "recipient": {
+      "@class": ".Recipient",
+      "identifier": "5544936181064",
+      "name": "5544936181064"
+    },
+    "contents": [
+      {
+        "@class": ".ContactArrayContent",
+        "contacts": [
+          {
+            "@class": ".ContactContent",
+            "first_name": "Ryan",
+            "identifier": "019E6F1A994975239E5E5BAF8C833D29",
+            "last_name": "Andrade",
+            "name": "Ryan Andrade",
+            "phones": ["5544997294496"],
+            "type": "CONTACT"
+          }
+        ],
+        "identifier": "019E6F1A994975239E5FB79A31BFC0D8",
+        "internal_information": {},
+        "state_items": [
+          {
+            "@class": ".StateItem",
+            "identifier": "019E6F1A994975239E5D8A8C150F9F59",
+            "integration_message_ids": [],
+            "moment": 1779980474697,
+            "state": { "@class": ".Pending", "name": "PENDING" }
+          }
+        ],
+        "type": "CONTACT_ARRAY"
+      }
+    ],
+    "attachments": [],
+    "actions": [],
+    "webhook_processed": false
+  },
+  "messageEventType": "NEW_MESSAGE"
+}
+```
+
+---
+
+### INTERACTIVE_BUTTON — Quick reply buttons (text)
+
+The content is in `contents[0]` with `type: "INTERACTIVE_BUTTON"`. The field `internal_information.mediaButtonType` indicates the attached media type: `"TEXT"` when there is no media.
+
+```json
+{
+  "message": {
+    "_id": "019E6F1A9D797F86B18E80700C3F22BD",
+    "tenant": "019DCEB3E93B7077B2447616B6DC8B91",
+    "tenant_owner": "email@hubmessage.io",
+    "channel_id": "019E4C54B1B375A28970B605CA9B03C3",
+    "created_by": "BARLING",
+    "created": 1779980475768,
+    "metadata": {
+      "@class": ".Metadata",
+      "forwarded": false,
+      "from_api": true,
+      "from_me": true,
+      "middleware": "META_WHATSAPP",
+      "moment": 1779980475768
+    },
+    "sender": {
+      "@class": ".Sender",
+      "identifier": "BARLING_SYSTEM",
+      "name": "Barling System"
+    },
+    "recipient": {
+      "@class": ".Recipient",
+      "identifier": "5544936181064",
+      "name": "5544936181064"
+    },
+    "contents": [
+      {
+        "@class": ".InteractiveButtonContent",
+        "buttons": [
+          {
+            "@class": "com.arkansas.littlerock.core.domain.content.ButtonContent",
+            "id": "1",
+            "identifier": "019E6F1A9D78704094E6BF55E8608F62",
+            "title": "Excellent",
+            "type": "BUTTON"
+          },
+          {
+            "@class": "com.arkansas.littlerock.core.domain.content.ButtonContent",
+            "id": "2",
+            "identifier": "019E6F1A9D78704094E7458F381C4760",
+            "title": "Good",
+            "type": "BUTTON"
+          },
+          {
+            "@class": "com.arkansas.littlerock.core.domain.content.ButtonContent",
+            "id": "3",
+            "identifier": "019E6F1A9D78704094E8F88F236F2BDB",
+            "title": "Average",
+            "type": "BUTTON"
+          }
+        ],
+        "identifier": "019E6F1A9D797F86B18D0DE8252112B4",
+        "internal_information": { "mediaButtonType": "TEXT" },
+        "message": "How was your experience with us?",
+        "state_items": [
+          {
+            "@class": ".StateItem",
+            "identifier": "019E6F1A9D78704094E5ED1463943EF7",
+            "integration_message_ids": [],
+            "moment": 1779980475768,
+            "state": { "@class": ".Pending", "name": "PENDING" }
+          }
+        ],
+        "type": "INTERACTIVE_BUTTON"
+      }
+    ],
+    "attachments": [],
+    "actions": [],
+    "webhook_processed": false
+  },
+  "messageEventType": "NEW_MESSAGE"
+}
+```
+
+---
+
+### INTERACTIVE_BUTTON — Quick reply buttons (with image)
+
+When `internal_information.mediaButtonType` is `"IMAGE"`, the `thumbnail` field contains the URL of the image displayed above the buttons.
+
+```json
+{
+  "message": {
+    "_id": "019E6F1A9DDA7B3B92E8EF5955A33D3A",
+    "tenant": "019DCEB3E93B7077B2447616B6DC8B91",
+    "tenant_owner": "email@hubmessage.io",
+    "channel_id": "019E4C54B1B375A28970B605CA9B03C3",
+    "created_by": "BARLING",
+    "created": 1779980475864,
+    "metadata": {
+      "@class": ".Metadata",
+      "forwarded": false,
+      "from_api": true,
+      "from_me": true,
+      "middleware": "META_WHATSAPP",
+      "moment": 1779980475866
+    },
+    "sender": {
+      "@class": ".Sender",
+      "identifier": "BARLING_SYSTEM",
+      "name": "Barling System"
+    },
+    "recipient": {
+      "@class": ".Recipient",
+      "identifier": "5544936181064",
+      "name": "5544936181064"
+    },
+    "contents": [
+      {
+        "@class": ".InteractiveButtonContent",
+        "buttons": [
+          {
+            "@class": "com.arkansas.littlerock.core.domain.content.ButtonContent",
+            "id": "1",
+            "identifier": "019E6F1A9DDA7B3B92E55FED919D3B46",
+            "title": "I'm interested",
+            "type": "BUTTON"
+          },
+          {
+            "@class": "com.arkansas.littlerock.core.domain.content.ButtonContent",
+            "id": "2",
+            "identifier": "019E6F1A9DDA7B3B92E65ED03B1AA85C",
+            "title": "No, thanks",
+            "type": "BUTTON"
+          }
+        ],
+        "identifier": "019E6F1A9DDA7B3B92E70CADB0034C76",
+        "internal_information": { "mediaButtonType": "IMAGE" },
+        "message": "Special offer just for you! Grab it before it's gone.",
+        "state_items": [
+          {
+            "@class": ".StateItem",
+            "identifier": "019E6F1A9DDA7B3B92E43ADD4BB2FCE6",
+            "integration_message_ids": [],
+            "moment": 1779980475866,
+            "state": { "@class": ".Pending", "name": "PENDING" }
+          }
+        ],
+        "thumbnail": "https://example.com/image.png",
+        "type": "INTERACTIVE_BUTTON"
+      }
+    ],
+    "attachments": [],
+    "actions": [],
+    "webhook_processed": false
+  },
+  "messageEventType": "NEW_MESSAGE"
+}
+```
+
+---
+
+### INTERACTIVE_ACTION — Action buttons (URL and call)
+
+The content is in `contents[0]` with `type: "INTERACTIVE_ACTION"`. Each button in `buttons` has its own `type`: `"URL"` or `"CALL"`. The `header` and `footer` fields are optional.
+
+```json
+{
+  "message": {
+    "_id": "019E6F1A9BD8708EA5C67A9DBB071E68",
+    "tenant": "019DCEB3E93B7077B2447616B6DC8B91",
+    "tenant_owner": "email@hubmessage.io",
+    "channel_id": "019E4C54B1B375A28970B605CA9B03C3",
+    "created_by": "BARLING",
+    "created": 1779980475352,
+    "metadata": {
+      "@class": ".Metadata",
+      "forwarded": false,
+      "from_api": true,
+      "from_me": true,
+      "middleware": "META_WHATSAPP",
+      "moment": 1779980475352
+    },
+    "sender": {
+      "@class": ".Sender",
+      "identifier": "BARLING_SYSTEM",
+      "name": "Barling System"
+    },
+    "recipient": {
+      "@class": ".Recipient",
+      "identifier": "5544936181064",
+      "name": "5544936181064"
+    },
+    "contents": [
+      {
+        "@class": ".InteractiveActionContent",
+        "action": {
+          "@class": ".ActionContent",
+          "identifier": "019E6F1A9BD8708EA5C4EFD19090B043",
+          "type": "BUTTON"
+        },
+        "buttons": [
+          {
+            "@class": ".ButtonActionContent",
+            "id": "1",
+            "identifier": "019E6F1A9BD8708EA5C05038542872ED",
+            "title": "Visit our website",
+            "type": "URL",
+            "url": "https://www.hubmessage.io"
+          },
+          {
+            "@class": ".ButtonActionContent",
+            "id": "2",
+            "identifier": "019E6F1A9BD8708EA5C1D19DAE30D4D0",
+            "phone": "5544997294496",
+            "title": "Talk to us",
+            "type": "CALL"
+          }
+        ],
+        "footer": {
+          "@class": ".FooterContent",
+          "identifier": "019E6F1A9BD8708EA5C315998956AE77",
+          "message": "Choose an option",
+          "type": "BUTTON"
+        },
+        "header": {
+          "@class": ".HeaderContent",
+          "identifier": "019E6F1A9BD8708EA5C2D3033640052B",
+          "message": "Hub Message",
+          "type": "BUTTON"
+        },
+        "identifier": "019E6F1A9BD8708EA5C5ACAB2DFBD176",
+        "internal_information": {},
+        "message": "How can we help you?",
+        "state_items": [
+          {
+            "@class": ".StateItem",
+            "identifier": "019E6F1A9BD8708EA5BF766A2E8F53A3",
+            "integration_message_ids": [],
+            "moment": 1779980475352,
+            "state": { "@class": ".Pending", "name": "PENDING" }
+          }
+        ],
+        "type": "INTERACTIVE_ACTION"
+      }
+    ],
+    "attachments": [],
+    "actions": [],
+    "webhook_processed": false
+  },
+  "messageEventType": "NEW_MESSAGE"
+}
+```
+
+---
+
+## Type summary
+
+| `type` | Location | Key field(s) |
+|---|---|---|
+| `TEXT` | `contents[0]` | `message` |
+| `IMAGE` | `attachments[0]` | `url`, `caption` (optional), `thumbnail_url` |
+| `AUDIO` | `attachments[0]` | `url` |
+| `VIDEO` | `attachments[0]` | `url`, `caption` (optional) |
+| `STICKER` | `attachments[0]` | `url` (`.webp`) |
+| `CONTACT_ARRAY` | `contents[0]` | `contacts[]` with `name`, `phones` |
+| `INTERACTIVE_BUTTON` | `contents[0]` | `message`, `buttons[]`, `thumbnail` (when `mediaButtonType: "IMAGE"`) |
+| `INTERACTIVE_ACTION` | `contents[0]` | `message`, `buttons[]` with `type: "URL"\|"CALL"`, `header`, `footer` |

@@ -1,0 +1,17 @@
+---
+title: "Buscar webhook"
+description: "Busque os dados de um webhook específico"
+openapi: "/pt/webhooks/openapi.json GET /v1/channels/{channelId}/webhooks/{webhookId}"
+---
+
+## Conceituação
+
+Retorna os dados de um webhook específico. Assim como na listagem, as credenciais de autenticação e o `secret` de assinatura **não são retornados** por segurança.
+
+<Note>
+  Este endpoint requer a role **ENTERPRISE** na sua conta.
+</Note>
+
+<Note>
+  O `webhookId` é obtido no retorno do endpoint [Criar webhook](/webhooks/create-webhook) ou [Listar webhooks](/webhooks/list-webhooks).
+</Note>

@@ -1,0 +1,15 @@
+---
+title: "List webhooks"
+description: "List all webhooks for a channel"
+openapi: "/en/webhooks/openapi.json GET /v1/channels/{channelId}/webhooks"
+---
+
+## Overview
+
+Returns all webhooks registered on a channel. The `auth.configured` field indicates whether authentication credentials are set, but the credentials themselves are **not returned** for security reasons.
+
+The `secret` field (HMAC signing) is also **not returned** in the list — it is only available at the time of creation or when updating with `signing: true`.
+
+<Note>
+  This endpoint requires the **ENTERPRISE** role on your account.
+</Note>

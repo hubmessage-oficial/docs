@@ -1,0 +1,25 @@
+---
+title: "Create webhook"
+description: "Register a webhook endpoint on a channel"
+openapi: "/en/webhooks/openapi.json POST /v1/channels/{channelId}/webhooks"
+---
+
+## Overview
+
+Registers a new webhook endpoint on the channel. From creation onwards, {projectName} starts sending the configured events to the provided URL.
+
+A channel can have multiple webhooks — useful for sending different events to different systems, or for maintaining webhooks with different formats.
+
+### HMAC signing
+
+If `signing: true`, a `secret` is automatically generated and returned **only in this response**. Store it securely — it will not be shown again in any other call.
+
+Use the `secret` to verify the authenticity of requests received on your server. Compute HMAC-SHA256 over the received body using the `secret` and compare it with the signing header sent by {projectName}.
+
+<Warning>
+  This endpoint requires the **ENTERPRISE** role on your account.
+</Warning>
+
+<Note>
+  The `channelId` is obtained from the [Create channel](/en/channels/create-channel) endpoint.
+</Note>

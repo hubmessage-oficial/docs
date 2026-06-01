@@ -1,0 +1,127 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Partner: Cancel Subscription",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/v1/channels/{channelId}/cancel": {
+      "delete": {
+        "summary": "Cancel subscription (Partner)",
+        "description": "Requests cancellation of the channel subscription. The channel enters `CANCELLATION_PROCESS` and remains active until the end of the paid period. Requires ENTERPRISE role.",
+        "operationId": "partnerCancelSubscription",
+        "tags": ["Partners"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "Channel ID (obtained via Create channel)",
+            "schema": { "type": "string", "example": "019E4C54B1B375A28970B605CA9B03C3" }
+          },
+          {
+            "name": "cancel",
+            "in": "query",
+            "required": true,
+            "description": "Must be `true` to confirm the cancellation",
+            "schema": { "type": "boolean", "example": true }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CancelRequest" },
+              "examples": {
+                "withReason": {
+                  "summary": "With cancellation reason",
+                  "value": {
+                    "cancelReason": "Customer closed the company"
+                  }
+                },
+                "withoutReason": {
+                  "summary": "Without reason (body omitted)",
+                  "value": {}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Cancellation requested successfully. No content returned."
+          },
+          "400": {
+            "description": "Invalid request — `cancel=true` query parameter missing",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 400, "message": "cancel query param is required" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": {
+            "description": "Channel not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 404, "message": "Channel not found" }
+              }
+            }
+          },
+          "422": {
+            "description": "Business rule violation — account does not have ENTERPRISE role",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 422, "message": "This action requires ENTERPRISE role" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Unauthorized": {
+        "description": "Invalid or missing token.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 401, "message": "Unauthorized" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "CancelRequest": {
+        "type": "object",
+        "properties": {
+          "cancelReason": {
+            "type": "string",
+            "description": "Cancellation reason (optional, but recommended for auditing)",
+            "example": "Customer closed the company"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Secret Key generated in the Hub Message Security panel"
+      }
+    }
+  }
+}

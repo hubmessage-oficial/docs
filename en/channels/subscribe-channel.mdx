@@ -1,0 +1,30 @@
+---
+title: "Subscribe channel"
+description: "Add a channel to an existing subscription after payment is completed in the dashboard"
+openapi: "/en/channels/openapi-subscribe.json GET /v1/channels/{channelId}/subscribe"
+---
+
+## Overview
+
+Links a channel to the account's active Stripe subscription. The channel is **automatically added** to the existing subscription and a prorated charge for the remaining billing period is included on the next invoice.
+
+<Note>
+  Payment is completed beforehand by the user in the {projectName} dashboard. This endpoint should be called after the checkout is completed in the dashboard to activate the channel via API.
+</Note>
+
+<Warning>
+  This endpoint requires the **ENTERPRISE** role on your account.
+</Warning>
+
+Example response:
+
+```json
+{
+  "type": "SUBSCRIPTION_UPDATED",
+  "message": "Channel active. Prorated charge will be included on the next invoice."
+}
+```
+
+<Note>
+  The `channelId` is obtained from the [Create channel](/en/channels/create-channel) endpoint.
+</Note>
