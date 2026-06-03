@@ -1,0 +1,160 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Send Location",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/v1/channels/{channelId}/messages": {
+      "post": {
+        "summary": "Send location",
+        "description": "Sends a location message. Only works when the 24-hour conversation window is open.",
+        "operationId": "sendLocationMessage",
+        "tags": ["Messages"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "Channel ID",
+            "schema": { "type": "string", "example": "YOUR_CHANNEL_ID" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SendLocationRequest" },
+              "example": {
+                "recipient": {
+                  "identifier": "5544936181064",
+                  "name": "Recipient Name",
+                  "subject": "Title",
+                  "picture": ""
+                },
+                "sender": {
+                  "identifier": "5544936181064",
+                  "name": "Sender Name",
+                  "picture": ""
+                },
+                "content": {
+                  "type": "LOCATION",
+                  "attachments": [
+                    {
+                      "name": "Google Brasil",
+                      "address": "Av. Brg. Faria Lima, 3477 - Itaim Bibi, São Paulo - SP, 04538-133",
+                      "latitude": "-23.0696347",
+                      "longitude": "-50.4357913"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MessageSuccess" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "422": { "$ref": "#/components/responses/WindowClosed" }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "MessageSuccess": {
+        "description": "Message sent successfully",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/MessageResponse" },
+            "example": { "messageId": "wamid.HBgNNTU0NDk3MDUwNzg1FQIAERgSM0" }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Invalid or missing token.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 401, "message": "Unauthorized" }
+          }
+        }
+      },
+      "WindowClosed": {
+        "description": "24-hour conversation window is closed.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 422, "message": "Conversation window is closed" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "SendLocationRequest": {
+        "type": "object",
+        "required": ["recipient", "content"],
+        "properties": {
+          "recipient": {
+            "type": "object",
+            "required": ["identifier"],
+            "description": "Recipient data",
+            "properties": {
+              "identifier": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5544936181064" },
+              "name": { "type": "string", "description": "Recipient name (optional)", "example": "Recipient Name" },
+              "subject": { "type": "string", "description": "Title or subject (optional)", "example": "Title" },
+              "picture": { "type": "string", "description": "Recipient profile picture URL (optional)", "example": "" }
+            }
+          },
+          "sender": {
+            "type": "object",
+            "description": "Sender data (optional)",
+            "properties": {
+              "identifier": { "type": "string", "description": "Sender phone number", "example": "5544936181064" },
+              "name": { "type": "string", "description": "Sender name", "example": "Sender Name" },
+              "picture": { "type": "string", "description": "Sender profile picture URL", "example": "" }
+            }
+          },
+          "content": {
+            "type": "object",
+            "required": ["type", "attachments"],
+            "properties": {
+              "type": { "type": "string", "description": "Message type", "enum": ["LOCATION"] },
+              "attachments": {
+                "type": "array",
+                "description": "List with location data",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "latitude": { "type": "string", "description": "Location latitude. Not validated by the API, but required for the pin to display correctly on WhatsApp.", "example": "-23.0696347" },
+                    "longitude": { "type": "string", "description": "Location longitude. Not validated by the API, but required for the pin to display correctly on WhatsApp.", "example": "-50.4357913" },
+                    "name": { "type": "string", "description": "Place name (optional)", "example": "Google Brasil" },
+                    "address": { "type": "string", "description": "Place address (optional)", "example": "Av. Brg. Faria Lima, 3477 - Itaim Bibi, São Paulo - SP, 04538-133" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "messageId": { "type": "string", "description": "Sent message ID" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer", "description": "Secret Key generated in the Hub Message Security panel" }
+    }
+  }
+}

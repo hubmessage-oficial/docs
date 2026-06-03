@@ -1,0 +1,19 @@
+---
+title: "Send location"
+description: "Send location messages"
+openapi: "/en/messages/openapi-location.json POST /v1/channels/{channelId}/messages"
+---
+
+## Overview
+
+Sends a location message to a contact. The `content.type` field must be `LOCATION` and the coordinates are provided in the `attachments` array using `latitude` and `longitude`.
+
+The `name` and `address` fields are optional and allow displaying the place name and address directly in the message.
+
+<Warning>
+  The API does not validate the `latitude` and `longitude` fields. Requests without these values will be accepted, but the message will not display the location correctly on WhatsApp. Always provide both fields.
+</Warning>
+
+<Note>
+  This endpoint only works when the [conversation window](/en/conversation-window) is open (24 hours).
+</Note>
