@@ -1,0 +1,142 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Partner: Delete Channel",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/v1/channels/{channelId}": {
+      "delete": {
+        "summary": "Delete channel (Partner)",
+        "description": "Permanently removes a channel and all its data. Deletion is only allowed when the channel has no active subscription (status `CANCELED`, `TRIAL`, or `PENDING`). Requires ENTERPRISE role.",
+        "operationId": "partnerDeleteChannel",
+        "tags": ["Partners"],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "description": "Channel ID (obtained via Create channel)",
+            "schema": { "type": "string", "example": "019E4C54B1B375A28970B605CA9B03C3" }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DeleteRequest" },
+              "examples": {
+                "withReason": {
+                  "summary": "With deletion reason",
+                  "value": {
+                    "cancelReason": "Customer closed the company"
+                  }
+                },
+                "withoutReason": {
+                  "summary": "Without reason (body omitted)",
+                  "value": {}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Channel deleted successfully. No content returned."
+          },
+          "400": {
+            "description": "Invalid or missing authorization",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 400, "message": "Authorization invalid" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": {
+            "description": "Channel not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 404, "message": "Instance not found" }
+              }
+            }
+          },
+          "422": {
+            "description": "Business rule violation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "examples": {
+                  "enterpriseRequired": {
+                    "summary": "Account does not have ENTERPRISE role",
+                    "value": { "error": 422, "message": "Channel deletion requires ENTERPRISE role" }
+                  },
+                  "channelConnected": {
+                    "summary": "Channel is still connected",
+                    "value": { "error": 422, "message": "INSTANCE_STILL_CONNECTED" }
+                  },
+                  "activeSubscription": {
+                    "summary": "Channel has an active subscription (PAID or CANCELLATION_PROCESS)",
+                    "value": { "error": 422, "message": "INSTANCE_HAS_ACTIVE_SUBSCRIPTION" }
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Internal service integration failure",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 502, "message": "Hermitage deleteChannel failed" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Unauthorized": {
+        "description": "Invalid or missing token.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": 401, "message": "Unauthorized" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "DeleteRequest": {
+        "type": "object",
+        "properties": {
+          "cancelReason": {
+            "type": "string",
+            "description": "Reason for deletion (optional, but recommended for auditing)",
+            "example": "Customer closed the company"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Secret Key generated in the Hub Message Security panel"
+      }
+    }
+  }
+}

@@ -16,6 +16,7 @@
     "/pt/channels/openapi-disconnect.json",
     "/pt/channels/openapi-subscribe.json",
     "/pt/channels/openapi-cancel.json",
+    "/pt/channels/openapi-delete.json",
     "/pt/templates/openapi.json",
     "/pt/messages/openapi.json",
     "/pt/messages/openapi-image.json",
@@ -33,6 +34,7 @@
     "/en/channels/openapi-disconnect.json",
     "/en/channels/openapi-subscribe.json",
     "/en/channels/openapi-cancel.json",
+    "/en/channels/openapi-delete.json",
     "/en/templates/openapi.json",
     "/en/messages/openapi.json",
     "/en/messages/openapi-image.json",
@@ -69,7 +71,8 @@
                   "channels/connect-channel",
                   "channels/disconnect",
                   "channels/subscribe-channel",
-                  "channels/cancel-subscription"
+                  "channels/cancel-subscription",
+                  "channels/delete-channel"
                 ]
               },
               {
@@ -173,7 +176,8 @@
                   "en/channels/connect-channel",
                   "en/channels/disconnect",
                   "en/channels/subscribe-channel",
-                  "en/channels/cancel-subscription"
+                  "en/channels/cancel-subscription",
+                  "en/channels/delete-channel"
                 ]
               },
               {

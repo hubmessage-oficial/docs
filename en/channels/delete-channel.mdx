@@ -1,0 +1,33 @@
+---
+title: "Delete channel"
+description: "Permanently delete a channel via API"
+openapi: "/en/channels/openapi-delete.json DELETE /v1/channels/{channelId}"
+---
+
+## Overview
+
+Permanently removes a channel and all its data. Deletion is irreversible — the channel is physically removed from the system.
+
+<Warning>
+  This endpoint requires the **ENTERPRISE** role on your account.
+</Warning>
+
+### Conditions for deletion
+
+Deletion is only allowed when the channel has no active subscription. The table below describes the behavior by status:
+
+| Status | Deletion allowed | Notes |
+|---|---|---|
+| Trial | Yes | — |
+| Pending | Yes | If there is an open invoice, it will be automatically cancelled |
+| Paid | No | The channel must be cancelled before it can be deleted |
+| Cancellation in progress | No | The channel must be cancelled before it can be deleted |
+| Cancelled | Yes | — |
+
+<Warning>
+  Deletion is permanent and irreversible. To delete a channel with an active subscription, first cancel the subscription via [Cancel subscription](/en/channels/cancel-subscription) and wait for the `CANCELED` status.
+</Warning>
+
+<Note>
+  The `channelId` is obtained from the [Create channel](/en/channels/create-channel) endpoint.
+</Note>
