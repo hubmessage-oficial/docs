@@ -99,7 +99,7 @@
                   "messages/send-sticker",
                   "messages/send-interactive-action",
                   "messages/send-interactive-button",
-                  "messages/send-location"
+                  "pt/messages/send-location"
                 ]
               },
               {
