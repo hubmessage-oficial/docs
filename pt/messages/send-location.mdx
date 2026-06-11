@@ -1,0 +1,20 @@
+---
+title: "Enviar localização"
+description: "Envie mensagens de localização"
+openapi: "/pt/messages/openapi-location.json POST /v1/channels/{channelId}/messages"
+---
+
+## Conceituação
+
+Envia uma mensagem de localização para um contato. O campo `content.type` deve ser `LOCATION` e as coordenadas são informadas no array `attachments` com `latitude` e `longitude`.
+
+Os campos `name` e `address` são opcionais e permitem exibir o nome e o endereço do local diretamente na mensagem.
+
+<Warning>
+  A API não valida os campos `latitude` e `longitude`. Requisições sem esses valores serão aceitas, mas a mensagem não exibirá a localização corretamente no WhatsApp. Sempre informe ambos os campos.
+</Warning>
+
+<Note>
+  Este endpoint só funciona quando a [janela de conversa](/conversation-window) de 24 horas estiver aberta.
+</Note>
+
