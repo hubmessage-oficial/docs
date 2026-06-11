@@ -25,6 +25,7 @@
     "/pt/messages/openapi-sticker.json",
     "/pt/messages/openapi-interactive-action.json",
     "/pt/messages/openapi-interactive-button.json",
+    "/pt/messages/openapi-location.json",
     "/pt/messages/openapi-template.json",
     "/pt/webhooks/openapi.json",
     "/en/z-api/openapi.json",
@@ -42,6 +43,7 @@
     "/en/messages/openapi-sticker.json",
     "/en/messages/openapi-interactive-action.json",
     "/en/messages/openapi-interactive-button.json",
+    "/en/messages/openapi-location.json",
     "/en/messages/openapi-template.json",
     "/en/webhooks/openapi.json"
   ],
@@ -96,7 +98,8 @@
                   "messages/send-contact",
                   "messages/send-sticker",
                   "messages/send-interactive-action",
-                  "messages/send-interactive-button"
+                  "messages/send-interactive-button",
+                  "pt/messages/send-location"
                 ]
               },
               {
@@ -200,7 +203,8 @@
                   "en/messages/send-contact",
                   "en/messages/send-sticker",
                   "en/messages/send-interactive-action",
-                  "en/messages/send-interactive-button"
+                  "en/messages/send-interactive-button",
+                  "en/messages/send-location"
                 ]
               },
               {
