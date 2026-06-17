@@ -122,7 +122,7 @@
                     "summary": "Com assinatura HMAC habilitada",
                     "value": {
                       "id": "A1B2C3D4E5F6789012345678901234AB",
-                      "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
+                      "channelId": "019E4C54B1B375A28970B605CA9B03C3",
                       "url": "https://app.suaempresa.com/webhooks/hubmessage",
                       "description": null,
                       "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
@@ -140,7 +140,7 @@
                     "summary": "Sem assinatura HMAC",
                     "value": {
                       "id": "B2C3D4E5F6789012345678901234AB12",
-                      "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
+                      "channelId": "019E4C54B1B375A28970B605CA9B03C3",
                       "url": "https://app.suaempresa.com/webhooks/hubmessage",
                       "description": "Webhook principal de produção",
                       "events": ["MESSAGE_RECEIVED", "CONNECTED", "DISCONNECTED"],
@@ -204,7 +204,7 @@
                 "example": [
                   {
                     "id": "A1B2C3D4E5F6789012345678901234AB",
-                    "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
+                    "channelId": "019E4C54B1B375A28970B605CA9B03C3",
                     "url": "https://app.suaempresa.com/webhooks/hubmessage",
                     "description": "Webhook principal de produção",
                     "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
@@ -218,7 +218,7 @@
                   },
                   {
                     "id": "B2C3D4E5F6789012345678901234AB12",
-                    "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
+                    "channelId": "019E4C54B1B375A28970B605CA9B03C3",
                     "url": "https://app.suaempresa.com/webhooks/eventos-conexao",
                     "description": "Eventos de conexão",
                     "events": ["CONNECTED", "DISCONNECTED"],
@@ -277,7 +277,7 @@
                 "schema": { "$ref": "#/components/schemas/WebhookResponse" },
                 "example": {
                   "id": "A1B2C3D4E5F6789012345678901234AB",
-                  "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
+                  "channelId": "019E4C54B1B375A28970B605CA9B03C3",
                   "url": "https://app.suaempresa.com/webhooks/hubmessage",
                   "description": "Webhook principal de produção",
                   "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
@@ -383,7 +383,7 @@
                     "summary": "Após habilitar assinatura (secret retornado)",
                     "value": {
                       "id": "A1B2C3D4E5F6789012345678901234AB",
-                      "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
+                      "channelId": "019E4C54B1B375A28970B605CA9B03C3",
                       "url": "https://app.suaempresa.com/webhooks/hubmessage",
                       "description": "Webhook principal de produção",
                       "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
@@ -401,7 +401,7 @@
                     "summary": "Após desabilitar (sem secret)",
                     "value": {
                       "id": "A1B2C3D4E5F6789012345678901234AB",
-                      "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
+                      "channelId": "019E4C54B1B375A28970B605CA9B03C3",
                       "url": "https://app.suaempresa.com/webhooks/hubmessage",
                       "description": "Webhook principal de produção",
                       "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
@@ -683,7 +683,7 @@
             "description": "ID único do webhook",
             "example": "A1B2C3D4E5F6789012345678901234AB"
           },
-          "instanceId": {
+          "channelId": {
             "type": "string",
             "description": "ID do canal ao qual o webhook pertence",
             "example": "019E4C54B1B375A28970B605CA9B03C3"
