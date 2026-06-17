@@ -123,6 +123,7 @@
                     "value": {
                       "id": "A1B2C3D4E5F6789012345678901234AB",
                       "channelId": "019E4C54B1B375A28970B605CA9B03C3",
+                      "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                       "url": "https://app.suaempresa.com/webhooks/hubmessage",
                       "description": null,
                       "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
@@ -141,6 +142,7 @@
                     "value": {
                       "id": "B2C3D4E5F6789012345678901234AB12",
                       "channelId": "019E4C54B1B375A28970B605CA9B03C3",
+                      "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                       "url": "https://app.suaempresa.com/webhooks/hubmessage",
                       "description": "Webhook principal de produção",
                       "events": ["MESSAGE_RECEIVED", "CONNECTED", "DISCONNECTED"],
@@ -205,6 +207,7 @@
                   {
                     "id": "A1B2C3D4E5F6789012345678901234AB",
                     "channelId": "019E4C54B1B375A28970B605CA9B03C3",
+                    "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                     "url": "https://app.suaempresa.com/webhooks/hubmessage",
                     "description": "Webhook principal de produção",
                     "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
@@ -219,6 +222,7 @@
                   {
                     "id": "B2C3D4E5F6789012345678901234AB12",
                     "channelId": "019E4C54B1B375A28970B605CA9B03C3",
+                    "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                     "url": "https://app.suaempresa.com/webhooks/eventos-conexao",
                     "description": "Eventos de conexão",
                     "events": ["CONNECTED", "DISCONNECTED"],
@@ -278,6 +282,7 @@
                 "example": {
                   "id": "A1B2C3D4E5F6789012345678901234AB",
                   "channelId": "019E4C54B1B375A28970B605CA9B03C3",
+                  "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                   "url": "https://app.suaempresa.com/webhooks/hubmessage",
                   "description": "Webhook principal de produção",
                   "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
@@ -384,6 +389,7 @@
                     "value": {
                       "id": "A1B2C3D4E5F6789012345678901234AB",
                       "channelId": "019E4C54B1B375A28970B605CA9B03C3",
+                      "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                       "url": "https://app.suaempresa.com/webhooks/hubmessage",
                       "description": "Webhook principal de produção",
                       "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
@@ -402,6 +408,7 @@
                     "value": {
                       "id": "A1B2C3D4E5F6789012345678901234AB",
                       "channelId": "019E4C54B1B375A28970B605CA9B03C3",
+                      "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                       "url": "https://app.suaempresa.com/webhooks/hubmessage",
                       "description": "Webhook principal de produção",
                       "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
@@ -686,6 +693,12 @@
           "channelId": {
             "type": "string",
             "description": "ID do canal ao qual o webhook pertence",
+            "example": "019E4C54B1B375A28970B605CA9B03C3"
+          },
+          "instanceId": {
+            "type": "string",
+            "deprecated": true,
+            "description": "Descontinuado — use `channelId`",
             "example": "019E4C54B1B375A28970B605CA9B03C3"
           },
           "url": {
