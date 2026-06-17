@@ -1,0 +1,33 @@
+---
+title: "Excluir canal"
+description: "Exclua permanentemente um canal via API"
+openapi: "/pt/channels/openapi-delete.json DELETE /v1/channels/{channelId}"
+---
+
+## Conceituação
+
+Remove permanentemente um canal e todos os seus dados. A exclusão é irreversível — o canal é fisicamente removido do sistema.
+
+<Warning>
+  Este endpoint requer a role **ENTERPRISE** na sua conta.
+</Warning>
+
+### Condições para exclusão
+
+A exclusão só é permitida quando o canal não possui assinatura ativa. A tabela abaixo descreve o comportamento por status:
+
+| Status | Exclusão permitida | Observação |
+|---|---|---|
+| Trial | Sim | — |
+| Pendente | Sim | Se houver fatura aberta, ela será cancelada automaticamente |
+| Pago | Não | O canal deve ser cancelado antes de ser excluído |
+| Em processo de cancelamento | Não | O canal deve ser cancelado antes de ser excluído |
+| Cancelado | Sim | — |
+
+<Warning>
+  A exclusão é permanente e irreversível. Para excluir um canal com assinatura ativa, primeiro cancele a assinatura via [Cancelar assinatura](/channels/cancel-subscription) e aguarde o status `CANCELED`.
+</Warning>
+
+<Note>
+  O `channelId` é obtido através do endpoint [Criar canal](/channels/create-channel).
+</Note>
