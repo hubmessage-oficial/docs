@@ -10,7 +10,7 @@
     "/v1/channels/{channelId}/connect": {
       "post": {
         "summary": "Connect Meta WhatsApp channel",
-        "description": "Finalizes the connection of a **META_WHATSAPP** channel with the data returned by the `@hubmessage/connect` SDK. Exclusive to WhatsApp Official API (Meta) channels. For Z-API channels, use the QR Code flow.",
+        "description": "Finalizes the connection of a **META_WHATSAPP** channel with the data returned by the `@hubmessage/connect` SDK. Exclusive to WhatsApp Official API (Meta) channels.",
         "operationId": "connectMetaChannel",
         "tags": ["Channels"],
         "parameters": [
