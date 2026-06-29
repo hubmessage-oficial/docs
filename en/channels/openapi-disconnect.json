@@ -10,7 +10,7 @@
     "/v1/channels/{channelId}/disconnect": {
       "put": {
         "summary": "Disconnect Meta WhatsApp channel",
-        "description": "Disconnects a **META_WHATSAPP** channel from the WhatsApp Official API. Clears all connection data (WABA, phone ID, coexistence) and marks the channel as disconnected. For Z-API channels, use `POST /zapi/disconnect`.",
+        "description": "Disconnects a **META_WHATSAPP** channel from the WhatsApp Official API. Clears all connection data (WABA, phone ID, coexistence) and marks the channel as disconnected.",
         "operationId": "disconnectMetaChannel",
         "tags": ["Channels"],
         "parameters": [

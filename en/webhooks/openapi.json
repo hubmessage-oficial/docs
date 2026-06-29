@@ -79,15 +79,6 @@
                     }
                   }
                 },
-                "zapiFormat": {
-                  "summary": "Z-API format (compatibility)",
-                  "value": {
-                    "url": "https://app.yourcompany.com/webhooks/zapi",
-                    "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS", "CONNECTED", "DISCONNECTED"],
-                    "payloadFormat": "Z_API",
-                    "signing": true
-                  }
-                },
                 "allEvents": {
                   "summary": "All events with HMAC + Bearer",
                   "value": {
@@ -554,8 +545,8 @@
           },
           "payloadFormat": {
             "type": "string",
-            "enum": ["DEFAULT", "Z_API"],
-            "description": "Payload format delivered to the webhook. `Z_API` maintains compatibility with systems integrated via Z-API.",
+            "enum": ["DEFAULT"],
+            "description": "Payload format delivered to the webhook.",
             "default": "DEFAULT",
             "example": "DEFAULT"
           },
@@ -613,7 +604,7 @@
           },
           "payloadFormat": {
             "type": "string",
-            "enum": ["DEFAULT", "Z_API"]
+            "enum": ["DEFAULT"]
           },
           "customAttributes": {
             "type": "object",
@@ -721,7 +712,7 @@
           },
           "payloadFormat": {
             "type": "string",
-            "enum": ["DEFAULT", "Z_API"],
+            "enum": ["DEFAULT"],
             "description": "Delivered payload format",
             "example": "DEFAULT"
           },

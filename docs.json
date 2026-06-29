@@ -9,7 +9,6 @@
   },
   "favicon": "/favicon.svg",
   "openapi": [
-    "/pt/z-api/openapi.json",
     "/pt/channels/openapi-create.json",
     "/pt/channels/openapi-connect.json",
     "/pt/channels/openapi-create-channel.json",
@@ -29,7 +28,6 @@
     "/pt/messages/openapi-location.json",
     "/pt/messages/openapi-template.json",
     "/pt/webhooks/openapi.json",
-    "/en/z-api/openapi.json",
     "/en/channels/openapi-create.json",
     "/en/channels/openapi-connect.json",
     "/en/channels/openapi-disconnect.json",
@@ -118,42 +116,6 @@
                 ]
               }
             ]
-          },
-          {
-            "tab": "Z-API Compatibilidade",
-            "groups": [
-              {
-                "group": "Introdução",
-                "pages": [
-                  "z-api/introduction",
-                  "z-api/authentication",
-                  "z-api/limitations"
-                ]
-              },
-              {
-                "group": "Mensagens",
-                "pages": [
-                  "z-api/messages/introduction",
-                  "z-api/messages/reply-message",
-                  "z-api/messages/send-text",
-                  "z-api/messages/send-image",
-                  "z-api/messages/send-audio",
-                  "z-api/messages/send-video",
-                  "z-api/messages/send-link",
-                  "z-api/messages/send-button-actions",
-                  "z-api/messages/send-button-list",
-                  "z-api/messages/send-contact",
-                  "z-api/messages/send-document",
-                  "z-api/messages/send-sticker",
-                  "z-api/messages/send-carousel",
-                  "z-api/messages/send-button-pix",
-                  "z-api/messages/send-catalog",
-                  "z-api/messages/send-product",
-                  "z-api/messages/send-reaction",
-                  "z-api/messages/send-remove-reaction"
-                ]
-              }
-            ]
           }
         ]
       },
@@ -221,42 +183,6 @@
                   "en/webhooks/get-webhook",
                   "en/webhooks/update-webhook",
                   "en/webhooks/delete-webhook"
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "Z-API Compatibility",
-            "groups": [
-              {
-                "group": "Introduction",
-                "pages": [
-                  "en/z-api/introduction",
-                  "en/z-api/authentication",
-                  "en/z-api/limitations"
-                ]
-              },
-              {
-                "group": "Messages",
-                "pages": [
-                  "en/z-api/messages/introduction",
-                  "en/z-api/messages/reply-message",
-                  "en/z-api/messages/send-text",
-                  "en/z-api/messages/send-image",
-                  "en/z-api/messages/send-audio",
-                  "en/z-api/messages/send-video",
-                  "en/z-api/messages/send-link",
-                  "en/z-api/messages/send-button-actions",
-                  "en/z-api/messages/send-button-list",
-                  "en/z-api/messages/send-contact",
-                  "en/z-api/messages/send-document",
-                  "en/z-api/messages/send-sticker",
-                  "en/z-api/messages/send-carousel",
-                  "en/z-api/messages/send-button-pix",
-                  "en/z-api/messages/send-catalog",
-                  "en/z-api/messages/send-product",
-                  "en/z-api/messages/send-reaction",
-                  "en/z-api/messages/send-remove-reaction"
                 ]
               }
             ]

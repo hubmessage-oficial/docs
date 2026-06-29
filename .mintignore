@@ -5,3 +5,7 @@
 # Draft content
 drafts/
 *.draft.mdx
+
+z-api/
+en/z-api/
+pt/z-api/
