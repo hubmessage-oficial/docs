@@ -1,0 +1,81 @@
+---
+title: "Templates de mensagem"
+description: "Entenda o que são os templates da API Oficial do WhatsApp, como funcionam e suas categorias"
+---
+
+import { projectName, frontendUrl } from '/snippets/variables.mdx';
+
+## O que é um Template?
+
+Um **Template** (Mensagem de Modelo) é uma mensagem previamente cadastrada e aprovada pela Meta. Ela serve para **iniciar ou retomar uma conversa** quando não existe uma janela aberta.
+
+**Exemplos de uso:**
+
+- Confirmação de pedido
+- Lembrete de consulta
+- Aviso de entrega
+- Cobrança
+- Recuperação de atendimento
+- Confirmação de agendamento
+
+**Os templates podem conter:**
+
+- Texto
+- Imagens
+- Vídeos
+- Documentos
+- Botões
+- Variáveis personalizadas
+
+## O que acontece após enviar um Template?
+
+Depende da resposta do cliente.
+
+### Se o cliente responder
+
+Assim que o cliente responder ao template:
+
+- Uma nova janela de 24 horas é aberta
+- Sua empresa volta a poder enviar mensagens comuns normalmente
+
+```
+Janela encerrada
+       ↓
+Envio de Template
+       ↓
+Cliente responde
+       ↓
+Nova janela de 24 horas
+       ↓
+Mensagens livres novamente
+```
+
+### Se o cliente não responder
+
+Caso o cliente não responda:
+
+- A janela continua fechada
+- Você não poderá enviar mensagens comuns
+- Será necessário enviar outro template quando fizer sentido
+
+<Note>
+  Para entender melhor o funcionamento da janela de atendimento, consulte a página sobre a [janela de 24 horas](/whatsapp-official/24h-window).
+</Note>
+
+## Categorias de Templates
+
+Os templates pertencem a uma categoria definida pela Meta.
+
+<CardGroup cols={3}>
+  <Card title="Marketing" icon="bullhorn">
+    Usado para promoções, ofertas, divulgação de produtos e campanhas.
+
+    **Exemplo:** "Aproveite 20% de desconto em toda a loja até domingo."
+  </Card>
+  <Card title="Utilidade" icon="bell">
+    Usado para informações solicitadas ou relacionadas a uma compra ou serviço, como confirmação de pedido, atualização de entrega, envio de boleto, confirmação de pagamento ou alteração de agendamento.
+  </Card>
+  <Card title="Autenticação" icon="lock">
+    Utilizado para validar a identidade do usuário, como código OTP, código de login ou autenticação em duas etapas.
+  </Card>
+</CardGroup>

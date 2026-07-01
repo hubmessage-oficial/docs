@@ -1,0 +1,104 @@
+---
+title: "Pagamento"
+description: "Configure uma forma de pagamento para enviar templates de mensagem pela API Oficial do WhatsApp"
+---
+
+import { projectName, frontendUrl } from '/snippets/variables.mdx';
+
+## Visão geral
+
+Para utilizar a **API Oficial do WhatsApp**, é necessário configurar uma forma de pagamento. Essa configuração possibilitará o envio de **templates de mensagem**.
+
+## Requisitos
+
+- **Portfólio empresarial (BM)**: é necessário ter um portfólio empresarial configurado e estar com o número do WhatsApp vinculado
+- **Permissão necessária**: você precisará ser administrador ou ter as permissões necessárias para fazer configurações de pagamento na conta respectiva do WhatsApp
+
+## Passo a passo
+
+### Passo 1 - Acessar a conta da Meta
+
+Acesse o link: [business.facebook.com](https://business.facebook.com/)
+
+### Passo 2 - Acesse ao Portfólio Empresarial (BM)
+
+- Clique para selecionar o Portfólio Empresarial
+- Clique para acessar as configurações desse portfólio
+
+<Frame>
+  <img src="/images/pagamento-1.png" alt="Acessar configurações do Portfólio Empresarial" />
+</Frame>
+
+### Passo 3 - Acesse as Waba (Contas do WhatsApp)
+
+- Clique em **Contas do WhatsApp**
+
+<Frame>
+  <img src="/images/pagamento-2.png" alt="Contas do WhatsApp" />
+</Frame>
+
+### Passo 4 - Acesse as configurações de pagamento
+
+- Selecione a conta respectiva
+- Após isso, selecione **"Configurações de pagamento"**
+
+<Frame>
+  <img src="/images/pagamento-3.png" alt="Configurações de pagamento" />
+</Frame>
+
+### Passo 5 - Acesse a configuração de pagamento
+
+- Selecione o item de menu **Formas de pagamento**
+
+<Warning>
+  Não configure pela opção **Contas**, pois o sistema da Meta não conseguirá validar corretamente essa forma, gerando problemas no processamento da fatura.
+</Warning>
+
+<Note>
+  Para fazer alterações nesta tela, é importante ter as permissões necessárias.
+</Note>
+
+<Frame>
+  <img src="/images/pagamento-4.png" alt="Formas de pagamento" />
+</Frame>
+
+### Passo 6 - Adicione uma forma de pagamento
+
+- Clique em **Adicionar** para iniciar o processo de configuração da forma de pagamento
+
+<Frame>
+  <img src="/images/pagamento-5.png" alt="Adicionar forma de pagamento" />
+</Frame>
+
+### Passo 7 - Preencha o país e moeda
+
+- Preencha o país como **Brasil**
+- Selecione a moeda **dólar americano (USD)**. Isso é necessário porque a Meta utiliza o dólar como base, mas após isso faz a conversão para o real na fatura do seu cartão
+- Após isso, clique em **Avançar**
+
+<Frame>
+  <img src="/images/pagamento-6.png" alt="Preencher país e moeda" />
+</Frame>
+
+### Passo 8 - Preencha dados do cartão
+
+- Preencha todos os dados do cartão e clique em **Salvar**
+
+<Note>
+  - Como o processamento é em dólar, o cartão precisa estar habilitado para **compras internacionais**
+  - O valor a ser pago terá como base a cotação do dólar no dia do fechamento da fatura
+</Note>
+
+<Frame>
+  <img src="/images/pagamento-7.png" alt="Preencher dados do cartão" />
+</Frame>
+
+### Passo 9 - Adicione o cartão à conta do WhatsApp Business
+
+- Após inserir um cartão, clique na aba **Contas do WhatsApp Business**
+- Após isso, clique em **Adicionar forma de pagamento**
+- Adicione o cartão que havia cadastrado anteriormente e vincule para concluir o processo
+
+<Frame>
+  <img src="/images/pagamento-8.png" alt="Vincular cartão à conta do WhatsApp Business" />
+</Frame>
