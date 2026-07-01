@@ -113,6 +113,7 @@
                     "summary": "With HMAC signature enabled",
                     "value": {
                       "id": "A1B2C3D4E5F6789012345678901234AB",
+                      "channelId": "019E4C54B1B375A28970B605CA9B03C3",
                       "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                       "url": "https://app.yourcompany.com/webhooks/hubmessage",
                       "description": null,
@@ -131,6 +132,7 @@
                     "summary": "Without HMAC signature",
                     "value": {
                       "id": "B2C3D4E5F6789012345678901234AB12",
+                      "channelId": "019E4C54B1B375A28970B605CA9B03C3",
                       "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                       "url": "https://app.yourcompany.com/webhooks/hubmessage",
                       "description": "Main production webhook",
@@ -195,6 +197,7 @@
                 "example": [
                   {
                     "id": "A1B2C3D4E5F6789012345678901234AB",
+                    "channelId": "019E4C54B1B375A28970B605CA9B03C3",
                     "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                     "url": "https://app.yourcompany.com/webhooks/hubmessage",
                     "description": "Main production webhook",
@@ -209,6 +212,7 @@
                   },
                   {
                     "id": "B2C3D4E5F6789012345678901234AB12",
+                    "channelId": "019E4C54B1B375A28970B605CA9B03C3",
                     "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                     "url": "https://app.yourcompany.com/webhooks/connection-events",
                     "description": "Connection events",
@@ -268,6 +272,7 @@
                 "schema": { "$ref": "#/components/schemas/WebhookResponse" },
                 "example": {
                   "id": "A1B2C3D4E5F6789012345678901234AB",
+                  "channelId": "019E4C54B1B375A28970B605CA9B03C3",
                   "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                   "url": "https://app.yourcompany.com/webhooks/hubmessage",
                   "description": "Main production webhook",
@@ -374,6 +379,7 @@
                     "summary": "After enabling signature (secret returned)",
                     "value": {
                       "id": "A1B2C3D4E5F6789012345678901234AB",
+                      "channelId": "019E4C54B1B375A28970B605CA9B03C3",
                       "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                       "url": "https://app.yourcompany.com/webhooks/hubmessage",
                       "description": "Main production webhook",
@@ -392,6 +398,7 @@
                     "summary": "After disabling (no secret)",
                     "value": {
                       "id": "A1B2C3D4E5F6789012345678901234AB",
+                      "channelId": "019E4C54B1B375A28970B605CA9B03C3",
                       "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                       "url": "https://app.yourcompany.com/webhooks/hubmessage",
                       "description": "Main production webhook",
@@ -674,9 +681,15 @@
             "description": "Unique webhook ID",
             "example": "A1B2C3D4E5F6789012345678901234AB"
           },
-          "instanceId": {
+          "channelId": {
             "type": "string",
             "description": "ID of the channel this webhook belongs to",
+            "example": "019E4C54B1B375A28970B605CA9B03C3"
+          },
+          "instanceId": {
+            "type": "string",
+            "deprecated": true,
+            "description": "Deprecated — use `channelId` instead",
             "example": "019E4C54B1B375A28970B605CA9B03C3"
           },
           "url": {
