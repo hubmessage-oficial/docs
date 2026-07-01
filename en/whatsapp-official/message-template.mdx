@@ -1,0 +1,81 @@
+---
+title: "Message templates"
+description: "Understand what WhatsApp Official API templates are, how they work, and their categories"
+---
+
+import { projectName, frontendUrl } from '/snippets/variables.mdx';
+
+## What is a Template?
+
+A **Template** (Message Model) is a message that has been pre-registered and approved by Meta. It's used to **start or resume a conversation** when there is no open window.
+
+**Example use cases:**
+
+- Order confirmation
+- Appointment reminder
+- Delivery notice
+- Billing/collection
+- Support recovery
+- Booking confirmation
+
+**Templates can contain:**
+
+- Text
+- Images
+- Videos
+- Documents
+- Buttons
+- Custom variables
+
+## What happens after sending a Template?
+
+It depends on the customer's response.
+
+### If the customer replies
+
+As soon as the customer replies to the template:
+
+- A new 24-hour window opens
+- Your business can go back to sending regular messages normally
+
+```
+Window closed
+       ↓
+Template sent
+       ↓
+Customer replies
+       ↓
+New 24-hour window
+       ↓
+Free messaging again
+```
+
+### If the customer doesn't reply
+
+If the customer doesn't reply:
+
+- The window stays closed
+- You won't be able to send regular messages
+- You'll need to send another template when it makes sense
+
+<Note>
+  To better understand how the support window works, see the page on the [24-hour window](/en/whatsapp-official/24h-window).
+</Note>
+
+## Template categories
+
+Templates belong to a category defined by Meta.
+
+<CardGroup cols={3}>
+  <Card title="Marketing" icon="bullhorn">
+    Used for promotions, offers, product announcements, and campaigns.
+
+    **Example:** "Enjoy 20% off storewide through Sunday."
+  </Card>
+  <Card title="Utility" icon="bell">
+    Used for information requested by or related to a purchase or service, such as order confirmation, delivery updates, invoice delivery, payment confirmation, or rescheduling.
+  </Card>
+  <Card title="Authentication" icon="lock">
+    Used to verify a user's identity, such as an OTP code, login code, or two-factor authentication.
+  </Card>
+</CardGroup>

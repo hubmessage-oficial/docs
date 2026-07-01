@@ -1,0 +1,84 @@
+---
+title: "Cloud API"
+description: "Conecte um número à API Oficial do WhatsApp por meio da Cloud API"
+---
+
+import { projectName, frontendUrl } from '/snippets/variables.mdx';
+
+## Visão geral
+
+A **Cloud API** permite conectar um número diretamente à **API Oficial do WhatsApp** por meio da sua Conta Comercial da Meta (Business Manager). Essa é a forma mais tradicional para novos números e oferece acesso a todos os recursos disponíveis na plataforma.
+
+## Requisitos
+
+- **Portfólio empresarial (BM)**: é necessário ter um portfólio empresarial configurado (se possível, verificado. Com isso, a BM possuirá mais credibilidade com a Meta)
+- **Administrador da conta**: você precisará estar com um perfil administrador na conta comercial e no Facebook
+- **Não ter o número no app do WhatsApp**: para utilizar esse método de conexão, o número não poderá estar no aplicativo do WhatsApp. Será necessário desconectá-lo do aplicativo. O processo entre desconectar e tentar uma conexão via API Oficial pela Cloud API pode demorar alguns minutos
+- **Número que recebe SMS ou Ligação**: ter um número que possa receber SMS ou ligação, pois a Meta irá enviar um código de verificação
+
+## Para adicionar um número pela Meta
+
+### Passo 1 - Acessar ao Portfólio Empresarial (BM)
+
+- Acesse o link: [business.facebook.com](https://business.facebook.com/)
+- Clique na engrenagem do Portfólio respectivo
+
+<Frame>
+  <img src="/images/cloud-api-1.png" alt="Acessar Portfólio Empresarial" />
+</Frame>
+
+### Passo 2 - Acessar tela das Waba (Conta Comercial)
+
+- Clique em **"Contas do WhatsApp"**
+
+<Frame>
+  <img src="/images/cloud-api-2.png" alt="Contas do WhatsApp" />
+</Frame>
+
+### Passo 3 - Adicionar uma nova Waba e um novo número
+
+Você poderá adicionar uma Waba pela própria Meta.
+
+- Clique no botão **Adicionar**
+
+<Frame>
+  <img src="/images/cloud-api-3.png" alt="Botão Adicionar" />
+</Frame>
+
+- Clique em **Criar uma nova conta do WhatsApp Business**
+
+<Frame>
+  <img src="/images/cloud-api-4.png" alt="Criar nova conta do WhatsApp Business" />
+</Frame>
+
+### Passo 4 - Preencha as informações sobre a empresa
+
+- **Configure o nome de exibição do Whats**: é importante que seja igual ao nome comercial e cumpra com as [diretrizes da Meta](https://www.facebook.com/business/help/757569725593362)
+- **Selecione uma categoria** que corresponda ao seu negócio (Automotivo, Educação, etc)
+
+<Frame>
+  <img src="/images/cloud-api-5.png" alt="Preencher informações da empresa" />
+</Frame>
+
+### Passo 4 - Escolher o número
+
+Você terá duas opções para escolher:
+
+- **Usar um nome de exibição**: nesta opção, a Meta cria um número virtual (que não recebe ligação e nem SMS) e apenas o nome de exibição aparece para o cliente no WhatsApp
+- **Adicionar um número**: com essa opção, você precisará adicionar um novo número
+
+<Frame>
+  <img src="/images/cloud-api-6.png" alt="Escolher o número" />
+</Frame>
+
+### Passo 5 - Verificar um telefone
+
+Caso escolha a opção **"Adicionar um número"**, você precisará verificar seu telefone.
+
+- Escolha **SMS** ou **Ligação**
+
+Após isso, seu número será validado e você poderá utilizá-lo para conectar.
+
+<Note>
+  É importante configurar um método de pagamento para enviar templates.
+</Note>

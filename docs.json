@@ -59,8 +59,44 @@
                 "group": "Introdução",
                 "pages": [
                   "index",
-                  "authentication",
-                  "conversation-window"
+                  "authentication"
+                ]
+              },
+              {
+                "group": "WhatsApp Oficial",
+                "pages": [
+                  "whatsapp-official/introduction",
+                  {
+                    "group": "Portfólio Empresarial (Meta Business Manager)",
+                    "pages": [
+                      "whatsapp-official/portfolio/introduction",
+                      "whatsapp-official/portfolio/how-to-create",
+                      "whatsapp-official/portfolio/verify-portfolio"
+                    ]
+                  },
+                  {
+                    "group": "Conexão",
+                    "pages": [
+                      "whatsapp-official/connection/introduction",
+                      "whatsapp-official/connection/cloud-api",
+                      "whatsapp-official/connection/coexistence"
+                    ]
+                  },
+                  {
+                    "group": "Pagamentos e Cobranças",
+                    "pages": [
+                      "whatsapp-official/payment",
+                      "whatsapp-official/billing"
+                    ]
+                  },
+                  {
+                    "group": "Recursos e Configurações",
+                    "pages": [
+                      "whatsapp-official/migrate-number",
+                      "whatsapp-official/24h-window",
+                      "whatsapp-official/message-template"
+                    ]
+                  }
                 ]
               },
               {
@@ -75,6 +111,7 @@
                   "channels/delete-channel"
                 ]
               },
+
               {
                 "group": "Templates",
                 "pages": [
@@ -129,8 +166,44 @@
                 "group": "Introduction",
                 "pages": [
                   "en/index",
-                  "en/authentication",
-                  "en/conversation-window"
+                  "en/authentication"
+                ]
+              },
+              {
+                "group": "WhatsApp Official",
+                "pages": [
+                  "en/whatsapp-official/introduction",
+                  {
+                    "group": "Business Portfolio (Meta Business Manager)",
+                    "pages": [
+                      "en/whatsapp-official/portfolio/introduction",
+                      "en/whatsapp-official/portfolio/how-to-create",
+                      "en/whatsapp-official/portfolio/verify-portfolio"
+                    ]
+                  },
+                  {
+                    "group": "Connection",
+                    "pages": [
+                      "en/whatsapp-official/connection/introduction",
+                      "en/whatsapp-official/connection/cloud-api",
+                      "en/whatsapp-official/connection/coexistence"
+                    ]
+                  },
+                  {
+                    "group": "Payments and Billing",
+                    "pages": [
+                      "en/whatsapp-official/payment",
+                      "en/whatsapp-official/billing"
+                    ]
+                  },
+                  {
+                    "group": "Resources and Settings",
+                    "pages": [
+                      "en/whatsapp-official/migrate-number",
+                      "en/whatsapp-official/24h-window",
+                      "en/whatsapp-official/message-template"
+                    ]
+                  }
                 ]
               },
               {

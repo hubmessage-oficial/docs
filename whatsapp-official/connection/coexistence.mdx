@@ -1,0 +1,93 @@
+---
+title: "Coexistência"
+description: "Conecte um número que já está em uso no WhatsApp Business à API Oficial"
+---
+
+import { projectName, frontendUrl } from '/snippets/variables.mdx';
+
+## Visão geral
+
+O modo de **Coexistência** permite conectar à **API Oficial do WhatsApp** um número que já está em uso no aplicativo do **WhatsApp Business**, mantendo o histórico de conversas e a possibilidade de continuar utilizando o aplicativo em paralelo.
+
+## Requisitos
+
+- **Portfólio empresarial (BM)**: é necessário ter um portfólio empresarial configurado (se possível, verificado. Com isso, a BM possuirá mais credibilidade com a Meta)
+- **Administrador da conta**: você precisará estar com um perfil administrador na conta comercial e no Facebook
+- **Ter o número no app do WhatsApp Business**: para utilizar esse método de conexão, o número precisará estar conectado no aplicativo do WhatsApp Business
+- **Possuir acesso ao número no aplicativo**: para realizar a conexão, é necessário ter acesso ao número business no aplicativo, pois receberá um código da Meta e também precisará escanear um QR Code
+
+## Informações importantes
+
+- **Número elegível**: nem todos os números serão elegíveis para a conexão, pois a Meta irá avaliar o histórico de uso no aplicativo do WhatsApp Business. Caso tente conectar, mas a Meta retorne um erro relacionado à elegibilidade, será necessário utilizar o número por mais um tempo antes de tentar novamente realizar a conexão
+- **Templates de mensagem serão cobrados**: ao enviar um modelo de mensagem, será cobrado de acordo com as regras de cobrança definidas pela API Oficial
+- **O WhatsApp Desktop para Windows não é compatível**: após a conexão via API Oficial, as mensagens enviadas e recebidas via WhatsApp Desktop não irão funcionar
+- **Deve utilizar o aplicativo do WhatsApp Business**: mesmo utilizando a API Oficial, é de extrema importância que continue acessando o aplicativo do WhatsApp Business, pelo menos, uma vez a cada 15 dias. Isso é necessário pois a Meta pode remover o vínculo com a API Oficial
+- **Utilização do WhatsApp Web**: após a conexão na API Oficial, seu dispositivo será desconectado do WhatsApp Web. Mas poderá reconectar novamente para utilizá-lo
+
+## Para adicionar um número pela Meta
+
+### Passo 1 - Acessar ao Portfólio Empresarial (BM)
+
+- Acesse o link: [business.facebook.com](https://business.facebook.com/)
+- Clique na engrenagem do Portfólio respectivo
+
+<Frame>
+  <img src="/images/coexistencia-1.png" alt="Acessar Portfólio Empresarial" />
+</Frame>
+
+### Passo 2 - Acessar tela das Waba (Conta Comercial)
+
+- Clique em **"Contas do WhatsApp"**
+
+<Frame>
+  <img src="/images/coexistencia-2.png" alt="Contas do WhatsApp" />
+</Frame>
+
+### Passo 3 - Adicionar uma nova Waba e um novo número
+
+Você poderá adicionar uma Waba pela própria Meta.
+
+- Clique no botão **Adicionar**
+
+<Frame>
+  <img src="/images/coexistencia-3.png" alt="Botão Adicionar" />
+</Frame>
+
+- Clique na opção **Vincular uma conta do WhatsApp Business**
+
+<Frame>
+  <img src="/images/coexistencia-4.png" alt="Vincular conta do WhatsApp Business" />
+</Frame>
+
+### Passo 4 - Adicione um número
+
+- Adicione o número business que deseja atrelar a essa conta do WhatsApp no seu portfólio
+
+<Frame>
+  <img src="/images/coexistencia-5.png" alt="Adicionar número business" />
+</Frame>
+
+### Passo 5 - Valide o código
+
+- Chegará um código no seu WhatsApp
+- Insira o código e depois clique em **Continuar**
+
+<Frame>
+  <img src="/images/coexistencia-6.png" alt="Validar código" />
+</Frame>
+
+### Passo 6 - Número Business adicionado na Meta
+
+- Após validar o número, uma janela irá aparecer informando que seu número foi adicionado à sua conta do WhatsApp no Portfólio Empresarial (BM) respectivo
+
+<Frame>
+  <img src="/images/coexistencia-7.png" alt="Número adicionado na Meta" />
+</Frame>
+
+### Passo 7 - Conexão no Hub Message
+
+Após adicionar o número pela Meta, será possível conectar na API Oficial pelo Hub Message.
+
+<Note>
+  Esse mesmo processo que fizemos poderia ter sido feito pelo próprio SDK. Essa é apenas uma das formas de adicionar um número. Sugerimos que faça tudo diretamente pelo Hub Message, pois, assim, ao terminar o processo, seu número já estará conectado.
+</Note>

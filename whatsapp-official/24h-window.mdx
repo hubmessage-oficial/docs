@@ -1,0 +1,102 @@
+---
+title: "Janela de 24 horas"
+description: "Entenda como funciona a janela de 24 horas da API Oficial do WhatsApp e quando utilizar templates"
+---
+
+import { projectName, frontendUrl } from '/snippets/variables.mdx';
+
+## Entendendo a janela de 24 horas do WhatsApp
+
+A janela de 24 horas é uma regra da **API Oficial do WhatsApp** definida pela Meta para controlar quando uma empresa pode conversar livremente com um cliente e quando é necessário utilizar **mensagens de modelo (templates)**.
+
+Entender esse conceito é essencial para utilizar a plataforma corretamente e evitar erros no envio de mensagens.
+
+## O que é a janela de 24 horas?
+
+A janela de 24 horas é um período que começa sempre que o **cliente envia uma mensagem** para a empresa.
+
+Durante esse período, sua empresa pode responder livremente utilizando mensagens comuns, como textos, imagens, documentos, áudios, vídeos, listas e botões.
+
+Cada nova mensagem enviada pelo cliente **reinicia esse contador** de 24 horas.
+
+### Exemplo
+
+| Horário | Evento | Janela |
+|---|---|---|
+| 10:00 | Cliente envia "Olá" | Janela aberta até 10:00 do dia seguinte |
+| 15:30 | Empresa responde | Permitido |
+| 18:20 | Cliente envia outra mensagem | A janela passa a expirar às 18:20 do dia seguinte |
+| 09:00 do dia seguinte | Empresa responde | Permitido |
+
+## Quando a janela está aberta
+
+Enquanto a janela estiver aberta, você pode enviar praticamente qualquer tipo de mensagem.
+
+**Mensagens permitidas:**
+
+- Texto
+- Imagens
+- Vídeos
+- Áudios
+- Documentos
+- Figurinhas (quando suportadas)
+- Localização
+- Contatos
+- Botões interativos
+- Listas
+- Respostas automáticas
+- Mensagens enviadas por agentes de IA
+- Mensagens enviadas por atendentes humanos
+
+<Note>
+  Durante esse período não é necessário utilizar templates para responder ao cliente.
+</Note>
+
+## Quando a janela expira
+
+Após **24 horas sem receber nenhuma nova mensagem do cliente**, a conversa é encerrada. A partir desse momento:
+
+- Não é possível enviar mensagens comuns
+- Qualquer tentativa será rejeitada pela API do WhatsApp
+
+Para iniciar uma nova conversa será necessário enviar um **Template aprovado pela Meta**.
+
+## Perguntas frequentes
+
+<AccordionGroup>
+  <Accordion title="Posso enviar mensagens comuns após 24 horas?">
+    Não. Depois que a janela expira, somente um Template aprovado pode ser enviado.
+  </Accordion>
+
+  <Accordion title="O cliente respondeu ao Template. Posso conversar normalmente?">
+    Sim. Assim que o cliente responde, uma nova janela de 24 horas é aberta.
+  </Accordion>
+
+  <Accordion title="Cada mensagem do cliente reinicia a janela?">
+    Sim. Sempre que o cliente enviar uma nova mensagem, a janela é renovada por mais 24 horas.
+  </Accordion>
+
+  <Accordion title="Posso enviar mídia durante a janela?">
+    Sim. Imagens, vídeos, documentos, áudios e outros formatos suportados podem ser enviados normalmente enquanto a janela estiver aberta.
+  </Accordion>
+
+  <Accordion title="Preciso criar um Template para cada conversa?">
+    Não. Templates são necessários apenas para iniciar ou retomar uma conversa quando não há uma janela de 24 horas aberta.
+  </Accordion>
+</AccordionGroup>
+
+## Resumo
+
+| Situação | Posso enviar mensagem comum? | Precisa de Template? | Há cobrança da Meta? |
+|---|---|---|---|
+| Cliente enviou mensagem nas últimas 24 horas | ✅ Sim | ❌ Não | ❌ Não |
+| Janela expirou | ❌ Não | ✅ Sim | ✅ Sim |
+| Cliente respondeu ao Template | ✅ Sim | ❌ Não | ❌ Não |
+| Cliente não respondeu ao Template | ❌ Não | ✅ Sim | ✅ Sim |
+
+## Boas práticas
+
+- Responda ao cliente enquanto a janela de 24 horas estiver aberta para manter a conversa fluindo
+- Utilize templates apenas quando precisar iniciar ou retomar um atendimento
+- Escolha a categoria de template correta (**Marketing**, **Utilidade** ou **Autenticação**) para evitar rejeições na aprovação
+- Monitore a expiração da janela para automatizar o envio de templates quando necessário
