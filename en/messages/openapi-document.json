@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Hub Message - Send Audio",
+    "title": "Hub Message - Send Document",
     "version": "1.0.0"
   },
   "servers": [{ "url": "https://api.hubmessage.io" }],
@@ -9,9 +9,9 @@
   "paths": {
     "/v1/channels/{channelId}/messages": {
       "post": {
-        "summary": "Send audio",
-        "description": "Sends an audio message.",
-        "operationId": "sendAudioMessage",
+        "summary": "Send document",
+        "description": "Sends a message with a document (PDF, DOC, XLS, etc).",
+        "operationId": "sendDocumentMessage",
         "tags": ["Messages"],
         "parameters": [
           {
@@ -26,13 +26,18 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/SendAudioRequest" },
+              "schema": { "$ref": "#/components/schemas/SendDocumentRequest" },
               "example": {
                 "recipient": { "identifier": "5511999999999" },
                 "content": {
-                  "type": "AUDIO",
+                  "type": "DOCUMENT",
                   "attachments": [
-                    { "url": "https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" }
+                    {
+                      "url": "https://www.thecampusqdl.com/uploads/files/pdf_sample_2.pdf",
+                      "caption": "Here is the contract",
+                      "name": "Contract",
+                      "extension": "pdf"
+                    }
                   ]
                 }
               }
@@ -68,7 +73,7 @@
               "timestamp": "2026-07-13T18:20:00Z",
               "code": "VALIDATION_ERROR",
               "subCode": "MEDIA_TOO_LARGE",
-              "message": "File above the allowed limit for AUDIO (16 MB)"
+              "message": "File above the allowed limit for DOCUMENT (100 MB)"
             }
           }
         }
@@ -81,8 +86,8 @@
             "example": {
               "timestamp": "2026-07-13T18:20:00Z",
               "code": "VALIDATION_ERROR",
-              "subCode": "MEDIA_CONVERSION_FAILED",
-              "message": "Failed to convert the media"
+              "subCode": "MEDIA_DOWNLOAD_FAILED",
+              "message": "Could not download the media from the provided URL"
             }
           }
         }
@@ -98,7 +103,7 @@
       }
     },
     "schemas": {
-      "SendAudioRequest": {
+      "SendDocumentRequest": {
         "type": "object",
         "required": ["recipient", "content"],
         "properties": {
@@ -113,7 +118,7 @@
             "type": "object",
             "required": ["type", "attachments"],
             "properties": {
-              "type": { "type": "string", "description": "Message type", "enum": ["AUDIO"] },
+              "type": { "type": "string", "description": "Message type", "enum": ["DOCUMENT"] },
               "attachments": {
                 "type": "array",
                 "description": "List of attachments",
@@ -121,7 +126,10 @@
                   "type": "object",
                   "required": ["url"],
                   "properties": {
-                    "url": { "type": "string", "description": "Audio URL" }
+                    "url": { "type": "string", "description": "Document URL (http(s) or base64 data URL)" },
+                    "caption": { "type": "string", "description": "Document caption (max. 1024 characters)" },
+                    "name": { "type": "string", "description": "File name shown to the recipient (without the extension)" },
+                    "extension": { "type": "string", "description": "File extension (e.g. pdf, docx, xlsx)", "example": "pdf" }
                   }
                 }
               }

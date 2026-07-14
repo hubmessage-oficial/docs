@@ -44,7 +44,9 @@
         },
         "responses": {
           "200": { "$ref": "#/components/responses/MessageSuccess" },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "400": { "$ref": "#/components/responses/MediaValidationError" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "502": { "$ref": "#/components/responses/MediaProcessingError" }
         }
       }
     }
@@ -57,6 +59,34 @@
           "application/json": {
             "schema": { "$ref": "#/components/schemas/MessageResponse" },
             "example": { "messageId": "wamid.HBgNNTU0NDk3MDUwNzg1FQIAERgSM0" }
+          }
+        }
+      },
+      "MediaValidationError": {
+        "description": "Media outside the rules (format, size, caption or URL). Handle it by `subCode`.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/MediaError" },
+            "example": {
+              "timestamp": "2026-07-13T18:20:00Z",
+              "code": "VALIDATION_ERROR",
+              "subCode": "MEDIA_TOO_LARGE",
+              "message": "File above the allowed limit for VIDEO (16 MB)"
+            }
+          }
+        }
+      },
+      "MediaProcessingError": {
+        "description": "Temporary technical failure while downloading, converting or storing the media. Retry; if it persists, contact support.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/MediaError" },
+            "example": {
+              "timestamp": "2026-07-13T18:20:00Z",
+              "code": "VALIDATION_ERROR",
+              "subCode": "MEDIA_CONVERSION_FAILED",
+              "message": "Failed to convert the media"
+            }
           }
         }
       },
@@ -107,6 +137,16 @@
         "type": "object",
         "properties": {
           "messageId": { "type": "string", "description": "Sent message ID" }
+        }
+      },
+      "MediaError": {
+        "type": "object",
+        "description": "Media processing error. Always carries a stable `subCode`.",
+        "properties": {
+          "timestamp": { "type": "string", "format": "date-time", "description": "Error date/time (ISO 8601)" },
+          "code": { "type": "string", "description": "General error code", "example": "VALIDATION_ERROR" },
+          "subCode": { "type": "string", "description": "Stable media error code — handle your flow by it" },
+          "message": { "type": "string", "description": "Human-readable message (may change/be translated — do not use for logic)" }
         }
       },
       "Error": {

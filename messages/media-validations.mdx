@@ -1,0 +1,83 @@
+---
+title: "Validações de mídia"
+description: "Formatos, limites e códigos de erro ao enviar mensagens com anexo"
+---
+
+## Como funciona
+
+Ao chamar `POST /v1/channels/{channelId}/messages` com um anexo, para canais **Meta WhatsApp** o Hub Message processa a mídia **de forma síncrona** (na própria requisição):
+
+<Steps>
+  <Step title="Baixa a mídia">
+    Baixa o arquivo da `url` informada (ou decodifica um _data URL_ base64).
+  </Step>
+  <Step title="Valida">
+    Verifica formato, tamanho e legenda.
+  </Step>
+  <Step title="Converte/normaliza">
+    Ajusta para um formato aceito pela Meta, quando necessário.
+  </Step>
+  <Step title="Envia">
+    Sobe o arquivo final e envia ao WhatsApp.
+  </Step>
+</Steps>
+
+Se algo estiver fora das regras, a requisição **falha imediatamente com erro HTTP**. Cada erro traz um **`subCode` estável** — trate seu fluxo por ele, **nunca** pelo texto de `message` (que é humano e pode mudar ou ser traduzido).
+
+<Note>
+  Para canais que **não** são Meta WhatsApp, a `url` é repassada sem conversão ou validação.
+</Note>
+
+## Formatos aceitos e limites
+
+| Tipo | Formatos de **entrada** aceitos | Entregue à Meta como | Tamanho máx (arquivo final) |
+|------|--------------------------------|----------------------|------------------------------|
+| **Imagem** | JPEG, PNG, BMP, TIFF, GIF, WebP | JPEG ou PNG (JPEG/PNG passam direto; os demais são convertidos para JPEG) | **5 MB** |
+| **Sticker** | WebP, PNG, JPEG, GIF, BMP, TIFF | WebP 512×512 | estático **100 KB** / animado **500 KB** |
+| **Áudio** | AAC, AMR, MP3, M4A, OGG, OPUS, WAV, FLAC | OGG/Opus (AMR é repassado) | **16 MB** |
+| **Vídeo** | MP4, 3GP, MKV, AVI, MOV | MP4 (H.264/AAC); 3GP repassado | **16 MB** |
+| **Documento** | TXT, XLS, XLSX, DOC, DOCX, PPT, PPTX, PDF | mesmo formato (DOC/DOCX são convertidos para PDF) | **100 MB** |
+
+**Observações:**
+
+- **Imagem:** a Meta só aceita JPEG/PNG. Enviar BMP/TIFF/GIF/WebP é permitido — o Hub Message converte para JPEG (no caso de GIF, usa o primeiro quadro).
+- **Sticker:** qualquer imagem é normalizada para **WebP 512×512**. O limite de **estático é 100 KB**; animado (origem GIF/WebP/vídeo) é **500 KB**.
+- **Tamanho:** o limite é validado no **arquivo final** (após conversão). Além disso, o arquivo de **entrada** não pode passar de **100 MB**.
+- **Legenda (caption):** imagem, vídeo e documento aceitam legenda de no máximo **1024 caracteres**.
+- **URL:** deve ser `http(s)://` acessível **ou** um _data URL_ base64 (`data:<mime>;base64,...`).
+
+## Códigos de erro (`subCode`)
+
+Formato da resposta de erro:
+
+```json
+{
+  "timestamp": "2026-07-13T18:20:00Z",
+  "code": "VALIDATION_ERROR",
+  "subCode": "MEDIA_MIME_NOT_ALLOWED",
+  "message": "Tipo de mídia não permitido para IMAGE: image/svg+xml"
+}
+```
+
+| `subCode` | HTTP | Quando ocorre | Como resolver |
+|-----------|------|---------------|---------------|
+| `MEDIA_URL_REQUIRED` | 400 | Anexo sem `url`/mídia | Informe a `url` do anexo |
+| `MEDIA_INVALID_URL` | 400 | `url` fora de `http(s)://` ou data URL | Envie uma URL válida (https) ou data URL base64 |
+| `MEDIA_INVALID_DATA_URL` | 400 | data URL base64 malformado | Verifique o formato `data:<mime>;base64,<conteúdo>` |
+| `MEDIA_MIME_NOT_ALLOWED` | 400 | Formato não aceito para aquele tipo de anexo | Use um dos formatos da tabela acima |
+| `MEDIA_TOO_LARGE` | 400 | Arquivo (entrada ou final) acima do limite | Reduza o tamanho/qualidade da mídia |
+| `MEDIA_CAPTION_TOO_LONG` | 400 | Legenda com mais de 1024 caracteres | Encurte a legenda |
+| `MEDIA_UNSUPPORTED_ATTACHMENT` | 400 | Tipo de anexo não suportado para conversão | Use imagem, sticker, áudio, vídeo ou documento |
+| `MEDIA_DOWNLOAD_FAILED` | 502 | Não foi possível baixar a mídia da `url` | Confirme que a URL está pública e acessível |
+| `MEDIA_CONVERSION_FAILED` | 502 | Falha ao converter a mídia | Reenvie; se persistir, contate o suporte |
+| `MEDIA_UPLOAD_FAILED` | 502 | Falha ao armazenar a mídia | Reenvie; se persistir, contate o suporte |
+| `MEDIA_PROCESSING_FAILED` | 502 | Falha inesperada no processamento | Reenvie; se persistir, contate o suporte |
+
+- **400** = problema no que foi enviado (corrigir e reenviar).
+- **502** = falha técnica temporária ao processar/entregar (reenviar; se persistir, suporte).
+
+## Notas de compatibilidade
+
+- O campo `subCode` só aparece nos erros de mídia; outros erros mantêm `{ timestamp, code, message }`.
+- Fonte das regras da Meta: WhatsApp Cloud API — [Supported Media Types](https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media/).
+- Limitação conhecida: para stickers de origem **WebP**, o Hub Message aplica o limite de **500 KB** (animado); a Meta pode recusar um WebP **estático** acima de **100 KB**. Prefira enviar stickers estáticos já otimizados (≤ 100 KB).

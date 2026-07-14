@@ -41,7 +41,9 @@
         },
         "responses": {
           "200": { "$ref": "#/components/responses/MessageSuccess" },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "400": { "$ref": "#/components/responses/MediaValidationError" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "502": { "$ref": "#/components/responses/MediaProcessingError" }
         }
       }
     }
@@ -54,6 +56,34 @@
           "application/json": {
             "schema": { "$ref": "#/components/schemas/MessageResponse" },
             "example": { "messageId": "wamid.HBgNNTU0NDk3MDUwNzg1FQIAERgSM0" }
+          }
+        }
+      },
+      "MediaValidationError": {
+        "description": "Mídia fora das regras (formato, tamanho ou URL). Trate pelo `subCode`.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/MediaError" },
+            "example": {
+              "timestamp": "2026-07-13T18:20:00Z",
+              "code": "VALIDATION_ERROR",
+              "subCode": "MEDIA_TOO_LARGE",
+              "message": "Sticker estático acima do limite permitido (100 KB)"
+            }
+          }
+        }
+      },
+      "MediaProcessingError": {
+        "description": "Falha técnica temporária ao baixar, converter ou armazenar a mídia. Reenvie; se persistir, contate o suporte.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/MediaError" },
+            "example": {
+              "timestamp": "2026-07-13T18:20:00Z",
+              "code": "VALIDATION_ERROR",
+              "subCode": "MEDIA_CONVERSION_FAILED",
+              "message": "Falha ao converter a mídia"
+            }
           }
         }
       },
@@ -103,6 +133,16 @@
         "type": "object",
         "properties": {
           "messageId": { "type": "string", "description": "ID da mensagem enviada" }
+        }
+      },
+      "MediaError": {
+        "type": "object",
+        "description": "Erro de processamento de mídia. Sempre traz um `subCode` estável.",
+        "properties": {
+          "timestamp": { "type": "string", "format": "date-time", "description": "Data/hora do erro (ISO 8601)" },
+          "code": { "type": "string", "description": "Código geral do erro", "example": "VALIDATION_ERROR" },
+          "subCode": { "type": "string", "description": "Código estável do erro de mídia — trate seu fluxo por ele" },
+          "message": { "type": "string", "description": "Mensagem legível (pode mudar/ser traduzida — não use para lógica)" }
         }
       },
       "Error": {
