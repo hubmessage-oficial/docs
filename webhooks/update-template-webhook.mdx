@@ -1,0 +1,45 @@
+---
+title: "Atualizar webhook de template"
+description: "Atualize a configuração de um webhook de template existente"
+openapi: "/pt/webhooks/openapi-template.json PATCH /v1/webhooks/{webhookId}"
+---
+
+## Conceituação
+
+Atualiza parcialmente a configuração de um webhook de template. Apenas os campos enviados no body são atualizados — os demais permanecem inalterados.
+
+### Atualizar eventos
+
+Se enviar o campo `events`, a lista substitui os eventos existentes e deve conter **somente** eventos de template (senão → `422`):
+
+```json
+{ "events": ["UPDATE_TEMPLATE_STATUS", "UPDATE_TEMPLATE_CATEGORY"] }
+```
+
+### Assinatura HMAC
+
+`signing: true` gera um novo `secret` (retornado apenas nesta resposta); `signing: false` remove a assinatura.
+
+<Warning>
+  O novo `secret` é retornado **apenas nesta resposta**. Armazene-o antes de fechar a sessão.
+</Warning>
+
+### Desabilitar temporariamente
+
+```json
+{ "status": "DISABLED" }
+```
+
+Para reativar, envie `{ "status": "ENABLED" }`.
+
+### `payloadFormat` continua ignorado
+
+Para webhooks de template o formato é sempre `DEFAULT`, mesmo que enviado na atualização.
+
+<Note>
+  Este endpoint requer a role **ENTERPRISE** na sua conta.
+</Note>
+
+<Note>
+  Após a alteração, o roteamento pode levar até ~5 min para refletir (TTL de cache).
+</Note>

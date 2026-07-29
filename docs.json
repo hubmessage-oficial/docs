@@ -28,6 +28,7 @@
     "/pt/messages/openapi-location.json",
     "/pt/messages/openapi-template.json",
     "/pt/webhooks/openapi.json",
+    "/pt/webhooks/openapi-template.json",
     "/en/channels/openapi-create.json",
     "/en/channels/openapi-connect.json",
     "/en/channels/openapi-disconnect.json",
@@ -45,7 +46,8 @@
     "/en/messages/openapi-interactive-button.json",
     "/en/messages/openapi-location.json",
     "/en/messages/openapi-template.json",
-    "/en/webhooks/openapi.json"
+    "/en/webhooks/openapi.json",
+    "/en/webhooks/openapi-template.json"
   ],
   "navigation": {
     "languages": [
@@ -144,12 +146,30 @@
                 "group": "Webhooks",
                 "pages": [
                   "webhooks/introduction",
-                  "webhooks/payloads",
-                  "webhooks/create-webhook",
-                  "webhooks/list-webhooks",
-                  "webhooks/get-webhook",
-                  "webhooks/update-webhook",
-                  "webhooks/delete-webhook"
+                  {
+                    "group": "Canais",
+                    "pages": [
+                      "webhooks/channel-webhooks",
+                      "webhooks/payloads",
+                      "webhooks/create-webhook",
+                      "webhooks/list-webhooks",
+                      "webhooks/get-webhook",
+                      "webhooks/update-webhook",
+                      "webhooks/delete-webhook"
+                    ]
+                  },
+                  {
+                    "group": "Templates",
+                    "pages": [
+                      "webhooks/template-webhooks",
+                      "webhooks/template-payloads",
+                      "webhooks/create-template-webhook",
+                      "webhooks/list-template-webhooks",
+                      "webhooks/get-template-webhook",
+                      "webhooks/update-template-webhook",
+                      "webhooks/delete-template-webhook"
+                    ]
+                  }
                 ]
               }
             ]
@@ -250,12 +270,30 @@
                 "group": "Webhooks",
                 "pages": [
                   "en/webhooks/introduction",
-                  "en/webhooks/payloads",
-                  "en/webhooks/create-webhook",
-                  "en/webhooks/list-webhooks",
-                  "en/webhooks/get-webhook",
-                  "en/webhooks/update-webhook",
-                  "en/webhooks/delete-webhook"
+                  {
+                    "group": "Channels",
+                    "pages": [
+                      "en/webhooks/channel-webhooks",
+                      "en/webhooks/payloads",
+                      "en/webhooks/create-webhook",
+                      "en/webhooks/list-webhooks",
+                      "en/webhooks/get-webhook",
+                      "en/webhooks/update-webhook",
+                      "en/webhooks/delete-webhook"
+                    ]
+                  },
+                  {
+                    "group": "Templates",
+                    "pages": [
+                      "en/webhooks/template-webhooks",
+                      "en/webhooks/template-payloads",
+                      "en/webhooks/create-template-webhook",
+                      "en/webhooks/list-template-webhooks",
+                      "en/webhooks/get-template-webhook",
+                      "en/webhooks/update-template-webhook",
+                      "en/webhooks/delete-template-webhook"
+                    ]
+                  }
                 ]
               }
             ]

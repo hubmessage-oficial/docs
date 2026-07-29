@@ -1,0 +1,606 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hub Message - Webhooks de Template",
+    "description": "API para criar e gerenciar webhooks de template — endpoints que recebem os eventos de template do WhatsApp e não dependem de uma instância (`instanceId` gravado como `null`). Requer role ENTERPRISE. Convivem com as rotas de webhook por instância/canal, que permanecem inalteradas.",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "https://api.hubmessage.io" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/v1/webhooks": {
+      "post": {
+        "summary": "Criar webhook de template",
+        "description": "Cria um webhook de template. Não depende de instância (`instanceId` gravado como `null`) e aceita **somente** eventos de template. O campo `payloadFormat` é ignorado — o formato é sempre `DEFAULT`.",
+        "operationId": "createTemplateWebhook",
+        "tags": ["Webhooks de template"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateTemplateWebhookRequest" },
+              "examples": {
+                "basic": {
+                  "summary": "Básico — eventos de template",
+                  "value": {
+                    "url": "https://destino/webhook",
+                    "description": "Webhook de template",
+                    "events": ["UPDATE_TEMPLATE_STATUS", "UPDATE_TEMPLATE_CATEGORY"],
+                    "signing": false,
+                    "authType": "NONE"
+                  }
+                },
+                "withSignature": {
+                  "summary": "Com assinatura HMAC",
+                  "value": {
+                    "url": "https://destino/webhook",
+                    "events": ["UPDATE_TEMPLATE_STATUS"],
+                    "signing": true
+                  }
+                },
+                "withBearerAuth": {
+                  "summary": "Com autenticação Bearer",
+                  "value": {
+                    "url": "https://destino/webhook",
+                    "events": ["UPDATE_TEMPLATE_STATUS", "UPDATE_TEMPLATE_CATEGORY"],
+                    "auth": {
+                      "type": "BEARER",
+                      "token": "meu-token-secreto"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Webhook de template criado com sucesso. `channelId` e `instanceId` vêm `null`. O campo `secret` é retornado **apenas nesta resposta** quando `signing` é `true`.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TemplateWebhookCreatedResponse" },
+                "example": {
+                  "id": "8F2C00000000000000000000000000A1",
+                  "channelId": null,
+                  "instanceId": null,
+                  "url": "https://destino/webhook",
+                  "description": "Webhook de template",
+                  "events": ["UPDATE_TEMPLATE_STATUS", "UPDATE_TEMPLATE_CATEGORY"],
+                  "status": "ENABLED",
+                  "signing": false,
+                  "secret": null,
+                  "auth": { "type": "NONE", "configured": false },
+                  "payloadFormat": "DEFAULT",
+                  "customAttributes": {},
+                  "createdAt": "2026-07-15T19:00:00.000+00:00",
+                  "updatedAt": "2026-07-15T19:00:00.000+00:00"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Header `Authorization` ausente ou entrada estruturalmente inválida",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": "Authorization header is required" }
+              }
+            }
+          },
+          "422": {
+            "description": "Role não ENTERPRISE; ou escopo de eventos inválido (evento não-template)",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "examples": {
+                  "notEnterprise": {
+                    "summary": "Conta sem role ENTERPRISE",
+                    "value": { "error": "This action requires ENTERPRISE role" }
+                  },
+                  "invalidScope": {
+                    "summary": "Evento não-template",
+                    "value": { "error": "Global webhooks (without instance) accept only template events" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Listar webhooks de template",
+        "description": "Retorna os webhooks de template habilitados do tenant. As credenciais de autenticação e o `secret` HMAC **não** são retornados por segurança.",
+        "operationId": "listTemplateWebhooks",
+        "tags": ["Webhooks de template"],
+        "responses": {
+          "200": {
+            "description": "Lista de webhooks de template do tenant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/TemplateWebhookResponse" }
+                },
+                "example": [
+                  {
+                    "id": "8F2C00000000000000000000000000A1",
+                    "channelId": null,
+                    "instanceId": null,
+                    "url": "https://destino/webhook",
+                    "description": "Webhook de template",
+                    "events": ["UPDATE_TEMPLATE_STATUS", "UPDATE_TEMPLATE_CATEGORY"],
+                    "status": "ENABLED",
+                    "signing": false,
+                    "auth": { "type": "NONE", "configured": false },
+                    "payloadFormat": "DEFAULT",
+                    "customAttributes": {},
+                    "createdAt": "2026-07-15T19:00:00.000+00:00",
+                    "updatedAt": "2026-07-15T19:00:00.000+00:00"
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "description": "Header `Authorization` ausente",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": "Authorization header is required" }
+              }
+            }
+          },
+          "422": {
+            "description": "Conta sem role ENTERPRISE",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": "This action requires ENTERPRISE role" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/webhooks/{webhookId}": {
+      "get": {
+        "summary": "Detalhar webhook de template",
+        "description": "Retorna os dados de um webhook de template específico do tenant. Credenciais e `secret` não são retornados.",
+        "operationId": "getTemplateWebhook",
+        "tags": ["Webhooks de template"],
+        "parameters": [
+          {
+            "name": "webhookId",
+            "in": "path",
+            "required": true,
+            "description": "ID do webhook de template",
+            "schema": { "type": "string", "example": "8F2C00000000000000000000000000A1" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dados do webhook de template",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TemplateWebhookResponse" },
+                "example": {
+                  "id": "8F2C00000000000000000000000000A1",
+                  "channelId": null,
+                  "instanceId": null,
+                  "url": "https://destino/webhook",
+                  "description": "Webhook de template",
+                  "events": ["UPDATE_TEMPLATE_STATUS"],
+                  "status": "ENABLED",
+                  "signing": false,
+                  "auth": { "type": "NONE", "configured": false },
+                  "payloadFormat": "DEFAULT",
+                  "customAttributes": {},
+                  "createdAt": "2026-07-15T19:00:00.000+00:00",
+                  "updatedAt": "2026-07-15T19:00:00.000+00:00"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Webhook não encontrado para o tenant",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": "Webhook not found" }
+              }
+            }
+          },
+          "422": {
+            "description": "Conta sem role ENTERPRISE",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": "This action requires ENTERPRISE role" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Atualizar webhook de template",
+        "description": "Atualiza parcialmente o webhook de template. Apenas os campos enviados são alterados; os omitidos permanecem inalterados. Se `events` for enviado, deve conter **somente** eventos de template. O campo `payloadFormat` continua sendo ignorado.",
+        "operationId": "updateTemplateWebhook",
+        "tags": ["Webhooks de template"],
+        "parameters": [
+          {
+            "name": "webhookId",
+            "in": "path",
+            "required": true,
+            "description": "ID do webhook de template",
+            "schema": { "type": "string", "example": "8F2C00000000000000000000000000A1" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateTemplateWebhookRequest" },
+              "examples": {
+                "updateUrlAndStatus": {
+                  "summary": "Atualizar URL e desabilitar",
+                  "value": {
+                    "url": "https://novo-destino/webhook",
+                    "status": "DISABLED"
+                  }
+                },
+                "updateEvents": {
+                  "summary": "Atualizar eventos de template",
+                  "value": { "events": ["UPDATE_TEMPLATE_STATUS", "UPDATE_TEMPLATE_CATEGORY"] }
+                },
+                "enableSignature": {
+                  "summary": "Habilitar / rotacionar assinatura HMAC",
+                  "value": { "signing": true }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook de template atualizado. O campo `secret` é retornado **apenas** quando `signing = true` nesta atualização.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TemplateWebhookCreatedResponse" },
+                "example": {
+                  "id": "8F2C00000000000000000000000000A1",
+                  "channelId": null,
+                  "instanceId": null,
+                  "url": "https://novo-destino/webhook",
+                  "description": "Webhook de template",
+                  "events": ["UPDATE_TEMPLATE_STATUS", "UPDATE_TEMPLATE_CATEGORY"],
+                  "status": "DISABLED",
+                  "signing": false,
+                  "auth": { "type": "NONE", "configured": false },
+                  "payloadFormat": "DEFAULT",
+                  "customAttributes": {},
+                  "createdAt": "2026-07-15T19:00:00.000+00:00",
+                  "updatedAt": "2026-07-15T19:30:00.000+00:00"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Entrada estruturalmente inválida",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": "Validation error" }
+              }
+            }
+          },
+          "404": {
+            "description": "Webhook não encontrado para o tenant",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": "Webhook not found" }
+              }
+            }
+          },
+          "422": {
+            "description": "Role não ENTERPRISE; ou escopo de eventos inválido",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": "Global webhooks (without instance) accept only template events" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remover webhook de template",
+        "description": "Remove permanentemente o webhook de template. Após a exclusão, nenhum evento de template é mais entregue na URL configurada.",
+        "operationId": "deleteTemplateWebhook",
+        "tags": ["Webhooks de template"],
+        "parameters": [
+          {
+            "name": "webhookId",
+            "in": "path",
+            "required": true,
+            "description": "ID do webhook de template",
+            "schema": { "type": "string", "example": "8F2C00000000000000000000000000A1" }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Webhook removido com sucesso. Nenhum conteúdo retornado."
+          },
+          "404": {
+            "description": "Webhook não encontrado para o tenant",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": "Webhook not found" }
+              }
+            }
+          },
+          "422": {
+            "description": "Conta sem role ENTERPRISE",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": "This action requires ENTERPRISE role" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateTemplateWebhookRequest": {
+        "type": "object",
+        "required": ["url", "events"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "URL de destino dos eventos",
+            "example": "https://destino/webhook"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição opcional do webhook",
+            "example": "Webhook de template"
+          },
+          "events": {
+            "type": "array",
+            "description": "Somente eventos de template. Pelo menos um obrigatório. Qualquer evento não-template resulta em `422`.",
+            "minItems": 1,
+            "items": { "$ref": "#/components/schemas/TemplateEvent" },
+            "example": ["UPDATE_TEMPLATE_STATUS", "UPDATE_TEMPLATE_CATEGORY"]
+          },
+          "signing": {
+            "type": "boolean",
+            "description": "Habilita assinatura HMAC-SHA256. Quando `true`, gera e retorna um `secret` de 64 caracteres hex **apenas na criação/atualização**.",
+            "default": false,
+            "example": false
+          },
+          "authType": {
+            "type": "string",
+            "enum": ["NONE", "BEARER", "API_KEY", "BASIC", "CUSTOM_HEADER"],
+            "description": "Tipo de autenticação (forma plana). Alternativa ao objeto `auth`.",
+            "default": "NONE",
+            "example": "NONE"
+          },
+          "token": {
+            "type": "string",
+            "description": "Credencial para `BEARER` (forma plana)"
+          },
+          "key": {
+            "type": "string",
+            "description": "Credencial para `API_KEY` (forma plana)"
+          },
+          "auth": {
+            "$ref": "#/components/schemas/WebhookAuth"
+          },
+          "payloadFormat": {
+            "type": "string",
+            "enum": ["DEFAULT"],
+            "description": "**Ignorado** para webhooks de template — o formato é sempre `DEFAULT`. Pode ser omitido; se enviado (qualquer valor), é descartado e persistido como `DEFAULT`.",
+            "default": "DEFAULT",
+            "example": "DEFAULT"
+          },
+          "customAttributes": {
+            "type": "object",
+            "description": "Mapa livre de atributos extras",
+            "additionalProperties": true,
+            "example": {}
+          }
+        }
+      },
+      "UpdateTemplateWebhookRequest": {
+        "type": "object",
+        "description": "Todos os campos são opcionais — apenas os campos enviados são atualizados.",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Nova URL de destino",
+            "example": "https://novo-destino/webhook"
+          },
+          "description": {
+            "type": "string",
+            "description": "Nova descrição"
+          },
+          "events": {
+            "type": "array",
+            "description": "Se enviado, substitui a lista de eventos — somente eventos de template (senão → `422`).",
+            "items": { "$ref": "#/components/schemas/TemplateEvent" }
+          },
+          "status": {
+            "type": "string",
+            "enum": ["ENABLED", "DISABLED"],
+            "description": "`DISABLED` pausa a entrega de eventos sem excluir o webhook"
+          },
+          "signing": {
+            "type": "boolean",
+            "description": "`true` gera um novo `secret`; `false` remove a assinatura"
+          },
+          "authType": {
+            "type": "string",
+            "enum": ["NONE", "BEARER", "API_KEY", "BASIC", "CUSTOM_HEADER"],
+            "description": "`NONE` limpa a autenticação; os demais reconfiguram"
+          },
+          "token": { "type": "string", "description": "Credencial para `BEARER`" },
+          "key": { "type": "string", "description": "Credencial para `API_KEY`" },
+          "auth": { "$ref": "#/components/schemas/WebhookAuth" },
+          "payloadFormat": {
+            "type": "string",
+            "enum": ["DEFAULT"],
+            "description": "**Ignorado** para webhooks de template"
+          },
+          "customAttributes": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "WebhookAuth": {
+        "type": "object",
+        "description": "Forma aninhada da autenticação. Para `BASIC` use `username`+`password`; para `CUSTOM_HEADER` use `headerName`+`headerValue`.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["NONE", "BEARER", "API_KEY", "BASIC", "CUSTOM_HEADER"],
+            "example": "BEARER"
+          },
+          "token": { "type": "string", "description": "Token para `BEARER`", "example": "meu-token-secreto" },
+          "key": { "type": "string", "description": "Chave para `API_KEY`" },
+          "username": { "type": "string", "description": "Usuário para `BASIC`" },
+          "password": { "type": "string", "description": "Senha para `BASIC`" },
+          "headerName": { "type": "string", "description": "Nome do header para `CUSTOM_HEADER`", "example": "X-Api-Key" },
+          "headerValue": { "type": "string", "description": "Valor do header para `CUSTOM_HEADER`" }
+        }
+      },
+      "WebhookAuthInfo": {
+        "type": "object",
+        "description": "Resumo da autenticação configurada — credenciais não são retornadas por segurança",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["NONE", "BEARER", "API_KEY", "BASIC", "CUSTOM_HEADER"],
+            "example": "NONE"
+          },
+          "configured": {
+            "type": "boolean",
+            "description": "`true` quando credenciais estão configuradas",
+            "example": false
+          }
+        }
+      },
+      "TemplateEvent": {
+        "type": "string",
+        "enum": ["UPDATE_TEMPLATE_STATUS", "UPDATE_TEMPLATE_CATEGORY"],
+        "description": "Eventos de template aceitos: `UPDATE_TEMPLATE_STATUS` (atualização de status do template — aprovado/rejeitado etc.) e `UPDATE_TEMPLATE_CATEGORY` (atualização de categoria do template)."
+      },
+      "TemplateWebhookResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único do webhook de template",
+            "example": "8F2C00000000000000000000000000A1"
+          },
+          "channelId": {
+            "type": "string",
+            "nullable": true,
+            "description": "Sempre `null` para webhooks de template",
+            "example": null
+          },
+          "instanceId": {
+            "type": "string",
+            "nullable": true,
+            "deprecated": true,
+            "description": "Descontinuado e sempre `null` para webhooks de template",
+            "example": null
+          },
+          "url": {
+            "type": "string",
+            "description": "URL de destino dos eventos",
+            "example": "https://destino/webhook"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Descrição do webhook",
+            "example": "Webhook de template"
+          },
+          "events": {
+            "type": "array",
+            "description": "Eventos de template configurados",
+            "items": { "$ref": "#/components/schemas/TemplateEvent" },
+            "example": ["UPDATE_TEMPLATE_STATUS", "UPDATE_TEMPLATE_CATEGORY"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["ENABLED", "DISABLED"],
+            "description": "Status atual do webhook",
+            "example": "ENABLED"
+          },
+          "signing": {
+            "type": "boolean",
+            "description": "Indica se a assinatura HMAC está habilitada",
+            "example": false
+          },
+          "auth": { "$ref": "#/components/schemas/WebhookAuthInfo" },
+          "payloadFormat": {
+            "type": "string",
+            "enum": ["DEFAULT"],
+            "description": "Sempre `DEFAULT` para webhooks de template",
+            "example": "DEFAULT"
+          },
+          "customAttributes": {
+            "type": "object",
+            "additionalProperties": true,
+            "example": {}
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-07-15T19:00:00.000+00:00"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-07-15T19:00:00.000+00:00"
+          }
+        }
+      },
+      "TemplateWebhookCreatedResponse": {
+        "allOf": [
+          { "$ref": "#/components/schemas/TemplateWebhookResponse" },
+          {
+            "type": "object",
+            "properties": {
+              "secret": {
+                "type": "string",
+                "nullable": true,
+                "description": "Segredo HMAC de 64 caracteres hex — retornado **apenas** quando `signing = true` no create/update. `null` quando a assinatura está desabilitada. Não poderá ser recuperado depois.",
+                "example": null
+              }
+            }
+          }
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Secret Key gerada no painel de Segurança do Hub Message"
+      }
+    }
+  }
+}

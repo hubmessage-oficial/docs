@@ -7,32 +7,30 @@ import { projectName } from '/snippets/variables.mdx';
 
 ## O que são webhooks?
 
-Webhooks são notificações HTTP que o {projectName} envia ao seu servidor quando eventos acontecem em um canal — como uma mensagem recebida, status de entrega, ou mudança de conexão.
+Webhooks são notificações HTTP que o {projectName} envia ao seu servidor quando eventos acontecem — como uma mensagem recebida, status de entrega, ou uma atualização de template.
 
 Em vez de o seu sistema consultar a API periodicamente (polling), o {projectName} **envia os eventos para você** assim que acontecem.
 
 ```
-Cliente envia mensagem → Hub Message → POST para sua URL → Seu sistema processa
+Evento acontece → Hub Message → POST para sua URL → Seu sistema processa
 ```
 
 <Note>
   Webhooks exigem a role **ENTERPRISE** na sua conta. Se sua conta não tem essa role, as chamadas de CRUD de webhook retornam `422`. Entre em contato com o suporte para habilitar.
 </Note>
 
-## Eventos disponíveis
+## Tipos de webhook
 
-| Evento | Quando é disparado |
-|---|---|
-| `MESSAGE_RECEIVED` | Uma mensagem foi recebida no canal |
-| `MESSAGE_DELIVERY` | Confirmação de entrega de uma mensagem enviada |
-| `MESSAGE_STATUS` | Atualização de status de uma mensagem (lida, falha, etc.) |
-| `RECEIVED_STATUS` | Combinação de recebimento e status |
-| `RECEIVED_AND_DELIVERY` | Combinação de recebimento e entrega |
-| `CONNECTED` | O canal foi conectado |
-| `DISCONNECTED` | O canal foi desconectado |
-| `PRESENCE_CHAT` | Indicador de presença ou digitação de um contato |
-| `INITIAL_DATA` | Sincronização inicial de dados ao conectar o canal |
-| `BLOCK` | Evento de bloqueio de contato |
+O {projectName} tem dois tipos de webhook. O que **muda** entre eles são os eventos aceitos e a forma de associação — cada seção detalha as suas particularidades. O restante desta página vale para **os dois tipos**.
+
+<CardGroup cols={2}>
+  <Card title="Webhooks de canal" icon="hashtag" href="/webhooks/channel-webhooks">
+    Recebem os eventos de um canal específico (mensagens, entrega, conexão).
+  </Card>
+  <Card title="Webhooks de template" icon="brackets-curly" href="/webhooks/template-webhooks">
+    Recebem os eventos de template do WhatsApp, independentes de instância.
+  </Card>
+</CardGroup>
 
 ## Formatos de payload
 
@@ -42,7 +40,6 @@ O {projectName} suporta três formatos de payload:
 |---|---|
 | `DEFAULT` | Formato padrão do Hub Message |
 {/* | `Z_API` | Formato compatível com a Z-API — ideal para migração ou sistemas já integrados com Z-API | */}
-
 
 ## Autenticação do webhook
 
@@ -66,29 +63,5 @@ Quando habilitado:
 - Você verifica a assinatura no seu servidor usando o `secret` armazenado.
 
 <Warning>
-  O `secret` é exibido **apenas** na resposta do `POST /webhooks` (criar) ou `PATCH /webhooks/{id}` (atualizar com `signing: true`). Armazene-o com segurança — ele não pode ser recuperado depois.
+  O `secret` é exibido **apenas** na resposta de criação ou de atualização com `signing: true`. Armazene-o com segurança — ele não pode ser recuperado depois.
 </Warning>
-
-## Por canal
-
-Cada webhook é associado a um canal específico via `channelId`. Um mesmo canal pode ter **múltiplos webhooks** com configurações diferentes — por exemplo, um para mensagens e outro para eventos de conexão.
-
-## Gerenciamento
-
-<CardGroup cols={2}>
-  <Card title="Criar webhook" icon="plus" href="/webhooks/create-webhook">
-    Registre um novo endpoint de webhook em um canal.
-  </Card>
-  <Card title="Listar webhooks" icon="list" href="/webhooks/list-webhooks">
-    Veja todos os webhooks de um canal.
-  </Card>
-  <Card title="Atualizar webhook" icon="pen" href="/webhooks/update-webhook">
-    Atualize URL, eventos, autenticação ou status.
-  </Card>
-  <Card title="Deletar webhook" icon="trash" href="/webhooks/delete-webhook">
-    Remova um webhook de um canal.
-  </Card>
-  <Card title="Estrutura dos payloads" icon="brackets-curly" href="/webhooks/payloads">
-    Exemplos reais dos payloads recebidos para cada tipo de mensagem.
-  </Card>
-</CardGroup>

@@ -1,0 +1,17 @@
+---
+title: "Get template webhook"
+description: "Retrieve the data of a specific template webhook"
+openapi: "/en/webhooks/openapi-template.json GET /v1/webhooks/{webhookId}"
+---
+
+## Overview
+
+Returns the data of a specific template webhook for the tenant. As with the list endpoint, authentication credentials and the `secret` are **not returned** for security reasons.
+
+<Note>
+  This endpoint requires the **ENTERPRISE** role on your account.
+</Note>
+
+<Note>
+  The `webhookId` is obtained from the [Create template webhook](/en/webhooks/create-template-webhook) or [List template webhooks](/en/webhooks/list-template-webhooks) endpoint.
+</Note>

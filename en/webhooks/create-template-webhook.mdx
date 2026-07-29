@@ -1,0 +1,27 @@
+---
+title: "Create template webhook"
+description: "Register a template webhook (independent of any instance)"
+openapi: "/en/webhooks/openapi-template.json POST /v1/webhooks"
+---
+
+## Overview
+
+Creates a template webhook. It does not depend on an instance — the `instanceId` is stored as `null` automatically — and receives only WhatsApp template events.
+
+The `events` field accepts **only** `UPDATE_TEMPLATE_STATUS` and `UPDATE_TEMPLATE_CATEGORY`. Any non-template event results in `422`.
+
+### `payloadFormat` is ignored
+
+For template webhooks the format is always `DEFAULT`. You may omit the field; if sent (any value), it is silently discarded and persisted as `DEFAULT`.
+
+### HMAC signing
+
+If `signing: true`, the `secret` field is generated and returned **only in this response**. Store it securely — it will not be shown again.
+
+<Warning>
+  This endpoint requires the **ENTERPRISE** role on your account.
+</Warning>
+
+<Note>
+  After creation, routing may take up to ~5 min to reflect (cache TTL).
+</Note>

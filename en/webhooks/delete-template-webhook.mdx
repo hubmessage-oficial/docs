@@ -1,0 +1,21 @@
+---
+title: "Delete template webhook"
+description: "Permanently remove a template webhook"
+openapi: "/en/webhooks/openapi-template.json DELETE /v1/webhooks/{webhookId}"
+---
+
+## Overview
+
+Permanently removes a template webhook. After deletion, {projectName} immediately stops sending template events to the configured URL.
+
+<Warning>
+  Deletion is permanent. If you only need to pause the webhook temporarily, use the [Update template webhook](/en/webhooks/update-template-webhook) endpoint with `status: "DISABLED"` instead of deleting.
+</Warning>
+
+<Note>
+  This endpoint requires the **ENTERPRISE** role on your account.
+</Note>
+
+<Note>
+  The `webhookId` is obtained from the [Create template webhook](/en/webhooks/create-template-webhook) or [List template webhooks](/en/webhooks/list-template-webhooks) endpoint.
+</Note>

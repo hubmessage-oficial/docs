@@ -1,0 +1,74 @@
+---
+title: "Webhooks de template"
+description: "Receba os eventos de template do WhatsApp de forma independente de instância"
+---
+
+import { projectName } from '/snippets/variables.mdx';
+
+## O que são webhooks de template?
+
+Diferente dos webhooks **de canal**, o {projectName} oferece **webhooks de template** — endpoints que recebem exclusivamente os eventos de template do WhatsApp e **não** dependem de uma instância (`instanceId = null`).
+
+Eles convivem com as rotas de webhook por canal, que permanecem inalteradas. O roteamento dos eventos de template é feito pelo serviço interno independentemente da instância.
+
+<Note>
+  Os conceitos comuns aos dois tipos de webhook (role **ENTERPRISE**, autenticação, assinatura HMAC e formatos de payload) estão na [Introdução](/webhooks/introduction).
+</Note>
+
+## Autenticação
+
+Todas as rotas exigem o header:
+
+```
+Authorization: Bearer <secret-key>
+```
+
+## Eventos de template aceitos
+
+Um webhook de template aceita **somente** eventos de template. Enviar qualquer evento não-template resulta em `422`.
+
+| Valor (exato, SNAKE_CASE) | Significado |
+|---|---|
+| `UPDATE_TEMPLATE_STATUS` | Atualização de status de template (aprovado/rejeitado etc.) |
+| `UPDATE_TEMPLATE_CATEGORY` | Atualização de categoria de template |
+
+## Regras de negócio
+
+1. **Escopo dos eventos (obrigatório).**
+   - Webhook **de template** → só aceita eventos de template. Qualquer evento não-template → `422`.
+   - Webhook **de canal** → **não** pode assinar eventos de template → `422`.
+2. **`payloadFormat` é ignorado.** Para webhooks de template o formato é sempre `DEFAULT`. O campo pode ser omitido; se enviado (qualquer valor, inclusive `CHATWOOT`), é silenciosamente descartado e persistido como `DEFAULT`.
+3. **`instanceId` gravado como `null`** automaticamente — não há campo de instância nestas rotas. `channelId` também vem `null`.
+
+## Observações importantes
+
+<Note>
+  **Escopo por tenant.** As operações de leitura/edição/remoção são escopadas pelo `tenant` resolvido do `Authorization` — não há acesso cross-tenant por id.
+</Note>
+
+<Note>
+  **Cache do roteador.** Após criar ou alterar um webhook de template, o roteamento pode levar até ~5 min para refletir (TTL de cache).
+</Note>
+
+## Gerenciamento
+
+<CardGroup cols={2}>
+  <Card title="Criar webhook de template" icon="plus" href="/webhooks/create-template-webhook">
+    Registre um novo endpoint de template.
+  </Card>
+  <Card title="Listar webhooks de template" icon="list" href="/webhooks/list-template-webhooks">
+    Veja todos os webhooks de template do tenant.
+  </Card>
+  <Card title="Detalhar webhook de template" icon="magnifying-glass" href="/webhooks/get-template-webhook">
+    Busque um webhook de template específico.
+  </Card>
+  <Card title="Atualizar webhook de template" icon="pen" href="/webhooks/update-template-webhook">
+    Atualize URL, eventos, autenticação ou status.
+  </Card>
+  <Card title="Remover webhook de template" icon="trash" href="/webhooks/delete-template-webhook">
+    Exclua permanentemente um webhook de template.
+  </Card>
+  <Card title="Estrutura dos payloads" icon="brackets-curly" href="/webhooks/template-payloads">
+    Exemplos reais dos payloads recebidos para cada evento de template.
+  </Card>
+</CardGroup>
