@@ -539,15 +539,17 @@
               "$ref": "#/components/schemas/UnprocessableEntity"
             },
             "example": {
-              "errors": [
-                {
-                  "code": "100",
-                  "name": "META_WHATSAPP_ERROR",
-                  "subCode": "2388024",
-                  "message": "Invalid parameter",
-                  "description": "There is already Portuguese (BR) content for this template. You can create a new template and try again."
-                }
-              ]
+              "error":{
+                "errors": [
+                  {
+                    "code": "100",
+                    "name": "META_WHATSAPP_ERROR",
+                    "subCode": "2388024",
+                    "message": "Invalid parameter",
+                    "description": "There is already Portuguese (BR) content for this template. You can create a new template and try again."
+                  }
+                ]
+              }
             }
           }
         }
