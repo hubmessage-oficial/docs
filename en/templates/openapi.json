@@ -396,7 +396,7 @@
       },
 
       "UnprocessableEntity": {
-        "description": "A requisição não pôde ser processada devido a um erro de validação.",
+        "description": "The request could not be processed due to a validation error.",
         "content": {
           "application/json": {
             "schema": {
