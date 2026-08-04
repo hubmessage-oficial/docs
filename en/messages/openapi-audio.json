@@ -41,7 +41,9 @@
         },
         "responses": {
           "200": { "$ref": "#/components/responses/MessageSuccess" },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "400": { "$ref": "#/components/responses/MediaValidationError" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "502": { "$ref": "#/components/responses/MediaProcessingError" }
         }
       }
     }
@@ -54,6 +56,44 @@
           "application/json": {
             "schema": { "$ref": "#/components/schemas/MessageResponse" },
             "example": { "messageId": "wamid.HBgNNTU0NDk3MDUwNzg1FQIAERgSM0" }
+          }
+        }
+      },
+      "MediaValidationError": {
+        "description": "Media outside the rules (format, size, caption or URL). Handle it by `errors[].subCode`.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/MediaError" },
+            "example": {
+              "timestamp": "2026-07-13T18:20:00Z",
+              "status": 400,
+              "errors": [
+                {
+                  "code": "VALIDATION_ERROR",
+                  "subCode": "MEDIA_TOO_LARGE",
+                  "message": "File above the allowed limit for AUDIO (16 MB)"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "MediaProcessingError": {
+        "description": "Temporary technical failure while downloading, converting or storing the media. Retry; if it persists, contact support.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/MediaError" },
+            "example": {
+              "timestamp": "2026-07-13T18:20:00Z",
+              "status": 502,
+              "errors": [
+                {
+                  "code": "VALIDATION_ERROR",
+                  "subCode": "MEDIA_CONVERSION_FAILED",
+                  "message": "Failed to convert the media"
+                }
+              ]
+            }
           }
         }
       },
@@ -103,6 +143,28 @@
         "type": "object",
         "properties": {
           "messageId": { "type": "string", "description": "Sent message ID" }
+        }
+      },
+      "MediaError": {
+        "type": "object",
+        "description": "Unified error contract. `errors` may contain more than one error. Handle your flow by `errors[].subCode` (stable) — never by `message`. Null fields are omitted.",
+        "properties": {
+          "timestamp": { "type": "string", "format": "date-time", "description": "Error date/time (ISO 8601)" },
+          "status": { "type": "integer", "description": "HTTP status code", "example": 400 },
+          "errors": {
+            "type": "array",
+            "description": "List of errors (there may be more than one)",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string", "description": "General error code", "example": "VALIDATION_ERROR" },
+                "name": { "type": "string", "description": "Error name" },
+                "subCode": { "type": "string", "description": "Stable media error code — handle your flow by it" },
+                "message": { "type": "string", "description": "Human-readable message (may change/be translated — do not use for logic)" },
+                "description": { "type": "string", "description": "Additional error details" }
+              }
+            }
+          }
         }
       },
       "Error": {

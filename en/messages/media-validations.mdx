@@ -1,0 +1,113 @@
+---
+title: "Media validations"
+description: "Formats, limits and error codes when sending messages with attachments"
+---
+
+## How it works
+
+When you call `POST /v1/channels/{channelId}/messages` with an attachment, for **Meta WhatsApp** channels Hub Message processes the media **synchronously** (within the request itself):
+
+<Steps>
+  <Step title="Downloads the media">
+    Downloads the file from the provided `url` (or decodes a base64 _data URL_).
+  </Step>
+  <Step title="Validates">
+    Checks format, size and caption. Video size is checked **before the download** (via `HEAD`/`Content-Length`).
+  </Step>
+  <Step title="Converts/normalizes">
+    Adjusts to a format accepted by Meta, when needed.
+  </Step>
+  <Step title="Sends">
+    Uploads the final file and sends it to WhatsApp.
+  </Step>
+</Steps>
+
+If anything is outside the rules, the request **fails immediately with an HTTP error**, following the platform's **unified error contract**: errors come in a **list** (`errors[]`, there may be more than one) and each item carries a **stable `subCode`** — handle your flow by it, **never** by the `message` text (which is human-facing and may change or be translated).
+
+<Note>
+  For channels that are **not** Meta WhatsApp, the `url` is passed through **without format conversion** — but the media **size** is validated against each channel's limit (see [Size limits per channel](#size-limits-per-channel)).
+</Note>
+
+## Accepted formats and limits
+
+| Type | Accepted **input** formats | Delivered to Meta as | Max size (final file) |
+|------|----------------------------|----------------------|------------------------|
+| **Image** | JPEG, PNG, BMP, TIFF, GIF, WebP, **SVG** | JPEG or PNG (JPEG/PNG pass through; BMP/TIFF/GIF/WebP → JPEG; **SVG → PNG**) | **5 MB** |
+| **Sticker** | WebP, PNG, JPEG, GIF, BMP, TIFF | WebP 512×512 | static **100 KB** / animated **500 KB** |
+| **Audio** | AAC, AMR, MP3, M4A, OGG, OPUS, WAV, FLAC | OGG/Opus (AMR is passed through) | **16 MB** |
+| **Video** | MP4, 3GP, MKV, AVI, MOV | MP4 (H.264/AAC); 3GP passed through | **16 MB** |
+| **Document** | TXT, XLS, XLSX, DOC, DOCX, PPT, PPTX, PDF | same format (DOC/DOCX are converted to PDF) | **100 MB** |
+
+**Notes:**
+
+- **Image:** Meta only accepts JPEG/PNG. Sending BMP/TIFF/GIF/WebP is allowed — Hub Message converts to JPEG (for GIF, it uses the first frame). **SVG** is not accepted by Meta and is **rasterized to PNG** (max 1024×1024 box, keeping the aspect ratio). Detection is by **content**: the SVG is identified and converted even if the client declares the wrong mime (e.g. `image/png`) or an empty one.
+- **Sticker:** any image is normalized to **WebP 512×512**. The **static limit is 100 KB**; animated (from GIF/WebP/video) is **500 KB**. **SVG is not supported** as a sticker (rejected).
+- **Size:** media is **never compressed or resized** to fit — if it exceeds the limit, the request is **rejected** with `MEDIA_TOO_LARGE` (400). The limit is validated on the **final file** (after conversion) and the **input** file cannot exceed **100 MB**.
+- **Caption:** image, video and document accept a caption of at most **1024 characters**.
+- **URL:** must be an accessible `http(s)://` URL **or** a base64 _data URL_ (`data:<mime>;base64,...`).
+
+## Size limits per channel
+
+Media is **never compressed or resized** to fit the limit. If it exceeds the channel limit, the request is **rejected** with `MEDIA_TOO_LARGE` (400) and the original media is preserved — send a file already within the limit.
+
+Whenever possible, the size is checked **before downloading** the file, reading the `Content-Length` via an HTTP `HEAD` on the source `url`.
+
+<Warning>
+  If the source server does **not** report `Content-Length`, the size cannot be validated before the download. For **Meta WhatsApp** there is an additional check after downloading; for the **other channels**, the media passes (best-effort).
+</Warning>
+
+Meta WhatsApp limits are in the table [above](#accepted-formats-and-limits). The channels below **do not convert** the format — they only validate the size against each platform's limit:
+
+| Channel | Image | Video | Audio | Document |
+|---------|------:|------:|------:|---------:|
+| **Instagram** | 8 MB | 25 MB | 25 MB | 25 MB |
+| **Messenger** | 8 MB | 25 MB | 25 MB | 25 MB |
+| **Telegram** | 5 MB | 20 MB | 20 MB | 20 MB |
+| **Z-API (WhatsApp)** | 5 MB | 16 MB | 16 MB | 100 MB |
+
+- Channels **without a configured limit** (e.g. Webchat, Mercado Livre) skip this validation.
+- The values are **defaults** and can be adjusted via configuration, without a new deploy.
+
+## Error codes (`subCode`)
+
+Error response format:
+
+```json
+{
+  "timestamp": "2026-07-13T18:20:00Z",
+  "status": 400,
+  "errors": [
+    {
+      "code": "VALIDATION_ERROR",
+      "subCode": "MEDIA_MIME_NOT_ALLOWED",
+      "message": "Media type not allowed for IMAGE: image/heic"
+    }
+  ]
+}
+```
+
+Errors always come in a **list** (`errors[]`) — there may be more than one (e.g. multiple validations). Null fields are omitted from each item.
+
+| `subCode` | HTTP | When it happens | How to resolve |
+|-----------|------|-----------------|----------------|
+| `MEDIA_URL_REQUIRED` | 400 | Attachment without `url`/media | Provide the attachment `url` |
+| `MEDIA_INVALID_URL` | 400 | `url` not `http(s)://` or data URL | Send a valid (https) URL or a base64 data URL |
+| `MEDIA_INVALID_DATA_URL` | 400 | Malformed base64 data URL | Check the `data:<mime>;base64,<content>` format |
+| `MEDIA_MIME_NOT_ALLOWED` | 400 | Format not accepted for that attachment type | Use one of the formats in the table above |
+| `MEDIA_TOO_LARGE` | 400 | Media above the channel limit (not compressed — rejected) | Send a file within the channel limit |
+| `MEDIA_CAPTION_TOO_LONG` | 400 | Caption longer than 1024 characters | Shorten the caption |
+| `MEDIA_UNSUPPORTED_ATTACHMENT` | 400 | Attachment type not supported for conversion | Use image, sticker, audio, video or document |
+| `MEDIA_DOWNLOAD_FAILED` | 502 | Could not download the media from the `url` | Make sure the URL is public and accessible |
+| `MEDIA_CONVERSION_FAILED` | 502 | Failed to convert the media | Retry; if it persists, contact support |
+| `MEDIA_UPLOAD_FAILED` | 502 | Failed to store the media | Retry; if it persists, contact support |
+| `MEDIA_PROCESSING_FAILED` | 502 | Unexpected processing failure | Retry; if it persists, contact support |
+
+- **400** = problem with what was sent (fix and resend).
+- **502** = temporary technical failure while processing/delivering (resend; if it persists, contact support).
+
+## Compatibility notes
+
+- **All endpoints** follow the **unified error contract** `{ timestamp, status, errors[] }`. For logic, always use `subCode` (stable) — never `message`.
+- For size validation **before sending**, the media's source server must return `Content-Length`. Without it, non-Meta WhatsApp channels cannot reject before publishing.
+- Source of Meta's rules: WhatsApp Cloud API — [Supported Media Types](https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media/).
+- Known limitation: for **WebP**-sourced stickers, Hub Message applies the **500 KB** (animated) limit; Meta may reject a **static** WebP above **100 KB**. Prefer sending static stickers already optimized (≤ 100 KB).

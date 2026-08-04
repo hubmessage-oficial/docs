@@ -1,0 +1,17 @@
+---
+title: "Enviar documento"
+description: "Envie documentos (PDF, DOC, XLS, etc)"
+openapi: "/pt/messages/openapi-document.json POST /v1/channels/{channelId}/messages"
+---
+
+## Conceituação
+
+Envia uma mensagem com documento para um contato. O campo `content.type` deve ser `DOCUMENT` e o documento é enviado via URL no array `attachments`.
+
+Cada anexo aceita `name` (nome exibido ao destinatário) e `extension` (extensão do arquivo, ex: `pdf`), além de uma `caption` opcional (legenda de até 1024 caracteres).
+
+<Note>
+  Este endpoint só funciona quando a [janela de conversa](/conversation-window) de 24 horas estiver aberta.
+</Note>
+
+Formatos aceitos: TXT, XLS, XLSX, DOC, DOCX, PPT, PPTX, PDF (DOC/DOCX são convertidos para PDF); tamanho máx. **100 MB**. Veja todos os detalhes em [Validações de mídia](/messages/media-validations).

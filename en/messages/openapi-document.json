@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Hub Message - Enviar Vídeo",
+    "title": "Hub Message - Send Document",
     "version": "1.0.0"
   },
   "servers": [{ "url": "https://api.hubmessage.io" }],
@@ -9,32 +9,34 @@
   "paths": {
     "/v1/channels/{channelId}/messages": {
       "post": {
-        "summary": "Enviar vídeo",
-        "description": "Envia uma mensagem com vídeo.",
-        "operationId": "sendVideoMessage",
-        "tags": ["Mensagens"],
+        "summary": "Send document",
+        "description": "Sends a message with a document (PDF, DOC, XLS, etc).",
+        "operationId": "sendDocumentMessage",
+        "tags": ["Messages"],
         "parameters": [
           {
             "name": "channelId",
             "in": "path",
             "required": true,
-            "description": "ID do canal",
-            "schema": { "type": "string", "example": "SEU_CHANNEL_ID" }
+            "description": "Channel ID",
+            "schema": { "type": "string", "example": "YOUR_CHANNEL_ID" }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/SendVideoRequest" },
+              "schema": { "$ref": "#/components/schemas/SendDocumentRequest" },
               "example": {
                 "recipient": { "identifier": "5511999999999" },
                 "content": {
-                  "type": "VIDEO",
+                  "type": "DOCUMENT",
                   "attachments": [
                     {
-                      "url": "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4",
-                      "caption": "Confira esse vídeo!"
+                      "url": "https://www.thecampusqdl.com/uploads/files/pdf_sample_2.pdf",
+                      "caption": "Here is the contract",
+                      "name": "Contract",
+                      "extension": "pdf"
                     }
                   ]
                 }
@@ -54,7 +56,7 @@
   "components": {
     "responses": {
       "MessageSuccess": {
-        "description": "Mensagem enviada com sucesso",
+        "description": "Message sent successfully",
         "content": {
           "application/json": {
             "schema": { "$ref": "#/components/schemas/MessageResponse" },
@@ -63,7 +65,7 @@
         }
       },
       "MediaValidationError": {
-        "description": "Mídia fora das regras (formato, tamanho, legenda ou URL). Trate pelo `errors[].subCode`.",
+        "description": "Media outside the rules (format, size, caption or URL). Handle it by `errors[].subCode`.",
         "content": {
           "application/json": {
             "schema": { "$ref": "#/components/schemas/MediaError" },
@@ -74,7 +76,7 @@
                 {
                   "code": "VALIDATION_ERROR",
                   "subCode": "MEDIA_TOO_LARGE",
-                  "message": "Arquivo acima do limite permitido para VIDEO (16 MB)"
+                  "message": "File above the allowed limit for DOCUMENT (100 MB)"
                 }
               ]
             }
@@ -82,7 +84,7 @@
         }
       },
       "MediaProcessingError": {
-        "description": "Falha técnica temporária ao baixar, converter ou armazenar a mídia. Reenvie; se persistir, contate o suporte.",
+        "description": "Temporary technical failure while downloading, converting or storing the media. Retry; if it persists, contact support.",
         "content": {
           "application/json": {
             "schema": { "$ref": "#/components/schemas/MediaError" },
@@ -92,8 +94,8 @@
               "errors": [
                 {
                   "code": "VALIDATION_ERROR",
-                  "subCode": "MEDIA_CONVERSION_FAILED",
-                  "message": "Falha ao converter a mídia"
+                  "subCode": "MEDIA_DOWNLOAD_FAILED",
+                  "message": "Could not download the media from the provided URL"
                 }
               ]
             }
@@ -101,7 +103,7 @@
         }
       },
       "Unauthorized": {
-        "description": "Token inválido ou ausente.",
+        "description": "Invalid or missing token.",
         "content": {
           "application/json": {
             "schema": { "$ref": "#/components/schemas/Error" },
@@ -111,7 +113,7 @@
       }
     },
     "schemas": {
-      "SendVideoRequest": {
+      "SendDocumentRequest": {
         "type": "object",
         "required": ["recipient", "content"],
         "properties": {
@@ -119,23 +121,25 @@
             "type": "object",
             "required": ["identifier"],
             "properties": {
-              "identifier": { "type": "string", "description": "Telefone do destinatário (DDI + DDD + número)", "example": "5511999999999" }
+              "identifier": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" }
             }
           },
           "content": {
             "type": "object",
             "required": ["type", "attachments"],
             "properties": {
-              "type": { "type": "string", "description": "Tipo da mensagem", "enum": ["VIDEO"] },
+              "type": { "type": "string", "description": "Message type", "enum": ["DOCUMENT"] },
               "attachments": {
                 "type": "array",
-                "description": "Lista de anexos",
+                "description": "List of attachments",
                 "items": {
                   "type": "object",
                   "required": ["url"],
                   "properties": {
-                    "url": { "type": "string", "description": "URL do vídeo" },
-                    "caption": { "type": "string", "description": "Legenda do vídeo" }
+                    "url": { "type": "string", "description": "Document URL (http(s) or base64 data URL)" },
+                    "caption": { "type": "string", "description": "Document caption (max. 1024 characters)" },
+                    "name": { "type": "string", "description": "File name shown to the recipient (without the extension)" },
+                    "extension": { "type": "string", "description": "File extension (e.g. pdf, docx, xlsx)", "example": "pdf" }
                   }
                 }
               }
@@ -146,26 +150,26 @@
       "MessageResponse": {
         "type": "object",
         "properties": {
-          "messageId": { "type": "string", "description": "ID da mensagem enviada" }
+          "messageId": { "type": "string", "description": "Sent message ID" }
         }
       },
       "MediaError": {
         "type": "object",
-        "description": "Contrato unificado de erro. `errors` pode conter mais de um erro. Trate seu fluxo pelo `errors[].subCode` (estável) — nunca pelo `message`. Campos nulos são omitidos.",
+        "description": "Unified error contract. `errors` may contain more than one error. Handle your flow by `errors[].subCode` (stable) — never by `message`. Null fields are omitted.",
         "properties": {
-          "timestamp": { "type": "string", "format": "date-time", "description": "Data/hora do erro (ISO 8601)" },
-          "status": { "type": "integer", "description": "Código de status HTTP", "example": 400 },
+          "timestamp": { "type": "string", "format": "date-time", "description": "Error date/time (ISO 8601)" },
+          "status": { "type": "integer", "description": "HTTP status code", "example": 400 },
           "errors": {
             "type": "array",
-            "description": "Lista de erros (pode haver mais de um)",
+            "description": "List of errors (there may be more than one)",
             "items": {
               "type": "object",
               "properties": {
-                "code": { "type": "string", "description": "Código geral do erro", "example": "VALIDATION_ERROR" },
-                "name": { "type": "string", "description": "Nome do erro" },
-                "subCode": { "type": "string", "description": "Código estável do erro de mídia — trate seu fluxo por ele" },
-                "message": { "type": "string", "description": "Mensagem legível (pode mudar/ser traduzida — não use para lógica)" },
-                "description": { "type": "string", "description": "Detalhes adicionais do erro" }
+                "code": { "type": "string", "description": "General error code", "example": "VALIDATION_ERROR" },
+                "name": { "type": "string", "description": "Error name" },
+                "subCode": { "type": "string", "description": "Stable media error code — handle your flow by it" },
+                "message": { "type": "string", "description": "Human-readable message (may change/be translated — do not use for logic)" },
+                "description": { "type": "string", "description": "Additional error details" }
               }
             }
           }
@@ -180,7 +184,7 @@
       }
     },
     "securitySchemes": {
-      "bearerAuth": { "type": "http", "scheme": "bearer", "description": "Secret Key gerada no painel de Segurança do Hub Message" }
+      "bearerAuth": { "type": "http", "scheme": "bearer", "description": "Secret Key generated in the Hub Message Security panel" }
     }
   }
 }
