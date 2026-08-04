@@ -65,15 +65,20 @@
         }
       },
       "MediaValidationError": {
-        "description": "Media outside the rules (format, size, caption or URL). Handle it by `subCode`.",
+        "description": "Media outside the rules (format, size, caption or URL). Handle it by `errors[].subCode`.",
         "content": {
           "application/json": {
             "schema": { "$ref": "#/components/schemas/MediaError" },
             "example": {
               "timestamp": "2026-07-13T18:20:00Z",
-              "code": "VALIDATION_ERROR",
-              "subCode": "MEDIA_TOO_LARGE",
-              "message": "File above the allowed limit for DOCUMENT (100 MB)"
+              "status": 400,
+              "errors": [
+                {
+                  "code": "VALIDATION_ERROR",
+                  "subCode": "MEDIA_TOO_LARGE",
+                  "message": "File above the allowed limit for DOCUMENT (100 MB)"
+                }
+              ]
             }
           }
         }
@@ -85,9 +90,14 @@
             "schema": { "$ref": "#/components/schemas/MediaError" },
             "example": {
               "timestamp": "2026-07-13T18:20:00Z",
-              "code": "VALIDATION_ERROR",
-              "subCode": "MEDIA_DOWNLOAD_FAILED",
-              "message": "Could not download the media from the provided URL"
+              "status": 502,
+              "errors": [
+                {
+                  "code": "VALIDATION_ERROR",
+                  "subCode": "MEDIA_DOWNLOAD_FAILED",
+                  "message": "Could not download the media from the provided URL"
+                }
+              ]
             }
           }
         }
@@ -145,12 +155,24 @@
       },
       "MediaError": {
         "type": "object",
-        "description": "Media processing error. Always carries a stable `subCode`.",
+        "description": "Unified error contract. `errors` may contain more than one error. Handle your flow by `errors[].subCode` (stable) — never by `message`. Null fields are omitted.",
         "properties": {
           "timestamp": { "type": "string", "format": "date-time", "description": "Error date/time (ISO 8601)" },
-          "code": { "type": "string", "description": "General error code", "example": "VALIDATION_ERROR" },
-          "subCode": { "type": "string", "description": "Stable media error code — handle your flow by it" },
-          "message": { "type": "string", "description": "Human-readable message (may change/be translated — do not use for logic)" }
+          "status": { "type": "integer", "description": "HTTP status code", "example": 400 },
+          "errors": {
+            "type": "array",
+            "description": "List of errors (there may be more than one)",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string", "description": "General error code", "example": "VALIDATION_ERROR" },
+                "name": { "type": "string", "description": "Error name" },
+                "subCode": { "type": "string", "description": "Stable media error code — handle your flow by it" },
+                "message": { "type": "string", "description": "Human-readable message (may change/be translated — do not use for logic)" },
+                "description": { "type": "string", "description": "Additional error details" }
+              }
+            }
+          }
         }
       },
       "Error": {

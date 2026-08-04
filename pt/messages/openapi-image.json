@@ -63,15 +63,20 @@
         }
       },
       "MediaValidationError": {
-        "description": "Mídia fora das regras (formato, tamanho, legenda ou URL). Trate pelo `subCode`.",
+        "description": "Mídia fora das regras (formato, tamanho, legenda ou URL). Trate pelo `errors[].subCode`.",
         "content": {
           "application/json": {
             "schema": { "$ref": "#/components/schemas/MediaError" },
             "example": {
               "timestamp": "2026-07-13T18:20:00Z",
-              "code": "VALIDATION_ERROR",
-              "subCode": "MEDIA_MIME_NOT_ALLOWED",
-              "message": "Tipo de mídia não permitido para IMAGE: image/svg+xml"
+              "status": 400,
+              "errors": [
+                {
+                  "code": "VALIDATION_ERROR",
+                  "subCode": "MEDIA_MIME_NOT_ALLOWED",
+                  "message": "Tipo de mídia não permitido para IMAGE: image/heic"
+                }
+              ]
             }
           }
         }
@@ -83,9 +88,14 @@
             "schema": { "$ref": "#/components/schemas/MediaError" },
             "example": {
               "timestamp": "2026-07-13T18:20:00Z",
-              "code": "VALIDATION_ERROR",
-              "subCode": "MEDIA_DOWNLOAD_FAILED",
-              "message": "Não foi possível baixar a mídia da URL informada"
+              "status": 502,
+              "errors": [
+                {
+                  "code": "VALIDATION_ERROR",
+                  "subCode": "MEDIA_DOWNLOAD_FAILED",
+                  "message": "Não foi possível baixar a mídia da URL informada"
+                }
+              ]
             }
           }
         }
@@ -141,12 +151,24 @@
       },
       "MediaError": {
         "type": "object",
-        "description": "Erro de processamento de mídia. Sempre traz um `subCode` estável.",
+        "description": "Contrato unificado de erro. `errors` pode conter mais de um erro. Trate seu fluxo pelo `errors[].subCode` (estável) — nunca pelo `message`. Campos nulos são omitidos.",
         "properties": {
           "timestamp": { "type": "string", "format": "date-time", "description": "Data/hora do erro (ISO 8601)" },
-          "code": { "type": "string", "description": "Código geral do erro", "example": "VALIDATION_ERROR" },
-          "subCode": { "type": "string", "description": "Código estável do erro de mídia — trate seu fluxo por ele" },
-          "message": { "type": "string", "description": "Mensagem legível (pode mudar/ser traduzida — não use para lógica)" }
+          "status": { "type": "integer", "description": "Código de status HTTP", "example": 400 },
+          "errors": {
+            "type": "array",
+            "description": "Lista de erros (pode haver mais de um)",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string", "description": "Código geral do erro", "example": "VALIDATION_ERROR" },
+                "name": { "type": "string", "description": "Nome do erro" },
+                "subCode": { "type": "string", "description": "Código estável do erro de mídia — trate seu fluxo por ele" },
+                "message": { "type": "string", "description": "Mensagem legível (pode mudar/ser traduzida — não use para lógica)" },
+                "description": { "type": "string", "description": "Detalhes adicionais do erro" }
+              }
+            }
+          }
         }
       },
       "Error": {

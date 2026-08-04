@@ -22,7 +22,7 @@ When you call `POST /v1/channels/{channelId}/messages` with an attachment, for *
   </Step>
 </Steps>
 
-If anything is outside the rules, the request **fails immediately with an HTTP error**. Every error carries a **stable `subCode`** — handle your flow by it, **never** by the `message` text (which is human-facing and may change or be translated).
+If anything is outside the rules, the request **fails immediately with an HTTP error**, following the platform's **unified error contract**: errors come in a **list** (`errors[]`, there may be more than one) and each item carries a **stable `subCode`** — handle your flow by it, **never** by the `message` text (which is human-facing and may change or be translated).
 
 <Note>
   For channels that are **not** Meta WhatsApp, the `url` is passed through without conversion or validation.
@@ -32,7 +32,7 @@ If anything is outside the rules, the request **fails immediately with an HTTP e
 
 | Type | Accepted **input** formats | Delivered to Meta as | Max size (final file) |
 |------|----------------------------|----------------------|------------------------|
-| **Image** | JPEG, PNG, BMP, TIFF, GIF, WebP | JPEG or PNG (JPEG/PNG pass through; others are converted to JPEG) | **5 MB** |
+| **Image** | JPEG, PNG, BMP, TIFF, GIF, WebP, **SVG** | JPEG or PNG (JPEG/PNG pass through; BMP/TIFF/GIF/WebP → JPEG; **SVG → PNG**) | **5 MB** |
 | **Sticker** | WebP, PNG, JPEG, GIF, BMP, TIFF | WebP 512×512 | static **100 KB** / animated **500 KB** |
 | **Audio** | AAC, AMR, MP3, M4A, OGG, OPUS, WAV, FLAC | OGG/Opus (AMR is passed through) | **16 MB** |
 | **Video** | MP4, 3GP, MKV, AVI, MOV | MP4 (H.264/AAC); 3GP passed through | **16 MB** |
@@ -40,8 +40,8 @@ If anything is outside the rules, the request **fails immediately with an HTTP e
 
 **Notes:**
 
-- **Image:** Meta only accepts JPEG/PNG. Sending BMP/TIFF/GIF/WebP is allowed — Hub Message converts to JPEG (for GIF, it uses the first frame).
-- **Sticker:** any image is normalized to **WebP 512×512**. The **static limit is 100 KB**; animated (from GIF/WebP/video) is **500 KB**.
+- **Image:** Meta only accepts JPEG/PNG. Sending BMP/TIFF/GIF/WebP is allowed — Hub Message converts to JPEG (for GIF, it uses the first frame). **SVG** is not accepted by Meta and is **rasterized to PNG** (max 1024×1024 box, keeping the aspect ratio). Detection is by **content**: the SVG is identified and converted even if the client declares the wrong mime (e.g. `image/png`) or an empty one.
+- **Sticker:** any image is normalized to **WebP 512×512**. The **static limit is 100 KB**; animated (from GIF/WebP/video) is **500 KB**. **SVG is not supported** as a sticker (rejected).
 - **Size:** the limit is validated on the **final file** (after conversion). In addition, the **input** file cannot exceed **100 MB**.
 - **Caption:** image, video and document accept a caption of at most **1024 characters**.
 - **URL:** must be an accessible `http(s)://` URL **or** a base64 _data URL_ (`data:<mime>;base64,...`).
@@ -53,11 +53,18 @@ Error response format:
 ```json
 {
   "timestamp": "2026-07-13T18:20:00Z",
-  "code": "VALIDATION_ERROR",
-  "subCode": "MEDIA_MIME_NOT_ALLOWED",
-  "message": "Media type not allowed for IMAGE: image/svg+xml"
+  "status": 400,
+  "errors": [
+    {
+      "code": "VALIDATION_ERROR",
+      "subCode": "MEDIA_MIME_NOT_ALLOWED",
+      "message": "Media type not allowed for IMAGE: image/heic"
+    }
+  ]
 }
 ```
+
+Errors always come in a **list** (`errors[]`) — there may be more than one (e.g. multiple validations). Null fields are omitted from each item.
 
 | `subCode` | HTTP | When it happens | How to resolve |
 |-----------|------|-----------------|----------------|
@@ -78,6 +85,6 @@ Error response format:
 
 ## Compatibility notes
 
-- The `subCode` field only appears in media errors; other errors keep `{ timestamp, code, message }`.
+- **All endpoints** follow the **unified error contract** `{ timestamp, status, errors[] }`. For logic, always use `subCode` (stable) — never `message`.
 - Source of Meta's rules: WhatsApp Cloud API — [Supported Media Types](https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media/).
 - Known limitation: for **WebP**-sourced stickers, Hub Message applies the **500 KB** (animated) limit; Meta may reject a **static** WebP above **100 KB**. Prefer sending static stickers already optimized (≤ 100 KB).
