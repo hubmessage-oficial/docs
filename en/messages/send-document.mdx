@@ -1,0 +1,22 @@
+---
+title: "Send document"
+description: "Send documents through supported channels"
+openapi: "/en/messages/openapi-document.json POST /v1/channels/{channelId}/messages"
+---
+
+## Overview
+
+Sends a document to a contact. The `content.type` field must be `DOCUMENT` and the document is sent by URL in the `attachments` array.
+
+The `caption` and `name` fields are optional. WhatsApp Business and Telegram use these metadata fields; Instagram and Messenger send only the file URL and ignore them.
+
+## Support by channel
+
+- **WhatsApp Business** — supports documents.
+- **Instagram** — supports PDF documents. Other formats may receive `200`, but they will not be delivered.
+- **Messenger** — supports documents.
+- **Telegram Bot** — supports documents.
+
+<Note>
+  This endpoint only works when the [conversation window](/en/conversation-window) is open (24 hours).
+</Note>

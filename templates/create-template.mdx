@@ -1,7 +1,7 @@
 ---
 title: "Criar template"
 description: "Crie um novo template e envie para aprovação da Meta"
-openapi: "POST /whatsapp/businesses/{wabaId}/templates"
+openapi: "POST /whatsapp/businesses/{businessId}/templates"
 ---
 
 ## Conceituação
@@ -15,5 +15,5 @@ Use o endpoint de [Sincronizar templates](/templates/sync-templates) para força
 </Warning>
 
 <Note>
-  O `wabaId` é obtido através do endpoint de [Listar WABAs](/templates/list-businesses).
+  O `businessId` (WABA) é obtido através do endpoint de [Listar WABAs](/templates/list-businesses).
 </Note>

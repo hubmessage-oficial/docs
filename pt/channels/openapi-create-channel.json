@@ -25,6 +25,27 @@
                     "name": "Canal de Vendas",
                     "type": "META_WHATSAPP"
                   }
+                },
+                "instagram": {
+                  "summary": "Instagram",
+                  "value": {
+                    "name": "Canal Instagram",
+                    "type": "META_INSTAGRAM"
+                  }
+                },
+                "messenger": {
+                  "summary": "Messenger",
+                  "value": {
+                    "name": "Canal Messenger",
+                    "type": "META_MESSENGER"
+                  }
+                },
+                "telegram": {
+                  "summary": "Telegram Bot",
+                  "value": {
+                    "name": "Canal Telegram",
+                    "type": "BOT_TELEGRAM"
+                  }
                 }
               }
             }
@@ -90,7 +111,7 @@
           "type": {
             "type": "string",
             "description": "Tipo do canal (plataforma)",
-            "enum": ["META_WHATSAPP"],
+            "enum": ["META_WHATSAPP", "META_INSTAGRAM", "META_MESSENGER", "BOT_TELEGRAM"],
             "example": "META_WHATSAPP"
           }
         }

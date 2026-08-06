@@ -11,6 +11,10 @@ Na API oficial do WhatsApp, você só pode enviar mensagens livremente enquanto 
 
 Fora dessa janela, a única forma de iniciar uma conversa é através de **templates** — mensagens pré-definidas que passam por aprovação da Meta antes de poderem ser enviadas.
 
+<Note>
+  A gestão de templates desta API é exclusiva de canais **`META_WHATSAPP`**. Instagram, Messenger e Telegram Bot não usam estes endpoints.
+</Note>
+
 {/* <Note>
   Se você vem da Z-API, essa é uma das maiores diferenças. Na Z-API (conexão não oficial) você podia enviar qualquer mensagem a qualquer momento. Na API oficial, fora da janela de 24h, só templates aprovados funcionam.
 </Note> */}
@@ -42,7 +46,7 @@ Você pode usar variáveis dinâmicas no texto com `{{1}}`, `{{2}}`, etc. Ao cri
 
 ## Fluxo de template
 
-A API organiza templates por **business** (WABA — WhatsApp Business Account). Cada business tem seus próprios templates, histórico de aprovação e limites.
+A API organiza templates por **business** (WABA — WhatsApp Business Account). No Hub Message, esse identificador é exposto como `businessId`. Cada business tem seus próprios templates, histórico de aprovação e limites.
 
 <Steps>
   <Step title="Identifique seu WABA">

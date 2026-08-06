@@ -1,0 +1,27 @@
+---
+title: "Enviar documento"
+description: "Envie documentos pelos canais compatíveis"
+openapi: "/pt/messages/openapi-document.json POST /v1/channels/{channelId}/messages"
+---
+
+## Conceituação
+
+Envia um documento para um contato. O campo `content.type` deve ser `DOCUMENT` e
+o documento é enviado pela URL no array `attachments`.
+
+Os campos `caption` e `name` são opcionais. O WhatsApp Business e o Telegram
+usam esses metadados para a mensagem. Instagram e Messenger enviam apenas a
+URL do arquivo e ignoram esses dois campos.
+
+## Suporte por canal
+
+- **WhatsApp Business** — suporta documentos.
+- **Instagram** — suporta documentos PDF. Outros formatos podem receber `200`,
+  mas não serão entregues.
+- **Messenger** — suporta documentos.
+- **Telegram Bot** — suporta documentos.
+
+<Note>
+  Este endpoint só funciona quando a [janela de conversa](/conversation-window)
+  de 24 horas estiver aberta.
+</Note>

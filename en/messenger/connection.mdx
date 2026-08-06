@@ -1,0 +1,129 @@
+---
+title: "Connect a Messenger channel"
+description: "Connect a Facebook Page to Hub Message to use Messenger"
+---
+
+import { frontendUrl } from '/snippets/variables.mdx';
+
+## Overview
+
+After [creating a channel](/en/channels/create-channel) of type `META_MESSENGER`, connect a Facebook Page to send and receive Messenger messages.
+
+There are two ways to connect the channel:
+
+- **Dashboard** — use the guided flow in the [Dashboard]({frontendUrl}).
+- **API** — complete Meta authorization in your system, list the available Pages, and activate the channel with the selected Page.
+
+<Note>
+  The Facebook Page is the resource connected to the channel. The identifier used in received messages comes from the webhook; it is not the contact's phone number or username.
+</Note>
+
+## Connect via API
+
+The API flow uses two keys at different stages:
+
+| Operation | Credential |
+|---|---|
+| List authorized Pages | **Public Key** |
+| Activate the channel with the selected Page | **Secret Key** |
+
+### 1. Get a Meta OAuth code
+
+Start Meta's authorization flow in your frontend so the user can grant access to the Pages they want to connect. When the flow finishes, you receive a `code`. Keep the same `redirectUri` that was used during authorization.
+
+The code is single-use. Do not reuse it after exchanging it or after it expires.
+
+### 2. List available Pages
+
+Send the `code` and `redirectUri` to:
+
+`POST /v1/channels/{channelId}/list-messenger-pages`
+
+```bash
+curl -X POST https://api.hubmessage.io/v1/channels/CHANNEL_ID/list-messenger-pages \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_PUBLIC_KEY" \
+  -d '{
+    "code": "META_OAUTH_CODE",
+    "redirectUri": "https://yourapp.com/oauth/meta/callback"
+  }'
+```
+
+The response is a list. Each item contains the Page, its category, and the token required to activate it:
+
+```json
+[
+  {
+    "pageId": "123456789012345",
+    "name": "My Page",
+    "accessToken": "PAGE_ACCESS_TOKEN",
+    "category": "Business"
+  }
+]
+```
+
+<Warning>
+  `accessToken` is a Page credential. Treat it as a secret, do not expose it in the frontend or write it to logs, and use it only from your backend to activate the channel.
+</Warning>
+
+### 3. Activate the channel
+
+Choose a Page from the list and call:
+
+`POST /v1/channels/{channelId}/activate-messenger`
+
+Use the **Secret Key** in the header. When you have already listed the Pages, send the `pageId` and `accessToken` for the selected Page:
+
+```bash
+curl -X POST https://api.hubmessage.io/v1/channels/CHANNEL_ID/activate-messenger \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_SECRET_KEY" \
+  -d '{
+    "pageId": "123456789012345",
+    "accessToken": "PAGE_ACCESS_TOKEN",
+    "code": "",
+    "redirectUri": ""
+  }'
+```
+
+You can also send `code` and `redirectUri` directly in this call. Hub Message exchanges the code, lists the Pages, and uses `pageId` to select one. If there is only one Page, `pageId` can be omitted; if there is more than one, it is required.
+
+```json
+{
+  "pageId": "123456789012345",
+  "accessToken": "",
+  "code": "META_OAUTH_CODE",
+  "redirectUri": "https://yourapp.com/oauth/meta/callback"
+}
+```
+
+A successful activation returns:
+
+```json
+{
+  "pageId": "123456789012345",
+  "connected": true,
+  "pageName": "My Page",
+  "pageCategory": "Business",
+  "displayName": "My Page"
+}
+```
+
+During activation, Hub Message links the Page to the channel and configures the Meta messaging event subscription. The received events are then delivered to the [configured webhook](/en/webhooks/introduction).
+
+## Disconnect the channel
+
+To deactivate the Messenger integration, use:
+
+`POST /v1/channels/{channelId}/deactivate-messenger`
+
+```bash
+curl -X POST https://api.hubmessage.io/v1/channels/CHANNEL_ID/deactivate-messenger \
+  -H "Authorization: Bearer YOUR_SECRET_KEY"
+```
+
+This removes the Page association from the channel and stops the event subscription.
+
+## Next steps
+
+With the channel connected, use the `channelId` to send [free messages](/en/messages/introduction). To reply to a conversation, use the contact identifier received in `message.sender.identifier` from the [webhook](/en/webhooks/payloads).

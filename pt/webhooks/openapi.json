@@ -48,7 +48,7 @@
                   "summary": "Com autenticação Bearer",
                   "value": {
                     "url": "https://app.suaempresa.com/webhooks/hubmessage",
-                    "events": ["MESSAGE_RECEIVED", "CONNECTED", "DISCONNECTED"],
+                    "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
                     "auth": {
                       "type": "BEARER",
                       "token": "meu-token-secreto"
@@ -80,7 +80,7 @@
                   }
                 },
                 "allEvents": {
-                  "summary": "Todos os eventos com HMAC + Bearer",
+                  "summary": "Eventos de mensagem com HMAC + Bearer",
                   "value": {
                     "url": "https://app.suaempresa.com/webhooks/hubmessage",
                     "description": "Webhook principal de produção",
@@ -88,8 +88,8 @@
                       "MESSAGE_RECEIVED",
                       "MESSAGE_DELIVERY",
                       "MESSAGE_STATUS",
-                      "CONNECTED",
-                      "DISCONNECTED"
+                      "RECEIVED_STATUS",
+                      "RECEIVED_AND_DELIVERY"
                     ],
                     "signing": true,
                     "auth": {
@@ -136,7 +136,7 @@
                       "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                       "url": "https://app.suaempresa.com/webhooks/hubmessage",
                       "description": "Webhook principal de produção",
-                      "events": ["MESSAGE_RECEIVED", "CONNECTED", "DISCONNECTED"],
+                      "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
                       "status": "ENABLED",
                       "signing": false,
                       "auth": { "type": "BEARER", "configured": true },
@@ -214,9 +214,9 @@
                     "id": "B2C3D4E5F6789012345678901234AB12",
                     "channelId": "019E4C54B1B375A28970B605CA9B03C3",
                     "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
-                    "url": "https://app.suaempresa.com/webhooks/eventos-conexao",
-                    "description": "Eventos de conexão",
-                    "events": ["CONNECTED", "DISCONNECTED"],
+                    "url": "https://app.suaempresa.com/webhooks/eventos-mensagem",
+                    "description": "Eventos de mensagem",
+                    "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
                     "status": "ENABLED",
                     "signing": false,
                     "auth": { "type": "NONE", "configured": false },
@@ -348,7 +348,7 @@
                   "summary": "Atualizar URL e eventos",
                   "value": {
                     "url": "https://nova-url.suaempresa.com/webhooks/hubmessage",
-                    "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS", "CONNECTED", "DISCONNECTED"]
+                    "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"]
                   }
                 },
                 "enableSignature": {
@@ -535,8 +535,8 @@
                 "CONNECTED",
                 "DISCONNECTED",
                 "PRESENCE_CHAT",
-                "INITIAL_DATA",
-                "BLOCK"
+                "BLOCK",
+                "INITIAL_DATA"
               ]
             },
             "example": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"]
@@ -592,8 +592,8 @@
                 "CONNECTED",
                 "DISCONNECTED",
                 "PRESENCE_CHAT",
-                "INITIAL_DATA",
-                "BLOCK"
+                "BLOCK",
+                "INITIAL_DATA"
               ]
             }
           },

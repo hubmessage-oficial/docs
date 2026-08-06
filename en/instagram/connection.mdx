@@ -1,0 +1,126 @@
+---
+title: "Connect a channel"
+description: "Connect an Instagram account to Hub Message through the Dashboard or SDK"
+---
+
+import { projectName, frontendUrl, npmPackage } from '/snippets/variables.mdx';
+
+## Overview
+
+After [creating a channel](/en/channels/create-channel) of type `META_INSTAGRAM`, connect it to a professional Instagram account. There are two ways to do this:
+
+- **Dashboard** — use the guided flow in the [Dashboard]({frontendUrl})
+- **SDK + API** — let your user connect the account from your own system
+
+Review the [requirements](/en/instagram/introduction#requirements) before you begin. Personal accounts cannot be connected.
+
+## Connect through the Dashboard
+
+This is the simplest option. Open the [Dashboard]({frontendUrl}), go to **Add channel → Instagram**, and follow the guided flow.
+
+Instagram opens an authorization window. Sign in with the professional account you want to connect and accept the requested permissions.
+
+## Connect through the SDK + API
+
+Use this flow when you want **your user** to connect the account from **your system**, without opening the {projectName} Dashboard.
+
+<Steps>
+  <Step title="Frontend — Start the SDK connection">
+    In your application frontend, use the SDK to start the connection flow. It opens Instagram authorization and returns an authentication code.
+
+    ```javascript
+    import HubMessage from '{npmPackage}';
+
+    const client = HubMessage.newClient({
+      publicKey: 'YOUR_PUBLIC_KEY'
+    });
+
+    const response = await client.connect({
+      channelId: 'CHANNEL_ID'
+    });
+
+    // Send response to your backend
+    ```
+
+    <Tip>
+      The SDK detects the channel type automatically. For a `META_INSTAGRAM` channel, it opens Instagram authorization — the same `connect()` method works for all channels.
+    </Tip>
+  </Step>
+  <Step title="Backend — Finish the connection through the API">
+    From **your backend**, send the SDK response to the Instagram activation endpoint using your **Secret Key**:
+
+    `POST /v1/channels/{channelId}/activate-instagram`
+
+    The request accepts one of two authentication forms:
+
+    | Flow | Required fields |
+    |---|---|
+    | Direct credentials | `igId` and `accessToken` |
+    | OAuth | `code` and `redirectUri` |
+
+    ```bash
+    curl -X POST https://api.hubmessage.io/v1/channels/CHANNEL_ID/activate-instagram \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer YOUR_SECRET_KEY" \
+      -d '{
+        "igId": "INSTAGRAM_ACCOUNT_ID",
+        "accessToken": "ACCESS_TOKEN",
+        "code": "",
+        "redirectUri": ""
+      }'
+    ```
+
+    For the OAuth flow, fill in `code` and `redirectUri`, and leave `igId` and `accessToken` empty.
+  </Step>
+  <Step title="Confirm message delivery">
+    Ask someone to send a Direct message to the connected account. If the [webhook](/en/webhooks/introduction) receives the event, the connection is working.
+  </Step>
+</Steps>
+
+## Requested permissions
+
+During authorization, Instagram requests two permissions:
+
+| Permission | Purpose |
+|---|---|
+| `instagram_business_basic` | Read basic professional profile data |
+| `instagram_business_manage_messages` | Send and receive Direct messages |
+
+<Warning>
+  If the user declines `instagram_business_manage_messages`, the connection completes but no messages are sent or received. In that case, reconnect and accept all requested permissions.
+</Warning>
+
+## Getting the customer identifier
+
+Instagram identifiers are numeric. They are not phone numbers or usernames. For a received message, the customer's ID appears in the Hub Message webhook as `message.sender.identifier`.
+
+Meta sends this value as `sender.id` in the raw payload. Hub Message normalizes it to `message.sender.identifier`. Store this ID to reply to the customer.
+
+```json
+{
+  "message": {
+    "metadata": {
+      "from_me": false,
+      "middleware": "META_INSTAGRAM"
+    },
+    "sender": { "identifier": "1073673115189819" },
+    "recipient": { "identifier": "17841437106730710" },
+    "contents": [
+      {
+        "message": "Hello",
+        "type": "TEXT"
+      }
+    ]
+  }
+}
+```
+
+In this example, `1073673115189819` is the identifier you use to reply to the customer. `recipient.identifier` is the identifier of the professional account that received the message. `from_me` indicates whether the message was marked as sent by the business.
+
+<Note>
+  Hub Message's normalized structure differs from the raw Meta payload, but the identifiers are the same: `sender.id` becomes `message.sender.identifier`, and `recipient.id` becomes `message.recipient.identifier`.
+</Note>
+
+<Note>
+  You cannot derive this ID from a username. You can only reply to someone who has already sent a message, which is also required by the [conversation window](/en/conversation-window).
+</Note>

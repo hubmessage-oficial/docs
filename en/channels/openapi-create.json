@@ -10,7 +10,7 @@
     "/v1/channels": {
       "post": {
         "summary": "Create channel",
-        "description": "Creates a new channel.",
+        "description": "Creates a new channel in the authenticated workspace. Requires the ENTERPRISE role.",
         "operationId": "createChannel",
         "tags": ["Channels"],
         "requestBody": {
@@ -26,7 +26,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Channel created successfully",
             "content": {
               "application/json": {
@@ -37,7 +37,16 @@
               }
             }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "422": {
+            "description": "Business rule violation — account does not have the ENTERPRISE role",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 422, "message": "This action requires ENTERPRISE role" }
+              }
+            }
+          }
         }
       }
     }
@@ -66,7 +75,7 @@
           "type": {
             "type": "string",
             "description": "Channel type (platform)",
-            "enum": ["META_WHATSAPP"]
+            "enum": ["META_WHATSAPP", "META_INSTAGRAM", "META_MESSENGER", "BOT_TELEGRAM"]
           }
         }
       },

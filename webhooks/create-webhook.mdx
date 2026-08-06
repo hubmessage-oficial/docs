@@ -10,6 +10,10 @@ Registra um novo endpoint de webhook no canal. A partir da criação, o {project
 
 Um canal pode ter múltiplos webhooks — útil para enviar eventos diferentes para sistemas diferentes, ou para manter webhooks com formatos distintos.
 
+<Note>
+  Nem todo evento existe em todo canal. Confira a [tabela de eventos por canal](/webhooks/introduction#eventos-disponíveis) antes de configurar — cadastrar um evento indisponível não retorna erro, mas o webhook nunca recebe nada.
+</Note>
+
 ### Assinatura HMAC
 
 Se `signing: true`, o campo `secret` é gerado automaticamente e retornado **apenas nesta resposta**. Armazene-o com segurança — ele não será exibido novamente em nenhuma outra chamada.

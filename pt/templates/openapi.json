@@ -53,7 +53,7 @@
         }
       }
     },
-    "/whatsapp/businesses/{wabaId}/templates": {
+    "/whatsapp/businesses/{businessId}/templates": {
       "get": {
         "summary": "Listar templates",
         "description": "Retorna a lista de templates de um WABA. A estrutura dos `components` varia conforme a categoria e configuração de cada template.",
@@ -63,7 +63,7 @@
         ],
         "parameters": [
           {
-            "name": "wabaId",
+            "name": "businessId",
             "in": "path",
             "required": true,
             "description": "ID do WABA (obtido via Listar WABAs)",
@@ -146,7 +146,7 @@
         ],
         "parameters": [
           {
-            "name": "wabaId",
+            "name": "businessId",
             "in": "path",
             "required": true,
             "description": "ID do WABA (obtido via Listar WABAs)",
@@ -280,7 +280,7 @@
         }
       }
     },
-    "/whatsapp/businesses/{wabaId}/templates/{templateId}": {
+    "/whatsapp/businesses/{businessId}/templates/{templateId}": {
       "put": {
         "summary": "Editar template",
         "description": "Edita um template existente e reenvia para aprovação da Meta.",
@@ -288,7 +288,7 @@
         "tags": ["Templates"],
         "parameters": [
           {
-            "name": "wabaId",
+            "name": "businessId",
             "in": "path",
             "required": true,
             "description": "ID do WABA (obtido via Listar WABAs)",
@@ -357,7 +357,7 @@
         "tags": ["Templates"],
         "parameters": [
           {
-            "name": "wabaId",
+            "name": "businessId",
             "in": "path",
             "required": true,
             "description": "ID do WABA (obtido via Listar WABAs)",
@@ -395,7 +395,7 @@
         }
       }
     },
-    "/whatsapp/businesses/{wabaId}/templates/sync": {
+    "/whatsapp/businesses/{businessId}/templates/sync": {
       "post": {
         "summary": "Sincronizar templates",
         "description": "Força a sincronização dos templates com a Meta, atualizando os status (PENDING, APPROVED, REJECTED) e demais informações.",
@@ -405,7 +405,7 @@
         ],
         "parameters": [
           {
-            "name": "wabaId",
+            "name": "businessId",
             "in": "path",
             "required": true,
             "description": "ID do WABA (obtido via Listar WABAs)",

@@ -6,12 +6,25 @@ openapi: "/pt/channels/openapi-create.json POST /v1/channels"
 
 ## Conceituação
 
-Cria um novo canal. Após a criação, o canal precisa ser conectado (via painel ou SDK) para começar a enviar e receber mensagens.
+Cria um novo canal. Após a criação, o canal precisa ser conectado ou ativado (via painel ou API) para começar a enviar e receber mensagens.
 
 O `id` retornado é o `channelId` usado em todas as chamadas de API.
+
+<Warning>
+  Este endpoint requer a role **ENTERPRISE** na sua conta.
+</Warning>
 
 ### Tipos disponíveis
 
 | Tipo | Plataforma |
 |---|---|
 | `META_WHATSAPP` | WhatsApp (API Oficial Meta) |
+| `META_INSTAGRAM` | Instagram |
+| `META_MESSENGER` | Messenger |
+| `BOT_TELEGRAM` | Telegram Bot |
+
+Após criar o canal, use a operação de conexão correspondente: [WhatsApp Business](/channels/connect-channel), [Instagram](/instagram/connection), [Messenger](/messenger/connection) ou [Telegram](/telegram/connection).
+
+<Note>
+  A API cria o canal ainda desconectado. Depois, use o fluxo de conexão ou ativação correspondente à plataforma.
+</Note>

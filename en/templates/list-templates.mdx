@@ -1,7 +1,7 @@
 ---
 title: "List templates"
 description: "List templates from a WABA"
-openapi: "/en/templates/openapi.json GET /whatsapp/businesses/{wabaId}/templates"
+openapi: "/en/templates/openapi.json GET /whatsapp/businesses/{businessId}/templates"
 ---
 
 ## Overview
@@ -9,5 +9,5 @@ openapi: "/en/templates/openapi.json GET /whatsapp/businesses/{wabaId}/templates
 Returns all templates registered in a WABA. The `components` structure returned varies according to each template's category and configuration.
 
 <Note>
-  The `wabaId` is obtained from the [List WABAs](/en/templates/list-businesses) endpoint.
+  The `businessId` (WABA) is obtained from the [List WABAs](/en/templates/list-businesses) endpoint.
 </Note>

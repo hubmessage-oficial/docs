@@ -1,4 +1,6 @@
 ---
+
+import SuporteInteractiveButton from '/en/snippets/suporte/interactive-button.mdx';
 title: "Send text with buttons"
 description: "Send text messages with quick reply buttons"
 openapi: "/en/messages/openapi-interactive-button.json POST /v1/channels/{channelId}/messages"
@@ -8,8 +10,12 @@ openapi: "/en/messages/openapi-interactive-button.json POST /v1/channels/{channe
 
 Sends a text message with quick reply buttons. The `content.type` field must be `INTERACTIVE_BUTTON`. The recipient can choose from the presented options.
 
-Optionally, you can include an **image** or **video** with the message using the `thumbnail` and `mimeType` fields inside `body`.
+The request body is the same across channels. What changes are the limits and which fields each platform uses; the differences are indicated in each field below.
 
 <Note>
   This endpoint only works when the [conversation window](/en/conversation-window) is open (24 hours).
 </Note>
+
+## Support by channel
+
+<SuporteInteractiveButton />

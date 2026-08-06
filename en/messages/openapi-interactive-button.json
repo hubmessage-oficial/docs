@@ -28,7 +28,7 @@
             "application/json": {
               "schema": { "$ref": "#/components/schemas/SendInteractiveButtonRequest" },
               "examples": {
-                "text": {
+                "WhatsApp": {
                   "summary": "Text with buttons",
                   "value": {
                     "recipient": { "identifier": "5511999999999" },
@@ -43,7 +43,7 @@
                     }
                   }
                 },
-                "withImage": {
+                "WhatsApp with image": {
                   "summary": "With image",
                   "value": {
                     "recipient": { "identifier": "5511999999999" },
@@ -61,7 +61,7 @@
                     }
                   }
                 },
-                "withVideo": {
+                "WhatsApp with video": {
                   "summary": "With video",
                   "value": {
                     "recipient": { "identifier": "5511999999999" },
@@ -120,7 +120,7 @@
             "type": "object",
             "required": ["identifier"],
             "properties": {
-              "identifier": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" }
+              "identifier": { "type": "string", "description": "Recipient identifier for the channel.\n\n**WhatsApp:** phone number with country code and area code.\n\n**Instagram, Messenger:** platform user ID obtained from the inbound webhook.", "example": "5511999999999" }
             }
           },
           "content": {
@@ -133,19 +133,19 @@
                 "required": ["message"],
                 "properties": {
                   "message": { "type": "string", "description": "Message text" },
-                  "thumbnail": { "type": "string", "description": "URL of an image or video (optional)", "nullable": true },
-                  "mimeType": { "type": "string", "description": "Thumbnail media type (e.g. image/jpeg, video/mp4)" }
+                  "thumbnail": { "type": "string", "description": "URL of an image or video (optional).\n\n**Instagram, Messenger:** ignored — send the media in a separate message.", "nullable": true },
+                  "mimeType": { "type": "string", "description": "Thumbnail media type (e.g. image/jpeg, video/mp4).\n\n**Instagram, Messenger:** ignored." }
                 }
               },
               "attachments": {
                 "type": "array",
-                "description": "List of quick-reply buttons (maximum 3)",
+                "description": "List of quick-reply buttons. Sending is currently available only on WhatsApp Business, with up to 3 buttons.",
                 "items": {
                   "type": "object",
                   "required": ["id", "title"],
                   "properties": {
                     "id": { "type": "string", "description": "Button identifier" },
-                    "title": { "type": "string", "description": "Text displayed on the button" }
+                    "title": { "type": "string", "description": "Text displayed on the button. Up to 20 characters — excess characters are truncated by the platform without an error in the request." }
                   }
                 }
               }
@@ -156,7 +156,7 @@
       "MessageResponse": {
         "type": "object",
         "properties": {
-          "messageId": { "type": "string", "description": "Sent message ID" }
+          "messageId": { "type": "string", "description": "Sent message ID, used to track status through webhooks. The response confirms that the message was accepted for sending, not that it was delivered.\n\n**WhatsApp:** the value starts with `wamid.`" }
         }
       },
       "Error": {

@@ -1,0 +1,75 @@
+---
+title: "Recursos e limites"
+description: "Tipos de mensagem, formatos de mídia e restrições da plataforma"
+---
+
+## Tipos de mensagem
+
+| Tipo | Instagram | Observação |
+|---|---|---|
+| `TEXT` | Sim | — |
+| `IMAGE` | Sim | — |
+| `AUDIO` | Sim | Não aceita `.ogg` |
+| `VIDEO` | Sim | — |
+| `DOCUMENT` | Somente PDF | Outros formatos não são entregues |
+| `STICKER` | Convertido | Entregue como imagem |
+| `CONTACT` | Não | A plataforma não possui mensagem de contato |
+| `LOCATION` | Não | A plataforma não possui mensagem de localização |
+| `INTERACTIVE_ACTION` | Em breve | Somente botão de URL — o Instagram não possui botão de ligação |
+| `INTERACTIVE_BUTTON` | Em breve | Até 13 botões, título de até 20 caracteres |
+| `TEMPLATE` | Não | Templates existem apenas no WhatsApp |
+
+<Warning>
+  Enviar um tipo indisponível **não retorna erro**. A API responde `200`, mas a mensagem não é entregue.
+</Warning>
+
+## Formatos de mídia
+
+| Tipo | Formatos aceitos | Tamanho máximo |
+|---|---|---|
+| Áudio | `aac`, `m4a`, `wav`, `mp4` | 25 MB |
+| Imagem | `png`, `jpeg` | 8 MB |
+| Vídeo | `mp4`, `ogg`, `avi`, `mov`, `webm` | 25 MB |
+| Documento | `pdf` | 25 MB |
+
+<Warning>
+  **`.ogg` não é aceito em áudio.** O formato aparece na lista de vídeo, mas arquivos de áudio em `.ogg` não são entregues — e a requisição responde `200` mesmo assim. Converta para `aac`, `m4a` ou `mp4` antes de enviar.
+</Warning>
+
+<Note>
+  Arquivos `.webp` enviados como imagem funcionam, mesmo não constando na lista oficial da Meta — a plataforma converte a mídia no envio. É assim que os stickers são entregues.
+</Note>
+
+## Janela de conversa
+
+A [janela de 24 horas](/conversation-window) vale para o Instagram. Como a plataforma **não possui templates**, a única forma de reabri-la é o cliente enviar uma nova mensagem.
+
+Na prática: fora da janela, não há como iniciar contato. Só é possível responder a quem escreveu primeiro.
+
+## Identificador do cliente
+
+O ID do cliente é numérico, atribuído pelo Instagram e obtido no [webhook de recebimento](/webhooks/payloads), em `message.sender.identifier`. Não é um nome de usuário e não pode ser deduzido a partir dele.
+
+Em uma mensagem recebida, `message.recipient.identifier` identifica a conta profissional. Use `message.sender.identifier` para capturar o identificador do cliente que iniciou a conversa.
+
+Veja [como obtê-lo](/instagram/connection#como-obter-o-identificador-do-cliente).
+
+## Eventos de webhook
+
+O Instagram dispara eventos de mensagem. **Não dispara** `CONNECTED`, `DISCONNECTED`, `PRESENCE_CHAT`, `INITIAL_DATA` nem `BLOCK` — veja a [tabela por canal](/webhooks/introduction#eventos-disponíveis).
+
+Além das mensagens comuns, o Instagram envia interações próprias da plataforma, todas como `MESSAGE_RECEIVED`:
+
+| Interação | O que é |
+|---|---|
+| Resposta a story | O cliente respondeu a um story da sua conta |
+| Menção em story | O cliente mencionou sua conta em um story |
+| Compartilhamento | O cliente enviou uma publicação no Direct |
+| Referência de anúncio | O cliente chegou por um anúncio ou link com referência |
+| Reação | O cliente reagiu a uma mensagem com emoji |
+
+Use os campos do payload para distinguir cada caso — veja [estrutura dos payloads](/webhooks/payloads).
+
+<Note>
+  Para comparar o suporte entre todas as plataformas, veja a tabela em [mensagens livres](/messages/introduction#tipos-disponíveis).
+</Note>

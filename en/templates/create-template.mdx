@@ -1,7 +1,7 @@
 ---
 title: "Create template"
 description: "Create a new template and submit for Meta approval"
-openapi: "/en/templates/openapi.json POST /whatsapp/businesses/{wabaId}/templates"
+openapi: "/en/templates/openapi.json POST /whatsapp/businesses/{businessId}/templates"
 ---
 
 ## Overview
@@ -15,5 +15,5 @@ Use the [Sync templates](/en/templates/sync-templates) endpoint to force a statu
 </Warning>
 
 <Note>
-  The `wabaId` is obtained from the [List WABAs](/en/templates/list-businesses) endpoint.
+  The `businessId` (WABA) is obtained from the [List WABAs](/en/templates/list-businesses) endpoint.
 </Note>

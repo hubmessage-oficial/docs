@@ -48,7 +48,7 @@
                   "summary": "With Bearer authentication",
                   "value": {
                     "url": "https://app.yourcompany.com/webhooks/hubmessage",
-                    "events": ["MESSAGE_RECEIVED", "CONNECTED", "DISCONNECTED"],
+                    "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
                     "auth": {
                       "type": "BEARER",
                       "token": "my-secret-token"
@@ -80,7 +80,7 @@
                   }
                 },
                 "allEvents": {
-                  "summary": "All events with HMAC + Bearer",
+                  "summary": "Message events with HMAC + Bearer",
                   "value": {
                     "url": "https://app.yourcompany.com/webhooks/hubmessage",
                     "description": "Main production webhook",
@@ -88,8 +88,8 @@
                       "MESSAGE_RECEIVED",
                       "MESSAGE_DELIVERY",
                       "MESSAGE_STATUS",
-                      "CONNECTED",
-                      "DISCONNECTED"
+                      "RECEIVED_STATUS",
+                      "RECEIVED_AND_DELIVERY"
                     ],
                     "signing": true,
                     "auth": {
@@ -136,7 +136,7 @@
                       "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                       "url": "https://app.yourcompany.com/webhooks/hubmessage",
                       "description": "Main production webhook",
-                      "events": ["MESSAGE_RECEIVED", "CONNECTED", "DISCONNECTED"],
+                      "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
                       "status": "ENABLED",
                       "signing": false,
                       "auth": { "type": "BEARER", "configured": true },
@@ -215,8 +215,8 @@
                     "channelId": "019E4C54B1B375A28970B605CA9B03C3",
                     "instanceId": "019E4C54B1B375A28970B605CA9B03C3",
                     "url": "https://app.yourcompany.com/webhooks/connection-events",
-                    "description": "Connection events",
-                    "events": ["CONNECTED", "DISCONNECTED"],
+                    "description": "Message events",
+                    "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"],
                     "status": "ENABLED",
                     "signing": false,
                     "auth": { "type": "NONE", "configured": false },
@@ -348,7 +348,7 @@
                   "summary": "Update URL and events",
                   "value": {
                     "url": "https://new-url.yourcompany.com/webhooks/hubmessage",
-                    "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS", "CONNECTED", "DISCONNECTED"]
+                    "events": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"]
                   }
                 },
                 "enableSignature": {
@@ -535,8 +535,8 @@
                 "CONNECTED",
                 "DISCONNECTED",
                 "PRESENCE_CHAT",
-                "INITIAL_DATA",
-                "BLOCK"
+                "BLOCK",
+                "INITIAL_DATA"
               ]
             },
             "example": ["MESSAGE_RECEIVED", "MESSAGE_STATUS"]
@@ -592,8 +592,8 @@
                 "CONNECTED",
                 "DISCONNECTED",
                 "PRESENCE_CHAT",
-                "INITIAL_DATA",
-                "BLOCK"
+                "BLOCK",
+                "INITIAL_DATA"
               ]
             }
           },

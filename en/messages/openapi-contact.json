@@ -79,7 +79,7 @@
             "type": "object",
             "required": ["identifier"],
             "properties": {
-              "identifier": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" }
+              "identifier": { "type": "string", "description": "Recipient identifier for the channel. On WhatsApp Business, this is the phone number with country code and area code. On Telegram, it is the chat ID.", "example": "5511999999999" }
             }
           },
           "content": {

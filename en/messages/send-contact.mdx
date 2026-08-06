@@ -1,8 +1,10 @@
 ---
 title: "Send contact"
-description: "Send contacts via WhatsApp"
+description: "Send contacts through supported channels"
 openapi: "/en/messages/openapi-contact.json POST /v1/channels/{channelId}/messages"
 ---
+
+import SuporteContact from '/en/snippets/suporte/contact.mdx';
 
 ## Overview
 
@@ -11,3 +13,11 @@ Sends a contact to a recipient. The `content.type` field must be `CONTACT`. You 
 <Note>
   This endpoint only works when the [conversation window](/en/conversation-window) is open (24 hours).
 </Note>
+
+## Support by channel
+
+<SuporteContact />
+
+<Warning>
+  Instagram and Messenger do not support contact messages. For those channels, send the contact details as a [text message](/en/messages/send-text).
+</Warning>

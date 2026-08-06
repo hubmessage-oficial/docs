@@ -21,9 +21,11 @@ Customer sends message → Window opens (24h) → You send free messages
 
 ## What if the window is closed?
 
-If the customer hasn't sent a message in the last 24 hours, the window is closed. In this case, the only option is to send a **Meta-approved template** through the [Send template](/en/messages/send-template) endpoint.
+If the customer hasn't sent a message in the last 24 hours, the window is closed.
 
-After the customer **replies** to the template, the window reopens and you can use free messages again.
+**On WhatsApp**, the only option is to send a **Meta-approved template** through the [Send template](/en/messages/send-template) endpoint. After the customer **replies** to the template, the window reopens and you can use free messages again.
+
+**On Instagram**, there is no template system: only a new message from the customer reopens the window.
 
 ```
 Window closed → Send template → Customer replies → Window reopens (24h)
@@ -41,14 +43,22 @@ All endpoints in this section use the same route:
 
 What changes is the `content.type` field:
 
-| Type | Description |
-|---|---|
-| `TEXT` | Simple text message |
-| `IMAGE` | Image message |
-| `AUDIO` | Audio message |
-| `VIDEO` | Video message |
-| `CONTACT` | Contact card |
-| `STICKER` | Sticker |
-| `INTERACTIVE_ACTION` | Message with action buttons (URL and call) |
-| `INTERACTIVE_BUTTON` | Message with quick reply buttons |
-| `TEMPLATE` | Meta-approved template (outside the 24h window) |
+| Type | Description | WhatsApp Business | Instagram | Messenger | Telegram Bot |
+|---|---|---|---|---|---|
+| `TEXT` | Simple text | Yes | Yes | Yes | Yes |
+| `IMAGE` | Image | Yes | Yes | Yes | Yes |
+| `AUDIO` | Audio | Yes | Yes | Yes | Yes |
+| `VIDEO` | Video | Yes | Yes | Yes | Yes |
+| `DOCUMENT` | File | Yes | PDF only | Yes | Yes |
+| `STICKER` | Sticker | Yes | As image | As image | Coming soon |
+| `CONTACT` | Contact | Yes | No | No | Yes |
+| `LOCATION` | Location | Yes | No | No | Yes |
+| `INTERACTIVE_ACTION` | Action buttons (URL and call) | Yes | Coming soon | Coming soon | Coming soon |
+| `INTERACTIVE_BUTTON` | Quick reply buttons | Yes | Coming soon | Coming soon | Coming soon |
+| `TEMPLATE` | Meta-approved template | Yes | No | No | No |
+
+<Warning>
+  Sending a type that is unavailable on the channel **does not return an error**. The API responds with `200`, but the message is not delivered. Check this table before integrating.
+</Warning>
+
+When support or format differs between channels, the corresponding send page explains the platform-specific behavior.

@@ -1,0 +1,59 @@
+---
+title: "Introdução"
+description: "Conecte sua conta do Instagram e receba mensagens do Direct no Hub Message"
+---
+
+import { projectName, frontendUrl } from '/snippets/variables.mdx';
+
+## Visão geral
+
+O canal **Instagram** conecta uma conta profissional do Instagram ao {projectName}, permitindo enviar e receber mensagens do **Direct** pela mesma API usada nos demais canais.
+
+Aqui você vai aprender a:
+
+- Preparar sua conta do Instagram para a integração
+- Conectar o canal pelo Dashboard ou pelo SDK
+- Conhecer os recursos e limites da plataforma
+
+## Pré-requisitos
+
+<Steps>
+  <Step title="Conta profissional do Instagram">
+    A conta precisa ser **profissional** — Empresa ou Criador de conteúdo. Contas pessoais não podem ser conectadas.
+
+    A conversão é gratuita e feita no próprio app do Instagram, em **Configurações → Tipo de conta**.
+  </Step>
+  <Step title="Mensagens do Direct habilitadas">
+    No app do Instagram, ative **Configurações → Mensagens → Permitir acesso a mensagens**. Sem isso, a conexão é concluída mas nenhuma mensagem chega.
+  </Step>
+</Steps>
+
+<Note>
+  **Não é necessário ter uma Página do Facebook.** Diferente de integrações mais antigas, a conexão é feita diretamente com a conta do Instagram.
+</Note>
+
+## O que você pode enviar
+
+| Tipo | Instagram |
+|---|---|
+| Texto, imagem, áudio e vídeo | Sim |
+| Documento | Somente PDF |
+| Sticker | Entregue como imagem |
+| Contato e localização | Não disponível |
+| Botões | Em breve |
+| Templates | Não disponível |
+
+Veja os detalhes em [Recursos e limites](/instagram/limitations), ou a [comparação entre todos os canais](/messages/introduction#tipos-disponíveis).
+
+<CardGroup cols={2}>
+  <Card title="Conectar canal" icon="link" href="/instagram/connection">
+    Conecte sua conta pelo Dashboard ou pelo SDK
+  </Card>
+  <Card title="Recursos e limites" icon="circle-info" href="/instagram/limitations">
+    Tipos de mensagem, formatos de mídia e restrições da plataforma
+  </Card>
+</CardGroup>
+
+<Note>
+  Caso ainda não tenha um canal criado, veja primeiro como [criar um canal](/channels/create-channel).
+</Note>

@@ -102,7 +102,7 @@
             "required": ["identifier"],
             "description": "Recipient data",
             "properties": {
-              "identifier": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5544936181064" },
+              "identifier": { "type": "string", "description": "Recipient identifier for the channel. On WhatsApp Business, this is the phone number with country code and area code. On Telegram, it is the chat ID.", "example": "5544936181064" },
               "name": { "type": "string", "description": "Recipient name (optional)", "example": "Recipient Name" },
               "subject": { "type": "string", "description": "Title or subject (optional)", "example": "Title" },
               "picture": { "type": "string", "description": "Recipient profile picture URL (optional)", "example": "" }
@@ -112,7 +112,7 @@
             "type": "object",
             "description": "Sender data (optional)",
             "properties": {
-              "identifier": { "type": "string", "description": "Sender phone number", "example": "5544936181064" },
+              "identifier": { "type": "string", "description": "Sender identifier for the channel. On WhatsApp Business, this is the phone number with country code and area code. On Telegram, it is the chat ID.", "example": "5544936181064" },
               "name": { "type": "string", "description": "Sender name", "example": "Sender Name" },
               "picture": { "type": "string", "description": "Sender profile picture URL", "example": "" }
             }

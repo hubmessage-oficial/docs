@@ -32,7 +32,7 @@
                 "content": {
                   "type": "AUDIO",
                   "attachments": [
-                    { "url": "https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" }
+                    { "url": "https://filesamples.com/samples/audio/m4a/sample1.m4a" }
                   ]
                 }
               }
@@ -76,7 +76,7 @@
             "type": "object",
             "required": ["identifier"],
             "properties": {
-              "identifier": { "type": "string", "description": "Recipient phone number (country code + area code + number)", "example": "5511999999999" }
+              "identifier": { "type": "string", "description": "Recipient identifier for the channel. On WhatsApp Business, this is the phone number with country code and area code. On Instagram and Messenger, it is the user ID obtained from the inbound webhook. On Telegram, it is the chat ID.", "example": "5511999999999" }
             }
           },
           "content": {
@@ -91,7 +91,7 @@
                   "type": "object",
                   "required": ["url"],
                   "properties": {
-                    "url": { "type": "string", "description": "Audio URL" }
+                    "url": { "type": "string", "description": "Audio URL. On WhatsApp Business, `.ogg` can also be used. On Instagram, use `aac`, `m4a`, `wav`, or `mp4`; `.ogg` is not accepted as audio." }
                   }
                 }
               }
