@@ -96,7 +96,6 @@
                     "group": "Recursos e Configurações",
                     "pages": [
                       "whatsapp-official/migrate-number",
-                      "whatsapp-official/24h-window",
                       "whatsapp-official/message-template"
                     ]
                   }
@@ -150,6 +149,7 @@
               {
                 "group": "Mensagens livres",
                 "pages": [
+                  "conversation-window",
                   "messages/introduction",
                   "messages/send-text",
                   "messages/send-image",
@@ -223,7 +223,6 @@
                     "group": "Resources and Settings",
                     "pages": [
                       "en/whatsapp-official/migrate-number",
-                      "en/whatsapp-official/24h-window",
                       "en/whatsapp-official/message-template"
                     ]
                   }
@@ -277,6 +276,7 @@
               {
                 "group": "Free messages",
                 "pages": [
+                  "en/conversation-window",
                   "en/messages/introduction",
                   "en/messages/send-text",
                   "en/messages/send-image",
