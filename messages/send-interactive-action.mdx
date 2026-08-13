@@ -1,8 +1,10 @@
 ---
 title: "Enviar botões de ação"
-description: "Envie mensagens com botões de ação (URL e ligar)"
+description: "Envie mensagens com botões de ação com URL"
 openapi: "/pt/messages/openapi-interactive-action.json POST /v1/channels/{channelId}/messages"
 ---
+
+import SuporteInteractiveAction from '/snippets/suporte/interactive-action.mdx';
 
 ## Conceituação
 
@@ -14,6 +16,16 @@ Tipos de botão disponíveis:
 - **CALL** — Liga para um número ao clicar
 
 Os campos `header` e `footer` são opcionais.
+
+<Warning>
+  O botão **CALL** ainda não foi implementado em nenhum canal. O tipo é aceito
+  na requisição e a API responde `200`, mas o botão não chega ao destinatário.
+  Use **URL** e, se precisar do telefone, coloque-o no corpo da mensagem.
+</Warning>
+
+## Suporte por canal
+
+<SuporteInteractiveAction />
 
 <Note>
   Este endpoint só funciona quando a [janela de conversa](/conversation-window) de 24 horas estiver aberta.

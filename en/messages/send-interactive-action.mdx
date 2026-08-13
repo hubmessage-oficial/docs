@@ -1,8 +1,10 @@
 ---
 title: "Send action buttons"
-description: "Send messages with action buttons (URL and call)"
+description: "Send messages with action buttons that open a URL"
 openapi: "/en/messages/openapi-interactive-action.json POST /v1/channels/{channelId}/messages"
 ---
+
+import SuporteInteractiveAction from '/en/snippets/suporte/interactive-action.mdx';
 
 ## Overview
 
@@ -14,6 +16,17 @@ Available button types:
 - **CALL** — Calls a number when clicked
 
 The `header` and `footer` fields are optional.
+
+<Warning>
+  The **CALL** button has not been implemented on any channel yet. The type is
+  accepted by the request and the API responds `200`, but the button never
+  reaches the recipient. Use **URL** instead, and put the phone number in the
+  message body if you need it.
+</Warning>
+
+## Channel support
+
+<SuporteInteractiveAction />
 
 <Note>
   This endpoint only works when the [conversation window](/en/conversation-window) is open (24 hours).
