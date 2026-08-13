@@ -276,7 +276,8 @@
             }
           },
           "400": { "$ref": "#/components/responses/MetaError" },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "422": { "$ref": "#/components/responses/UnprocessableEntity" }
         }
       }
     },
@@ -347,7 +348,8 @@
             }
           },
           "400": { "$ref": "#/components/responses/MetaError" },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "422": { "$ref": "#/components/responses/UnprocessableEntity"}
         }
       },
       "delete": {
@@ -527,7 +529,32 @@
             }
           }
         }
+      },
+      
+      "UnprocessableEntity": {
+        "description": "A requisição não pôde ser processada devido a um erro de validação.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UnprocessableEntity"
+            },
+            "example": {
+              "error":{
+                "errors": [
+                  {
+                    "code": "100",
+                    "name": "META_WHATSAPP_ERROR",
+                    "subCode": "2388024",
+                    "message": "Invalid parameter",
+                    "description": "There is already Portuguese (BR) content for this template. You can create a new template and try again."
+                  }
+                ]
+              }
+            }
+          }
+        }
       }
+     
     },
     "schemas": {
       "Business": {
@@ -743,6 +770,35 @@
           "message": {
             "type": "string",
             "description": "Descrição do erro"
+          }
+        }
+      },
+
+      "UnprocessableEntity": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "subCode": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }
