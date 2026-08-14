@@ -32,7 +32,7 @@
                 "content": {
                   "type": "AUDIO",
                   "attachments": [
-                    { "url": "https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" }
+                    { "url": "https://filesamples.com/samples/audio/m4a/sample1.m4a" }
                   ]
                 }
               }
@@ -76,7 +76,7 @@
             "type": "object",
             "required": ["identifier"],
             "properties": {
-              "identifier": { "type": "string", "description": "Telefone do destinatário (DDI + DDD + número)", "example": "5511999999999" }
+              "identifier": { "type": "string", "description": "Identificador do destinatário no canal. No WhatsApp Business, é o telefone com DDI + DDD + número. No Instagram e Messenger, é o ID do usuário obtido no webhook de recebimento. No Telegram, é o ID do chat.", "example": "5511999999999" }
             }
           },
           "content": {
@@ -91,7 +91,7 @@
                   "type": "object",
                   "required": ["url"],
                   "properties": {
-                    "url": { "type": "string", "description": "URL do áudio" }
+                    "url": { "type": "string", "description": "URL do áudio. No WhatsApp Business, .ogg também pode ser usado. No Instagram, use aac, m4a, wav ou mp4; .ogg não é aceito como áudio." }
                   }
                 }
               }

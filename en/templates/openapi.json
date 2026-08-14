@@ -39,7 +39,7 @@
         }
       }
     },
-    "/whatsapp/businesses/{wabaId}/templates": {
+    "/whatsapp/businesses/{businessId}/templates": {
       "get": {
         "summary": "List templates",
         "description": "Returns the list of templates for a WABA. The structure of `components` varies depending on the category and configuration of each template.",
@@ -47,7 +47,7 @@
         "tags": ["Templates"],
         "parameters": [
           {
-            "name": "wabaId",
+            "name": "businessId",
             "in": "path",
             "required": true,
             "description": "WABA ID (obtained via List WABAs)",
@@ -113,7 +113,7 @@
         "tags": ["Templates"],
         "parameters": [
           {
-            "name": "wabaId",
+            "name": "businessId",
             "in": "path",
             "required": true,
             "description": "WABA ID (obtained via List WABAs)",
@@ -209,7 +209,7 @@
         }
       }
     },
-    "/whatsapp/businesses/{wabaId}/templates/{templateId}": {
+    "/whatsapp/businesses/{businessId}/templates/{templateId}": {
       "put": {
         "summary": "Edit template",
         "description": "Edits an existing template and resubmits it for Meta approval.",
@@ -217,7 +217,7 @@
         "tags": ["Templates"],
         "parameters": [
           {
-            "name": "wabaId",
+            "name": "businessId",
             "in": "path",
             "required": true,
             "description": "WABA ID (obtained via List WABAs)",
@@ -273,7 +273,7 @@
         "tags": ["Templates"],
         "parameters": [
           {
-            "name": "wabaId",
+            "name": "businessId",
             "in": "path",
             "required": true,
             "description": "WABA ID (obtained via List WABAs)",
@@ -301,7 +301,7 @@
         }
       }
     },
-    "/whatsapp/businesses/{wabaId}/templates/sync": {
+    "/whatsapp/businesses/{businessId}/templates/sync": {
       "post": {
         "summary": "Sync templates",
         "description": "Forces synchronization of templates with Meta, updating statuses (PENDING, APPROVED, REJECTED) and other information.",
@@ -309,7 +309,7 @@
         "tags": ["Templates"],
         "parameters": [
           {
-            "name": "wabaId",
+            "name": "businessId",
             "in": "path",
             "required": true,
             "description": "WABA ID (obtained via List WABAs)",
@@ -338,6 +338,17 @@
                           "text": "Your verification code is *{{1}}*. For your security, do not share it.",
                           "add_security_recommendation": true,
                           "example": { "body_text": [["123456"]] }
+                        },
+                        {
+                          "type": "BUTTONS",
+                          "buttons": [
+                            {
+                              "type": "URL",
+                              "text": "Copy code",
+                              "url": "https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=otp{{1}}",
+                              "example": ["https://www.whatsapp.com/otp/code/?otp_type=COPY_CODE&code=otp123456"]
+                            }
+                          ]
                         }
                       ]
                     }

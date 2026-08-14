@@ -1,7 +1,7 @@
 ---
 title: "Sincronizar templates"
 description: "Force a atualização dos status dos templates com a Meta"
-openapi: "POST /whatsapp/businesses/{wabaId}/templates/sync"
+openapi: "POST /whatsapp/businesses/{businessId}/templates/sync"
 ---
 
 ## Conceituação
@@ -11,5 +11,5 @@ Força a sincronização dos templates com a Meta, atualizando os status (`PENDI
 Útil quando você criou ou editou um template e quer verificar se o status de aprovação já foi atualizado pela Meta.
 
 <Note>
-  O `wabaId` é obtido através do endpoint de [Listar WABAs](/templates/list-businesses).
+  O `businessId` (WABA) é obtido através do endpoint de [Listar WABAs](/templates/list-businesses).
 </Note>

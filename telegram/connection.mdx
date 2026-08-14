@@ -1,0 +1,78 @@
+---
+title: "Conectar canal Telegram"
+description: "Conecte um bot do Telegram ao Hub Message"
+---
+
+import { frontendUrl } from '/snippets/variables.mdx';
+
+## Visão geral
+
+Após [criar um canal](/channels/create-channel) do tipo `BOT_TELEGRAM`, conecte um bot criado no Telegram para enviar e receber mensagens.
+
+O Telegram não usa OAuth para esse fluxo. A conexão é feita com o token gerado pelo **BotFather**.
+
+## Conexão pelo painel
+
+Acesse o [Dashboard]({frontendUrl}), selecione o canal Telegram e siga o fluxo de ativação. Quando o painel solicitar o token, informe o valor fornecido pelo BotFather.
+
+## Conexão via API
+
+### 1. Crie o bot no BotFather
+
+No Telegram, abra uma conversa com o **BotFather**, use o comando `/newbot` e siga as instruções. Ao final, ele fornecerá um token no formato semelhante a:
+
+```text
+123456789:AAExemploDeTokenDoBot
+```
+
+Guarde esse token como um segredo. Ele permite controlar o bot.
+
+### 2. Ative o canal
+
+Envie o token para:
+
+`POST /v1/channels/{channelId}/activate-telegram`
+
+Use a **Secret Key** no cabeçalho:
+
+```bash
+curl -X POST https://api.hubmessage.io/v1/channels/ID_DO_CANAL/activate-telegram \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SUA_SECRET_KEY" \
+  -d '{
+    "token": "123456789:AAExemploDeTokenDoBot"
+  }'
+```
+
+O Hub Message valida o token com o Telegram. Se ele for válido, o canal é ativado e o webhook do bot é configurado automaticamente.
+
+Uma ativação bem-sucedida retorna:
+
+```json
+{
+  "externalId": "123456789",
+  "connected": true,
+  "displayName": "Meu Bot (@meu_bot)"
+}
+```
+
+<Warning>
+  Nunca exponha o token do BotFather no frontend ou em logs. Faça a chamada de ativação no backend usando a Secret Key.
+</Warning>
+
+## Desconectar o canal
+
+Para desativar o bot e remover o webhook configurado para ele, use:
+
+`POST /v1/channels/{channelId}/deactivate-telegram`
+
+```bash
+curl -X POST https://api.hubmessage.io/v1/channels/ID_DO_CANAL/deactivate-telegram \
+  -H "Authorization: Bearer SUA_SECRET_KEY"
+```
+
+Depois da desativação, o canal deixa de receber eventos do bot. Para conectá-lo novamente, envie o token outra vez.
+
+## Próximos passos
+
+Com o canal conectado, use o `channelId` para enviar [mensagens livres](/messages/introduction). Para responder a uma conversa, use o identificador do chat recebido no [webhook](/webhooks/payloads).

@@ -1,12 +1,23 @@
 ---
 title: "Enviar sticker"
-description: "Envie stickers (figurinhas) via WhatsApp"
+description: "Envie stickers (figurinhas) pelos canais compatíveis"
 openapi: "/pt/messages/openapi-sticker.json POST /v1/channels/{channelId}/messages"
 ---
 
 ## Conceituação
 
-Envia um sticker (figurinha) para um contato. O campo `content.type` deve ser `STICKER` e o sticker é enviado via URL no array `attachments`.
+Envia um sticker (figurinha) para um contato. O campo `content.type` deve ser `STICKER` e o sticker é enviado via URL no array `attachments`. Use uma URL para um arquivo WebP.
+
+<Info>
+  No Instagram e no Messenger, o sticker é entregue como uma mensagem de imagem
+  (`IMAGE`). No WhatsApp Business e no Telegram Bot, ele é enviado como sticker.
+</Info>
+
+<Warning>
+  O Instagram pode responder `200` mesmo quando o formato ou o tipo não é
+  entregue. Para esse canal, use WebP e considere que a mensagem chegará como
+  imagem.
+</Warning>
 
 <Note>
   Este endpoint só funciona quando a [janela de conversa](/conversation-window) de 24 horas estiver aberta.

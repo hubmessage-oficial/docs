@@ -1,15 +1,28 @@
 ---
 title: "Conversation window"
-description: "Understand how the WhatsApp 24-hour conversation window works"
+description: "Understand how the 24-hour conversation window works"
 ---
 
 import { projectName } from '/snippets/variables.mdx';
 
 ## How does it work?
 
-When a customer sends a message to your WhatsApp number, a **24-hour conversation window** opens. While this window is open, you can send any type of message: text, image, audio, video, document, etc.
+When a customer sends a message to your channel, a **24-hour conversation window** opens. While this window is open, you can send any message type supported by the platform: text, image, audio, video, document, and more.
 
-If the customer sends another message, the 24-hour timer **resets**. This means as long as there's an active conversation, the window stays open.
+If the customer interacts again, the 24-hour timer **resets**. This means as long as there's an active conversation, the window stays open.
+
+The window does not apply to every channel:
+
+| Channel | 24-hour window | How to reopen it |
+|---|---|---|
+| **WhatsApp Business** | Yes | A new customer message — which an [approved template](/en/messages/send-template) can prompt. The template itself does not reopen the window. |
+| **Instagram** | Yes | A new customer interaction only: direct message, story reply, or story mention |
+| **Messenger** | Yes | A new customer interaction only: message, reaction, or a tap on a call-to-action button |
+| **Telegram Bot** | Not applicable | — |
+
+<Note>
+  The sections below about templates, categories, and costs apply **only to WhatsApp Business**. Instagram and Messenger do not have a template system, so you cannot start a conversation outside the window on those channels.
+</Note>
 
 ## Inside the window (24h)
 
@@ -43,8 +56,8 @@ There are two ways:
   <Step title="The customer sends a message">
     The simplest way. Any message from the customer opens a new 24h window immediately.
   </Step>
-  <Step title="You send a template">
-    Send an [approved template](/en/messages/send-template) (marketing, utility, or authentication). When the customer **replies**, the 24h window reopens and you can send [free messages](/en/messages/introduction) again.
+  <Step title="You send a template and the customer replies">
+    Send an [approved template](/en/messages/send-template) (marketing, utility, or authentication). The template alone does not reopen the window: it is the **customer's reply** that opens a new 24h window and unlocks [free messages](/en/messages/introduction) again.
   </Step>
 </Steps>
 
@@ -59,6 +72,37 @@ When the customer comes through **Click-to-WhatsApp** (Facebook ad) or a **Faceb
 | Customer sent a message (window open) | Yes | No | Free |
 | Window closed (over 24h) | No | Yes | Depends on category |
 | Via Click-to-WhatsApp ad | Yes | No | Free for 72h |
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="Can I send regular messages after 24 hours?">
+    No. Once the window expires, only an approved template can be sent.
+  </Accordion>
+
+  <Accordion title="The customer replied to the template. Can I chat normally now?">
+    Yes. As soon as the customer replies, a new 24-hour window opens.
+  </Accordion>
+
+  <Accordion title="Does every customer message reset the window?">
+    Yes. Whenever the customer sends a new message, the window is renewed for another 24 hours.
+  </Accordion>
+
+  <Accordion title="Can I send media during the window?">
+    Yes. Images, videos, documents, audio, and other supported formats can be sent normally while the window is open.
+  </Accordion>
+
+  <Accordion title="Do I need to create a template for every conversation?">
+    No. Templates are only needed to start or resume a conversation when there is no open 24-hour window.
+  </Accordion>
+</AccordionGroup>
+
+## Best practices
+
+- Reply to the customer while the 24-hour window is open to keep the conversation flowing
+- Use templates only when you need to start or resume support
+- Choose the correct template category (**Marketing**, **Utility**, or **Authentication**) to avoid approval rejections
+- Monitor when the window is about to expire to automate sending templates when needed
 
 ## Next steps
 

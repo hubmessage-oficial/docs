@@ -10,13 +10,13 @@
     "/v1/channels": {
       "post": {
         "summary": "Criar canal",
-        "description": "Cria um novo canal.",
+        "description": "Cria um novo canal no workspace autenticado. Requer role ENTERPRISE.",
         "operationId": "createChannel",
         "tags": ["Canais"],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+          "application/json": {
               "schema": { "$ref": "#/components/schemas/CreateChannelRequest" },
               "example": {
                 "name": "Meu canal WhatsApp",
@@ -26,7 +26,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Canal criado com sucesso",
             "content": {
               "application/json": {
@@ -37,7 +37,16 @@
               }
             }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "422": {
+            "description": "Regra de negócio violada — conta sem role ENTERPRISE",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": 422, "message": "This action requires ENTERPRISE role" }
+              }
+            }
+          }
         }
       }
     }
@@ -66,7 +75,7 @@
           "type": {
             "type": "string",
             "description": "Tipo do canal (plataforma)",
-            "enum": ["META_WHATSAPP"]
+                "enum": ["META_WHATSAPP", "META_INSTAGRAM", "META_MESSENGER", "BOT_TELEGRAM"]
           }
         }
       },

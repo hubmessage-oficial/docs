@@ -8,6 +8,12 @@ openapi: "/pt/messages/openapi-audio.json POST /v1/channels/{channelId}/messages
 
 Envia uma mensagem de áudio para um contato. O campo `content.type` deve ser `AUDIO` e o áudio é enviado via URL no array `attachments`.
 
+## Formatos aceitos
+
+O exemplo desta página usa `.m4a`, uma opção recomendada para manter o mesmo payload entre os canais.
+
+No WhatsApp Business, `.ogg` também pode ser usado como áudio. No Instagram, os formatos aceitos são `aac`, `m4a`, `wav` e `mp4`, com limite de 25 MB. O formato `.ogg` **não é aceito como áudio** no Instagram: a API pode responder `200`, mas a mensagem não será entregue. Veja os detalhes nas [limitações do Instagram](/instagram/limitations).
+
 <Note>
   Este endpoint só funciona quando a [janela de conversa](/conversation-window) de 24 horas estiver aberta.
 </Note>

@@ -74,7 +74,7 @@
             "type": "object",
             "required": ["identifier"],
             "properties": {
-              "identifier": { "type": "string", "description": "Telefone do destinatário (DDI + DDD + número)", "example": "5511999999999" }
+              "identifier": { "type": "string", "description": "Identificador do destinatário no canal. No WhatsApp Business, é o telefone com DDI + DDD + número. No Instagram e Messenger, é o ID do usuário obtido no webhook de recebimento. No Telegram, é o ID do chat.", "example": "5511999999999" }
             }
           },
           "content": {

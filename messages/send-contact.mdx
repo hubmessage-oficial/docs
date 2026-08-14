@@ -1,8 +1,10 @@
 ---
 title: "Enviar contato"
-description: "Envie contatos via WhatsApp"
+description: "Envie contatos pelos canais compatíveis"
 openapi: "/pt/messages/openapi-contact.json POST /v1/channels/{channelId}/messages"
 ---
+
+import SuporteContact from '/snippets/suporte/contact.mdx';
 
 ## Conceituação
 
@@ -11,3 +13,12 @@ Envia um contato para um destinatário. O campo `content.type` deve ser `CONTACT
 <Note>
   Este endpoint só funciona quando a [janela de conversa](/conversation-window) de 24 horas estiver aberta.
 </Note>
+
+## Suporte por canal
+
+<SuporteContact />
+
+<Warning>
+  Instagram e Messenger não possuem mensagem de contato. Para esses canais, envie os dados
+  do contato como [mensagem de texto](/messages/send-text).
+</Warning>

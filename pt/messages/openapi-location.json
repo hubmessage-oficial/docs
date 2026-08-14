@@ -102,7 +102,7 @@
             "required": ["identifier"],
             "description": "Dados do destinatário",
             "properties": {
-              "identifier": { "type": "string", "description": "Telefone do destinatário (DDI + DDD + número)", "example": "5544936181064" },
+              "identifier": { "type": "string", "description": "Identificador do destinatário no canal. No WhatsApp Business, é o telefone com DDI + DDD + número. No Telegram, é o ID do chat.", "example": "5544936181064" },
               "name": { "type": "string", "description": "Nome do destinatário (opcional)", "example": "Nome do Destinatário" },
               "subject": { "type": "string", "description": "Título ou assunto (opcional)", "example": "Título" },
               "picture": { "type": "string", "description": "URL da foto do destinatário (opcional)", "example": "" }
@@ -112,7 +112,7 @@
             "type": "object",
             "description": "Dados do remetente (opcional)",
             "properties": {
-              "identifier": { "type": "string", "description": "Telefone do remetente", "example": "5544936181064" },
+              "identifier": { "type": "string", "description": "Identificador do remetente no canal. No WhatsApp Business, é o telefone com DDI + DDD + número. No Telegram, é o ID do chat.", "example": "5544936181064" },
               "name": { "type": "string", "description": "Nome do remetente", "example": "Nome do Remetente" },
               "picture": { "type": "string", "description": "URL da foto do remetente", "example": "" }
             }

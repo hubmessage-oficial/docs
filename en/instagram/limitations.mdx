@@ -1,0 +1,75 @@
+---
+title: "Features and limitations"
+description: "Message types, media formats, and Instagram platform restrictions"
+---
+
+## Message types
+
+| Type | Instagram | Notes |
+|---|---|---|
+| `TEXT` | Yes | — |
+| `IMAGE` | Yes | — |
+| `AUDIO` | Yes | Does not accept `.ogg` |
+| `VIDEO` | Yes | — |
+| `DOCUMENT` | PDF only | Other formats are not delivered |
+| `STICKER` | Converted | Delivered as an image |
+| `CONTACT` | No | The platform does not support contact messages |
+| `LOCATION` | No | The platform does not support location messages |
+| `INTERACTIVE_ACTION` | Coming soon | URL button only — Instagram does not support call buttons |
+| `INTERACTIVE_BUTTON` | Coming soon | Up to 13 buttons, title up to 20 characters |
+| `TEMPLATE` | No | Templates are available only on WhatsApp |
+
+<Warning>
+  Sending an unavailable type **does not return an error**. The API responds with `200`, but the message is not delivered.
+</Warning>
+
+## Media formats
+
+| Type | Accepted formats | Maximum size |
+|---|---|---|
+| Audio | `aac`, `m4a`, `wav`, `mp4` | 25 MB |
+| Image | `png`, `jpeg` | 8 MB |
+| Video | `mp4`, `ogg`, `avi`, `mov`, `webm` | 25 MB |
+| Document | `pdf` | 25 MB |
+
+<Warning>
+  **`.ogg` is not accepted for audio.** It appears in the video format list, but `.ogg` audio files are not delivered — and the request still returns `200`. Convert audio to `aac`, `m4a`, or `mp4` before sending it.
+</Warning>
+
+<Note>
+  `.webp` files sent as images work even though they are not listed in Meta's official formats — the platform converts the media during delivery. This is how stickers are delivered.
+</Note>
+
+## Conversation window
+
+The [24-hour window](/en/conversation-window) applies to Instagram. Because the platform **does not support templates**, the only way to reopen the window is for the customer to send a new message.
+
+In practice, you cannot start a conversation outside the window. You can only reply to someone who wrote first.
+
+## Customer identifier
+
+The customer ID is a numeric identifier assigned by Instagram. It is obtained from the [inbound webhook](/en/webhooks/payloads) at `message.sender.identifier`. It is not a username and cannot be derived from one.
+
+For a received message, `message.recipient.identifier` identifies the professional account. Use `message.sender.identifier` to capture the identifier of the customer who started the conversation.
+
+See [how to get it](/en/instagram/connection#getting-the-customer-identifier).
+
+## Webhook events
+
+Instagram sends message events. It **does not send** `CONNECTED`, `DISCONNECTED`, `PRESENCE_CHAT`, `INITIAL_DATA`, or `BLOCK` — see the [channel event table](/en/webhooks/introduction#available-events).
+
+In addition to regular messages, Instagram sends platform-specific interactions, all as `MESSAGE_RECEIVED`:
+
+| Interaction | Description |
+|---|---|
+| Story reply | The customer replied to a story from your account |
+| Story mention | The customer mentioned your account in a story |
+| Share | The customer sent a post in Direct |
+| Ad referral | The customer arrived through an ad or link with a referral |
+| Reaction | The customer reacted to a message with an emoji |
+
+Use the payload fields to distinguish each case — see [payload structure](/en/webhooks/payloads).
+
+<Note>
+  To compare support across all platforms, see the table in [free messages](/en/messages/introduction#available-types).
+</Note>

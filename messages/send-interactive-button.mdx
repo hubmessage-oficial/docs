@@ -4,12 +4,18 @@ description: "Envie mensagens de texto com botões de resposta rápida"
 openapi: "/pt/messages/openapi-interactive-button.json POST /v1/channels/{channelId}/messages"
 ---
 
+import SuporteInteractiveButton from '/snippets/suporte/interactive-button.mdx';
+
 ## Conceituação
 
 Envia uma mensagem de texto com botões de resposta rápida. O campo `content.type` deve ser `INTERACTIVE_BUTTON`. O destinatário pode escolher entre as opções apresentadas.
 
-Opcionalmente, você pode incluir uma **imagem** ou **vídeo** junto à mensagem usando os campos `thumbnail` e `mimeType` dentro do `body`.
+O corpo da requisição é o mesmo em todos os canais. O que muda são os limites e quais campos cada plataforma aproveita — as diferenças estão indicadas em cada campo abaixo.
 
 <Note>
   Este endpoint só funciona quando a [janela de conversa](/conversation-window) de 24 horas estiver aberta.
 </Note>
+
+## Suporte por canal
+
+<SuporteInteractiveButton />

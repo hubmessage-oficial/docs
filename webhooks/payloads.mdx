@@ -19,7 +19,7 @@ Toda requisição enviada ao seu webhook tem a seguinte estrutura de topo:
 | Campo | Tipo | Descrição |
 |---|---|---|
 | `message` | object | Objeto completo da mensagem |
-| `messageEventType` | string | Tipo do evento — atualmente `"NEW_MESSAGE"` para todos os eventos de mensagem |
+| `messageEventType` | string | Tipo do evento, quando presente. Esse campo pode não ser enviado em todos os eventos. |
 
 ## Campos comuns da mensagem
 
@@ -39,10 +39,84 @@ Todos os payloads compartilham os mesmos campos no objeto `message`, independent
 | `metadata.forwarded` | boolean | `true` se a mensagem foi encaminhada |
 | `sender.identifier` | string | Identificador de quem enviou |
 | `sender.name` | string | Nome de quem enviou |
-| `recipient.identifier` | string | Telefone do destinatário (DDI + DDD + número) |
+| `recipient.identifier` | string | Identificador do destinatário desta mensagem. O valor depende do canal e da direção (`metadata.from_me`); não assuma que ele seja sempre o cliente. |
 | `contents` | array | Conteúdos textuais e interativos da mensagem |
 | `attachments` | array | Anexos de mídia (imagem, áudio, vídeo, sticker) |
-| `webhook_processed` | boolean | Controle interno de processamento |
+| `media_webhook_processed` | boolean | Controle interno de processamento de mídia |
+
+<Note>
+  Os exemplos desta página usam mensagens do **WhatsApp Business** (`metadata.middleware: "META_WHATSAPP"`). Não use o formato ou o papel do `recipient.identifier` desses exemplos para outros canais: o identificador varia conforme a plataforma e a direção da mensagem.
+</Note>
+
+## Payload do Instagram
+
+O Hub Message normaliza o webhook do Instagram para o mesmo envelope usado pelos demais canais. A Meta envia os identificadores como `sender.id` e `recipient.id`; no webhook do Hub Message eles aparecem como `message.sender.identifier` e `message.recipient.identifier`.
+
+Em uma mensagem recebida do cliente (`metadata.from_me: false`), o identificador que deve ser guardado para responder é `message.sender.identifier`. O `message.recipient.identifier` é o identificador da conta profissional que recebeu a mensagem.
+
+```json
+{
+  "message": {
+    "_id": "...",
+    "tenant": "",
+    "tenant_owner": "",
+    "channel_id": "019FB4257427730B82F4E37B11B11382",
+    "created_by": "CONWAY",
+    "created": 1785968840699,
+    "metadata": {
+      "@class": ".Metadata",
+      "forwarded": false,
+      "from_api": false,
+      "from_me": false,
+      "middleware": "META_INSTAGRAM",
+      "moment": 1785968838347
+    },
+    "sender": {
+      "@class": ".Sender",
+      "identifier": "1073673115189819"
+    },
+    "recipient": {
+      "@class": ".Recipient",
+      "identifier": "17841437106730710"
+    },
+    "contents": [
+      {
+        "@class": ".TextContent",
+        "internal_information": {
+          "integration_id": "..."
+        },
+        "message": "opa",
+        "type": "TEXT"
+      }
+    ],
+    "attachments": [],
+    "actions": [],
+    "media_webhook_processed": false
+  }
+}
+```
+
+Neste exemplo, `1073673115189819` é o ID do cliente e `17841437106730710` é o ID da conta profissional. O campo `metadata.from_me` informa se a mensagem foi marcada como enviada pelo negócio; para responder ao cliente a partir de um evento de recebimento, use o `message.sender.identifier` recebido.
+
+### Particularidades de mídia
+
+No canal do Instagram, as mensagens podem aparecer no webhook com estas representações:
+
+| Mensagem enviada | Representação no webhook | Observação |
+|---|---|---|
+| Texto | `contents[0].type: "TEXT"` | O texto fica em `contents[0].message`. |
+| Imagem | `attachments[0].type: "IMAGE"` | Pode incluir `url`, `thumbnail_url` e `caption`. |
+| Documento | `attachments[0].type: "DOCUMENT"` | O anexo é entregue como documento. |
+| Sticker | `attachments[0].type: "IMAGE"` | O Instagram converte a figurinha em imagem; pode incluir `thumbnail_url`. |
+| Áudio `.m4a` | `attachments[0].type: "AUDIO"` | A URL recebida pode ser normalizada para um arquivo `.mp3`. |
+
+Áudio `.ogg` não é entregue como evento relacionado no webhook. Use os formatos de áudio documentados como suportados pelo Instagram.
+
+### Corpo compactado
+
+Alguns eventos podem chegar com o header HTTP `Content-Encoding: gzip`. O consumidor deve respeitar esse header e descompactar o corpo antes de interpretar o JSON. Frameworks HTTP que fazem a descompressão automaticamente já entregam o body pronto para leitura.
+
+O campo `messageEventType` é opcional e pode não ser enviado em eventos do Instagram. Quando ele não estiver presente, identifique o tipo do conteúdo em `contents[].type` ou `attachments[].type`.
 
 ## Tipos de conteúdo
 
@@ -101,7 +175,7 @@ O conteúdo fica em `contents[0]` com `type: "TEXT"`.
     ],
     "attachments": [],
     "actions": [],
-    "webhook_processed": false
+    "media_webhook_processed": false
   },
   "messageEventType": "NEW_MESSAGE"
 }
@@ -162,7 +236,7 @@ O anexo fica em `attachments[0]` com `type: "IMAGE"`. O campo `caption` é opcio
       }
     ],
     "actions": [],
-    "webhook_processed": false
+    "media_webhook_processed": false
   },
   "messageEventType": "NEW_MESSAGE"
 }
@@ -221,7 +295,7 @@ O anexo fica em `attachments[0]` com `type: "AUDIO"`.
       }
     ],
     "actions": [],
-    "webhook_processed": false
+    "media_webhook_processed": false
   },
   "messageEventType": "NEW_MESSAGE"
 }
@@ -281,7 +355,7 @@ O anexo fica em `attachments[0]` com `type: "VIDEO"`. O campo `caption` é opcio
       }
     ],
     "actions": [],
-    "webhook_processed": false
+    "media_webhook_processed": false
   },
   "messageEventType": "NEW_MESSAGE"
 }
@@ -339,7 +413,7 @@ O anexo fica em `attachments[0]` com `type: "STICKER"`. A URL aponta para um arq
       }
     ],
     "actions": [],
-    "webhook_processed": false
+    "media_webhook_processed": false
   },
   "messageEventType": "NEW_MESSAGE"
 }
@@ -408,7 +482,7 @@ O conteúdo fica em `contents[0]` com `type: "CONTACT_ARRAY"`. O array `contacts
     ],
     "attachments": [],
     "actions": [],
-    "webhook_processed": false
+    "media_webhook_processed": false
   },
   "messageEventType": "NEW_MESSAGE"
 }
@@ -416,9 +490,11 @@ O conteúdo fica em `contents[0]` com `type: "CONTACT_ARRAY"`. O array `contacts
 
 ---
 
-### INTERACTIVE_BUTTON — Botões de resposta rápida (texto)
+### INTERACTIVE_BUTTON — Botões de resposta rápida (WhatsApp Business)
 
 O conteúdo fica em `contents[0]` com `type: "INTERACTIVE_BUTTON"`. O campo `internal_information.mediaButtonType` indica o tipo de mídia anexada: `"TEXT"` quando não há mídia.
+
+Os exemplos de `INTERACTIVE_BUTTON` abaixo representam mensagens enviadas pela API no **WhatsApp Business**. Embora o corpo da requisição seja comum entre os canais, esse tipo está **Em breve** no Instagram, conforme as [limitações da plataforma](/instagram/limitations), e ainda não deve ser usado nesse canal.
 
 ```json
 {
@@ -490,7 +566,7 @@ O conteúdo fica em `contents[0]` com `type: "INTERACTIVE_BUTTON"`. O campo `int
     ],
     "attachments": [],
     "actions": [],
-    "webhook_processed": false
+    "media_webhook_processed": false
   },
   "messageEventType": "NEW_MESSAGE"
 }
@@ -498,7 +574,7 @@ O conteúdo fica em `contents[0]` com `type: "INTERACTIVE_BUTTON"`. O campo `int
 
 ---
 
-### INTERACTIVE_BUTTON — Botões de resposta rápida (com imagem)
+### INTERACTIVE_BUTTON — Botões de resposta rápida com imagem (WhatsApp Business)
 
 Quando `internal_information.mediaButtonType` é `"IMAGE"`, o campo `thumbnail` contém a URL da imagem exibida acima dos botões.
 
@@ -566,7 +642,7 @@ Quando `internal_information.mediaButtonType` é `"IMAGE"`, o campo `thumbnail` 
     ],
     "attachments": [],
     "actions": [],
-    "webhook_processed": false
+    "media_webhook_processed": false
   },
   "messageEventType": "NEW_MESSAGE"
 }
@@ -660,7 +736,7 @@ O conteúdo fica em `contents[0]` com `type: "INTERACTIVE_ACTION"`. Cada botão 
     ],
     "attachments": [],
     "actions": [],
-    "webhook_processed": false
+    "media_webhook_processed": false
   },
   "messageEventType": "NEW_MESSAGE"
 }

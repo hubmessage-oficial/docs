@@ -21,27 +21,40 @@ Customer sends message → Hub Message → POST to your URL → Your system proc
 
 ## Available events
 
-| Event | When it is triggered |
-|---|---|
-| `MESSAGE_RECEIVED` | A message was received on the channel |
-| `MESSAGE_DELIVERY` | Delivery confirmation for a sent message |
-| `MESSAGE_STATUS` | Message status update (read, failed, etc.) |
-| `RECEIVED_STATUS` | Combined received and status |
-| `RECEIVED_AND_DELIVERY` | Combined received and delivery |
-| `CONNECTED` | The channel was connected |
-| `DISCONNECTED` | The channel was disconnected |
-| `PRESENCE_CHAT` | Contact presence or typing indicator |
-| `INITIAL_DATA` | Initial data sync when channel connects |
-| `BLOCK` | Contact block event |
+Not every event exists on every channel. The table below shows which events are emitted by each one.
+
+| Event | When it is triggered | WhatsApp Business | Instagram | Messenger | Telegram Bot |
+|---|---|---|---|---|---|
+| `MESSAGE_RECEIVED` | A message was received on the channel | Yes | Yes | Yes | Yes |
+| `MESSAGE_DELIVERY` | Delivery confirmation for a sent message | Yes | Yes | Yes | No |
+| `MESSAGE_STATUS` | Message status update (read, failed, etc.) | Yes | Yes | Yes | No |
+| `RECEIVED_STATUS` | Combined received and status | Yes | Yes | Yes | No |
+| `RECEIVED_AND_DELIVERY` | Combined received and delivery | Yes | Yes | Yes | Yes |
+| `CONNECTED` | The channel was connected | No | No | No | No |
+| `DISCONNECTED` | The channel was disconnected | No | No | No | No |
+| `PRESENCE_CHAT` | Contact presence or typing indicator | No | No | No | No |
+| `INITIAL_DATA` | Template status or category update | Yes | No | No | No |
+| `BLOCK` | Contact block event | No | No | No | No |
+
+<Warning>
+  Registering an event that does not exist on the channel **does not return an error**. The webhook is created normally, but it never receives anything. Check this table before configuring it.
+</Warning>
+
+<Note>
+  `INITIAL_DATA` is used for WhatsApp Business template events, such as a status or category change. It does not apply to Instagram, Messenger, or Telegram Bot.
+</Note>
+
+<Note>
+  The Telegram Bot API does not report message delivery or read status. Therefore, `MESSAGE_DELIVERY`, `MESSAGE_STATUS`, and `RECEIVED_STATUS` are not emitted for this channel — use `MESSAGE_RECEIVED` to know that the customer replied.
+</Note>
 
 ## Payload formats
 
-{projectName} supports three payload formats:
+The public documentation currently documents one payload format: `DEFAULT`. It delivers the event normalized by Hub Message in the standard webhook envelope.
 
 | Format | Description |
 |---|---|
 | `DEFAULT` | Standard Hub Message format |
-{/* | `Z_API` | Z-API compatible format — ideal for migration or systems already integrated with Z-API | */}
 
 
 ## Webhook authentication

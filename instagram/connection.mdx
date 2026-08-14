@@ -1,0 +1,126 @@
+---
+title: "Conectar canal"
+description: "Conecte uma conta do Instagram ao Hub Message pelo Dashboard ou pelo SDK"
+---
+
+import { projectName, frontendUrl, npmPackage } from '/snippets/variables.mdx';
+
+## Visão geral
+
+Após [criar um canal](/channels/create-channel) do tipo `META_INSTAGRAM`, você precisa **conectá-lo** a uma conta profissional do Instagram. Existem duas formas:
+
+- **Pelo painel** — fluxo guiado no [Dashboard]({frontendUrl})
+- **Via SDK + API** — para que o seu usuário conecte a conta de dentro do seu próprio sistema
+
+Confira os [pré-requisitos](/instagram/introduction#pré-requisitos) antes de começar. Uma conta pessoal não pode ser conectada.
+
+## Conexão pelo painel
+
+A forma mais simples. Acesse o [Dashboard]({frontendUrl}), vá em **Adicionar canal → Instagram** e siga o fluxo guiado.
+
+Uma janela do Instagram vai abrir pedindo autorização. Faça login com a conta profissional que deseja conectar e aceite as permissões solicitadas.
+
+## Conexão via SDK + API
+
+Use este fluxo quando quiser que o **seu usuário** conecte a conta de dentro do **seu sistema**, sem acessar o painel do {projectName}.
+
+<Steps>
+  <Step title="Frontend — Iniciar conexão com o SDK">
+    No frontend da sua aplicação, use o SDK para iniciar o fluxo. Ele abre a autorização do Instagram e devolve o código de autenticação.
+
+    ```javascript
+    import HubMessage from '{npmPackage}';
+
+    const client = HubMessage.newClient({
+      publicKey: 'SUA_PUBLIC_KEY'
+    });
+
+    const response = await client.connect({
+      channelId: 'ID_DO_CANAL'
+    });
+
+    // Envie o response para o seu backend
+    ```
+
+    <Tip>
+      O SDK detecta o tipo do canal automaticamente. Para um canal `META_INSTAGRAM`, ele abre a autorização do Instagram — o mesmo método `connect()` atende todos os canais.
+    </Tip>
+  </Step>
+  <Step title="Backend — Finalizar a conexão via API">
+    A partir do **seu backend**, envie o retorno do SDK para o endpoint de ativação do Instagram usando sua **Secret Key**:
+
+    `POST /v1/channels/{channelId}/activate-instagram`
+
+    O corpo aceita uma das duas formas de autenticação:
+
+    | Fluxo | Campos necessários |
+    |---|---|
+    | Credenciais diretas | `igId` e `accessToken` |
+    | OAuth | `code` e `redirectUri` |
+
+    ```bash
+    curl -X POST https://api.hubmessage.io/v1/channels/ID_DO_CANAL/activate-instagram \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer SUA_SECRET_KEY" \
+      -d '{
+        "igId": "ID_DA_CONTA_INSTAGRAM",
+        "accessToken": "TOKEN_DE_ACESSO",
+        "code": "",
+        "redirectUri": ""
+      }'
+    ```
+
+    No fluxo OAuth, preencha `code` e `redirectUri` e deixe `igId` e `accessToken` vazios.
+  </Step>
+  <Step title="Confirme o recebimento">
+    Peça para alguém enviar uma mensagem no Direct da conta conectada. Se o [webhook](/webhooks/introduction) receber o evento, a conexão está funcionando.
+  </Step>
+</Steps>
+
+## Permissões solicitadas
+
+Durante a autorização, o Instagram pede duas permissões:
+
+| Permissão | Para que serve |
+|---|---|
+| `instagram_business_basic` | Ler dados básicos do perfil profissional |
+| `instagram_business_manage_messages` | Enviar e receber mensagens do Direct |
+
+<Warning>
+  Se o usuário recusar `instagram_business_manage_messages`, a conexão é concluída mas nenhuma mensagem é enviada ou recebida. Nesse caso, refaça a conexão aceitando todas as permissões.
+</Warning>
+
+## Como obter o identificador do cliente
+
+No Instagram, os identificadores são numéricos e não são um telefone nem o @ do usuário. Para uma mensagem recebida, o ID do cliente chega no webhook do Hub Message em `message.sender.identifier`.
+
+A Meta envia esse valor como `sender.id` no payload bruto. O Hub Message normaliza o campo para `message.sender.identifier`. Guarde esse ID para responder ao cliente.
+
+```json
+{
+  "message": {
+    "metadata": {
+      "from_me": false,
+      "middleware": "META_INSTAGRAM"
+    },
+    "sender": { "identifier": "1073673115189819" },
+    "recipient": { "identifier": "17841437106730710" },
+    "contents": [
+      {
+        "message": "Olá",
+        "type": "TEXT"
+      }
+    ]
+  }
+}
+```
+
+Neste exemplo, `1073673115189819` é o identificador que você usa para responder ao cliente. O `recipient.identifier` é o identificador da conta profissional que recebeu a mensagem. O campo `from_me` informa se a mensagem foi marcada como enviada pelo negócio.
+
+<Note>
+  A estrutura normalizada do Hub Message é diferente do payload bruto recebido diretamente da Meta, mas os identificadores são os mesmos: `sender.id` vira `message.sender.identifier` e `recipient.id` vira `message.recipient.identifier`.
+</Note>
+
+<Note>
+  Não é possível deduzir esse ID a partir do nome de usuário. Só é possível responder a quem já enviou uma mensagem — o que também é exigido pela [janela de conversa](/conversation-window).
+</Note>

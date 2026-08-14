@@ -21,6 +21,7 @@
     "/pt/messages/openapi-image.json",
     "/pt/messages/openapi-audio.json",
     "/pt/messages/openapi-video.json",
+    "/pt/messages/openapi-document.json",
     "/pt/messages/openapi-contact.json",
     "/pt/messages/openapi-sticker.json",
     "/pt/messages/openapi-interactive-action.json",
@@ -29,6 +30,7 @@
     "/pt/messages/openapi-template.json",
     "/pt/webhooks/openapi.json",
     "/en/channels/openapi-create.json",
+    "/en/channels/openapi-create-channel.json",
     "/en/channels/openapi-connect.json",
     "/en/channels/openapi-disconnect.json",
     "/en/channels/openapi-subscribe.json",
@@ -39,6 +41,7 @@
     "/en/messages/openapi-image.json",
     "/en/messages/openapi-audio.json",
     "/en/messages/openapi-video.json",
+    "/en/messages/openapi-document.json",
     "/en/messages/openapi-contact.json",
     "/en/messages/openapi-sticker.json",
     "/en/messages/openapi-interactive-action.json",
@@ -93,10 +96,29 @@
                     "group": "Recursos e Configurações",
                     "pages": [
                       "whatsapp-official/migrate-number",
-                      "whatsapp-official/24h-window",
                       "whatsapp-official/message-template"
                     ]
                   }
+                ]
+              },
+              {
+                "group": "Instagram",
+                "pages": [
+                  "instagram/introduction",
+                  "instagram/connection",
+                  "instagram/limitations"
+                ]
+              },
+              {
+                "group": "Messenger",
+                "pages": [
+                  "messenger/connection"
+                ]
+              },
+              {
+                "group": "Telegram",
+                "pages": [
+                  "telegram/connection"
                 ]
               },
               {
@@ -111,7 +133,6 @@
                   "channels/delete-channel"
                 ]
               },
-
               {
                 "group": "Templates",
                 "pages": [
@@ -128,16 +149,18 @@
               {
                 "group": "Mensagens livres",
                 "pages": [
+                  "conversation-window",
                   "messages/introduction",
                   "messages/send-text",
                   "messages/send-image",
                   "messages/send-audio",
                   "messages/send-video",
+                  "messages/send-document",
                   "messages/send-contact",
                   "messages/send-sticker",
                   "messages/send-interactive-action",
                   "messages/send-interactive-button",
-                  "pt/messages/send-location"
+                  "messages/send-location"
                 ]
               },
               {
@@ -200,10 +223,29 @@
                     "group": "Resources and Settings",
                     "pages": [
                       "en/whatsapp-official/migrate-number",
-                      "en/whatsapp-official/24h-window",
                       "en/whatsapp-official/message-template"
                     ]
                   }
+                ]
+              },
+              {
+                "group": "Instagram",
+                "pages": [
+                  "en/instagram/introduction",
+                  "en/instagram/connection",
+                  "en/instagram/limitations"
+                ]
+              },
+              {
+                "group": "Messenger",
+                "pages": [
+                  "en/messenger/connection"
+                ]
+              },
+              {
+                "group": "Telegram",
+                "pages": [
+                  "en/telegram/connection"
                 ]
               },
               {
@@ -234,11 +276,13 @@
               {
                 "group": "Free messages",
                 "pages": [
+                  "en/conversation-window",
                   "en/messages/introduction",
                   "en/messages/send-text",
                   "en/messages/send-image",
                   "en/messages/send-audio",
                   "en/messages/send-video",
+                  "en/messages/send-document",
                   "en/messages/send-contact",
                   "en/messages/send-sticker",
                   "en/messages/send-interactive-action",
@@ -286,15 +330,15 @@
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {

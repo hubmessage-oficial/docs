@@ -21,9 +21,11 @@ Cliente envia mensagem → Janela abre (24h) → Você envia mensagens livres
 
 ## E se a janela estiver fechada?
 
-Se o cliente não enviou mensagem nas últimas 24 horas, a janela está fechada. Nesse caso, a única opção é enviar um **template aprovado pela Meta** através do endpoint [Enviar template](/messages/send-template).
+Se o cliente não enviou mensagem nas últimas 24 horas, a janela está fechada.
 
-Depois que o cliente **responder** o template, a janela reabre e você volta a poder usar mensagens livres.
+**No WhatsApp**, a única opção é enviar um **template aprovado pela Meta** através do endpoint [Enviar template](/messages/send-template). Depois que o cliente **responder** o template, a janela reabre e você volta a poder usar mensagens livres.
+
+**No Instagram**, não existe sistema de templates: só uma nova mensagem do cliente reabre a janela.
 
 ```
 Janela fechada → Enviar template → Cliente responde → Janela reabre (24h)
@@ -41,14 +43,23 @@ Todos os endpoints desta seção utilizam a mesma rota:
 
 O que muda é o campo `content.type`:
 
-| Tipo | Descrição |
-|---|---|
-| `TEXT` | Mensagem de texto simples |
-| `IMAGE` | Mensagem com imagem |
-| `AUDIO` | Mensagem de áudio |
-| `VIDEO` | Mensagem com vídeo |
-| `CONTACT` | Envio de contato |
-| `STICKER` | Sticker (figurinha) |
-| `INTERACTIVE_ACTION` | Mensagem com botões de ação (URL e ligar) |
-| `INTERACTIVE_BUTTON` | Mensagem com botões de resposta rápida |
-| `TEMPLATE` | Template aprovado pela Meta (fora da janela de 24h) |
+| Tipo | Descrição | WhatsApp Business | Instagram | Messenger | Telegram Bot |
+|---|---|---|---|---|---|
+| `TEXT` | Texto simples | Sim | Sim | Sim | Sim |
+| `IMAGE` | Imagem | Sim | Sim | Sim | Sim |
+| `AUDIO` | Áudio | Sim | Sim | Sim | Sim |
+| `VIDEO` | Vídeo | Sim | Sim | Sim | Sim |
+| `DOCUMENT` | Arquivo | Sim | Somente PDF | Sim | Sim |
+| `STICKER` | Sticker (figurinha) | Sim | Como imagem | Como imagem | Sim |
+| `CONTACT` | Contato | Sim | Não | Não | Sim |
+| `LOCATION` | Localização | Sim | Não | Não | Sim |
+| `INTERACTIVE_ACTION` | Botões de ação com URL | Sim | Em breve | Em breve | Sim |
+| `INTERACTIVE_BUTTON` | Botões de resposta rápida | Sim | Em breve | Sim | Sim |
+| `TEMPLATE` | Template aprovado pela Meta | Sim | Não | Não | Não |
+
+<Warning>
+  Enviar um tipo indisponível no canal **não retorna erro** na requisição. A API responde `200`, mas a mensagem não é entregue. Confira esta tabela antes de integrar.
+</Warning>
+
+Quando houver diferenças de suporte ou formato entre os canais, a página de envio
+correspondente explica essas particularidades.

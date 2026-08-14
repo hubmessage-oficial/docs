@@ -1,12 +1,22 @@
 ---
 title: "Send sticker"
-description: "Send stickers via WhatsApp"
+description: "Send stickers through supported channels"
 openapi: "/en/messages/openapi-sticker.json POST /v1/channels/{channelId}/messages"
 ---
 
 ## Overview
 
-Sends a sticker to a contact. The `content.type` field must be `STICKER` and the sticker is sent via URL in the `attachments` array.
+Sends a sticker to a contact. The `content.type` field must be `STICKER` and the sticker is sent via URL in the `attachments` array. Use a URL for a WebP file.
+
+<Info>
+  On Instagram and Messenger, the sticker is delivered as an image message
+  (`IMAGE`). On WhatsApp Business and Telegram Bot, it is sent as a sticker.
+</Info>
+
+<Warning>
+  Instagram may respond with `200` even when the format or type is not delivered.
+  For this channel, use WebP and expect the message to arrive as an image.
+</Warning>
 
 <Note>
   This endpoint only works when the [conversation window](/en/conversation-window) is open (24 hours).

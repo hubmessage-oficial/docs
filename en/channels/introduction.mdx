@@ -7,17 +7,40 @@ import { projectName, frontendUrl } from '/snippets/variables.mdx';
 
 ## What is a channel?
 
-In {projectName}, a **channel** represents a connection to WhatsApp via the Meta Official API.
+In {projectName}, a **channel** represents a connection to a messaging platform — for example, a WhatsApp Business number, an Instagram account, or a Telegram bot.
 
-Each channel is linked to a WhatsApp Business phone number. For example, connecting the number `+55 11 99999-9999` creates a channel with a unique `channelId` used in all API calls.
+Each channel receives a unique `channelId`, used in all API calls to send [free messages](/en/messages/introduction), [templates](/en/messages/send-template), configure webhooks, and more.
 
-The `channelId` is the unique identifier for the channel and is used in all API calls to send [free messages](/en/messages/introduction), [templates](/en/messages/send-template), webhooks, etc.
+**Channel creation, message sending, and webhook management use a common API surface for all channels.** Payloads use the `channelId` of the selected channel. Connection/activation flows and supported message types may vary by platform.
 
-## Supported platform
+## Supported platforms
 
-| Platform | Type | Status |
+The names below match the options shown under **Add channel** in the Dashboard. The API creation contract is documented separately on the [Create channel](/en/channels/create-channel) page. The public API (`POST /v1/channels`) requires the **ENTERPRISE** role; creation through the Dashboard follows the flow available in the product.
+
+| Platform | Type | Recipient identifier |
 |---|---|---|
-| **WhatsApp** (Meta Official API) | `META_WHATSAPP` | Available |
+| **WhatsApp Business** | `META_WHATSAPP` | Phone number with country code and area code |
+| **Instagram** | `META_INSTAGRAM` | User ID obtained from the inbound webhook |
+| **Messenger** | `META_MESSENGER` | User ID obtained from the inbound webhook |
+| **Telegram Bot** | `BOT_TELEGRAM` | Chat ID obtained from the inbound webhook |
+
+<Note>
+  All four types above are available in the product and accepted by the API channel creation endpoint. After creation, each platform follows its own connection or activation flow.
+</Note>
+
+## Platform differences
+
+Each platform supports a different set of message types and may impose its own limits. The table in [free messages](/en/messages/introduction) summarizes what applies to each channel, and each send page contains the details.
+
+The main points are:
+
+**Not every type exists on every channel.** Instagram and Messenger do not support contact or location messages; only WhatsApp Business supports templates. Sending an unavailable type does not return an error — the message is simply not delivered.
+
+**The recipient identifier varies by platform.** For WhatsApp Business it is the phone number. For the other platforms it is an ID assigned by the platform, obtained from the [inbound webhook](/en/webhooks/payloads) when the customer writes to you — it is not a phone number and cannot be derived.
+
+**A `200` response confirms acceptance, not delivery.** Sending is asynchronous. Follow the actual result through [status webhooks](/en/webhooks/payloads).
+
+The [24-hour conversation window](/en/conversation-window) applies to WhatsApp Business, Instagram, and Messenger. Telegram Bot has no such restriction: you can send messages at any time.
 
 ## Flow to get started
 
@@ -26,10 +49,10 @@ The `channelId` is the unique identifier for the channel and is used in all API 
     If you haven't already, generate your **Public Key** and **Secret Key** at [Authentication](/en/authentication).
   </Step>
   <Step title="Create the channel">
-    Create a new channel via the [Dashboard]({frontendUrl}) or via API using the [Create channel](/en/channels/create-channel) endpoint.
+    Create a new channel through the [Dashboard]({frontendUrl}) or, for the documented types, through the [Create channel](/en/channels/create-channel) API endpoint. API channel creation requires the **ENTERPRISE** role.
   </Step>
   <Step title="Connect the channel">
-    Use the [SDK + API connection flow](/en/channels/connect-channel), which integrates with the official Meta authentication.
+    Use the platform-specific connection flow: [WhatsApp Business through SDK + API](/en/channels/connect-channel), [Instagram through the Dashboard or SDK](/en/instagram/connection), [Messenger through the Dashboard or API](/en/messenger/connection), or [Telegram through the Dashboard or API](/en/telegram/connection).
   </Step>
   <Step title="Activate subscription (ENTERPRISE accounts)">
     Partners and resellers with the ENTERPRISE role must activate the channel subscription via [Subscribe channel](/en/channels/subscribe-channel) before use.

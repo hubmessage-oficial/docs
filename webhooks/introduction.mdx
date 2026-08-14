@@ -21,27 +21,40 @@ Cliente envia mensagem → Hub Message → POST para sua URL → Seu sistema pro
 
 ## Eventos disponíveis
 
-| Evento | Quando é disparado |
-|---|---|
-| `MESSAGE_RECEIVED` | Uma mensagem foi recebida no canal |
-| `MESSAGE_DELIVERY` | Confirmação de entrega de uma mensagem enviada |
-| `MESSAGE_STATUS` | Atualização de status de uma mensagem (lida, falha, etc.) |
-| `RECEIVED_STATUS` | Combinação de recebimento e status |
-| `RECEIVED_AND_DELIVERY` | Combinação de recebimento e entrega |
-| `CONNECTED` | O canal foi conectado |
-| `DISCONNECTED` | O canal foi desconectado |
-| `PRESENCE_CHAT` | Indicador de presença ou digitação de um contato |
-| `INITIAL_DATA` | Sincronização inicial de dados ao conectar o canal |
-| `BLOCK` | Evento de bloqueio de contato |
+Nem todo evento existe em todo canal. A tabela abaixo indica quais são disparados em cada um.
+
+| Evento | Quando é disparado | WhatsApp Business | Instagram | Messenger | Telegram Bot |
+|---|---|---|---|---|---|
+| `MESSAGE_RECEIVED` | Uma mensagem foi recebida no canal | Sim | Sim | Sim | Sim |
+| `MESSAGE_DELIVERY` | Confirmação de entrega de uma mensagem enviada | Sim | Sim | Sim | Não |
+| `MESSAGE_STATUS` | Atualização de status de uma mensagem (lida, falha, etc.) | Sim | Sim | Sim | Não |
+| `RECEIVED_STATUS` | Combinação de recebimento e status | Sim | Sim | Sim | Não |
+| `RECEIVED_AND_DELIVERY` | Combinação de recebimento e entrega | Sim | Sim | Sim | Sim |
+| `CONNECTED` | O canal foi conectado | Não | Não | Não | Não |
+| `DISCONNECTED` | O canal foi desconectado | Não | Não | Não | Não |
+| `PRESENCE_CHAT` | Indicador de presença ou digitação de um contato | Não | Não | Não | Não |
+| `INITIAL_DATA` | Atualização de status ou categoria de um template | Sim | Não | Não | Não |
+| `BLOCK` | Evento de bloqueio de contato | Não | Não | Não | Não |
+
+<Warning>
+  Cadastrar um evento que não existe no canal **não retorna erro**. O webhook é criado normalmente, mas nunca recebe nada. Confira esta tabela antes de configurar.
+</Warning>
+
+<Note>
+  `INITIAL_DATA` é usado para eventos de templates do WhatsApp Business, como alteração de status ou categoria. Ele não se aplica a Instagram, Messenger ou Telegram Bot.
+</Note>
+
+<Note>
+  A Bot API do Telegram não informa entrega nem leitura de mensagens. Por isso `MESSAGE_DELIVERY`, `MESSAGE_STATUS` e `RECEIVED_STATUS` não são disparados nesse canal — use `MESSAGE_RECEIVED` para saber que o cliente respondeu.
+</Note>
 
 ## Formatos de payload
 
-O {projectName} suporta três formatos de payload:
+Na documentação pública, o formato de payload documentado é `DEFAULT`. Ele entrega o evento normalizado pelo Hub Message no envelope padrão do webhook.
 
 | Formato | Descrição |
 |---|---|
 | `DEFAULT` | Formato padrão do Hub Message |
-{/* | `Z_API` | Formato compatível com a Z-API — ideal para migração ou sistemas já integrados com Z-API | */}
 
 
 ## Autenticação do webhook

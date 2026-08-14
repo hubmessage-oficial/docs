@@ -1,0 +1,59 @@
+---
+title: "Introduction"
+description: "Connect your Instagram account and receive Direct messages in Hub Message"
+---
+
+import { projectName, frontendUrl } from '/snippets/variables.mdx';
+
+## Overview
+
+The **Instagram** channel connects a professional Instagram account to {projectName}, allowing you to send and receive **Direct** messages through the same API used by the other channels.
+
+Here you will learn how to:
+
+- Prepare your Instagram account for the integration
+- Connect the channel through the Dashboard or SDK
+- Understand the platform's features and limitations
+
+## Requirements
+
+<Steps>
+  <Step title="A professional Instagram account">
+    The account must be **professional** — Business or Creator. Personal accounts cannot be connected.
+
+    You can switch account types for free in the Instagram app under **Settings → Account type**.
+  </Step>
+  <Step title="Instagram Direct messaging enabled">
+    In the Instagram app, enable **Settings → Messages → Allow access to messages**. Without this permission, the connection completes but no messages are received.
+  </Step>
+</Steps>
+
+<Note>
+  **You do not need a Facebook Page.** Unlike older integrations, this connection is made directly to the Instagram account.
+</Note>
+
+## What you can send
+
+| Type | Instagram |
+|---|---|
+| Text, image, audio, and video | Yes |
+| Document | PDF only |
+| Sticker | Delivered as an image |
+| Contact and location | Not available |
+| Buttons | Coming soon |
+| Templates | Not available |
+
+See the details in [Features and limitations](/en/instagram/limitations), or the [comparison across all channels](/en/messages/introduction#available-types).
+
+<CardGroup cols={2}>
+  <Card title="Connect channel" icon="link" href="/en/instagram/connection">
+    Connect your account through the Dashboard or SDK
+  </Card>
+  <Card title="Features and limitations" icon="circle-info" href="/en/instagram/limitations">
+    Message types, media formats, and platform restrictions
+  </Card>
+</CardGroup>
+
+<Note>
+  If you do not have a channel yet, first learn how to [create a channel](/en/channels/create-channel).
+</Note>

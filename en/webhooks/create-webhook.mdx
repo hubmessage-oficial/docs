@@ -10,6 +10,10 @@ Registers a new webhook endpoint on the channel. From creation onwards, {project
 
 A channel can have multiple webhooks — useful for sending different events to different systems, or for maintaining webhooks with different formats.
 
+<Note>
+  Not every event exists on every channel. Check the [event table by channel](/en/webhooks/introduction#available-events) before configuring a webhook — registering an unavailable event does not return an error, but the webhook will never receive it.
+</Note>
+
 ### HMAC signing
 
 If `signing: true`, a `secret` is automatically generated and returned **only in this response**. Store it securely — it will not be shown again in any other call.

@@ -1,0 +1,129 @@
+---
+title: "Conectar canal Messenger"
+description: "Conecte uma Página do Facebook ao Hub Message para usar o Messenger"
+---
+
+import { frontendUrl } from '/snippets/variables.mdx';
+
+## Visão geral
+
+Após [criar um canal](/channels/create-channel) do tipo `META_MESSENGER`, conecte uma Página do Facebook para enviar e receber mensagens pelo Messenger.
+
+Existem duas formas de fazer a conexão:
+
+- **Pelo painel** — use o fluxo guiado no [Dashboard]({frontendUrl}).
+- **Via API** — faça a autorização da Meta no seu sistema, liste as páginas disponíveis e ative o canal com a página escolhida.
+
+<Note>
+  A Página do Facebook é o recurso conectado ao canal. O identificador usado nas mensagens recebidas é obtido pelo webhook; ele não é o telefone nem o nome de usuário do contato.
+</Note>
+
+## Conexão via API
+
+O fluxo via API usa duas chaves em momentos diferentes:
+
+| Operação | Credencial |
+|---|---|
+| Listar as páginas autorizadas | **Public Key** |
+| Ativar o canal com a página escolhida | **Secret Key** |
+
+### 1. Obtenha um código OAuth da Meta
+
+Inicie no seu frontend o fluxo de autorização da Meta para que o usuário conceda acesso às Páginas que deseja conectar. Ao concluir, você receberá um `code` e deverá manter o mesmo `redirectUri` usado na autorização.
+
+O código é de uso único. Não o reutilize depois de trocá-lo ou depois que ele expirar.
+
+### 2. Liste as páginas disponíveis
+
+Envie o `code` e o `redirectUri` para:
+
+`POST /v1/channels/{channelId}/list-messenger-pages`
+
+```bash
+curl -X POST https://api.hubmessage.io/v1/channels/ID_DO_CANAL/list-messenger-pages \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SUA_PUBLIC_KEY" \
+  -d '{
+    "code": "CODIGO_OAUTH_DA_META",
+    "redirectUri": "https://seuapp.com/oauth/meta/callback"
+  }'
+```
+
+A resposta é uma lista. Cada item contém a página, sua categoria e o token necessário para ativá-la:
+
+```json
+[
+  {
+    "pageId": "123456789012345",
+    "name": "Minha Página",
+    "accessToken": "TOKEN_DA_PAGINA",
+    "category": "Empresa"
+  }
+]
+```
+
+<Warning>
+  `accessToken` é uma credencial da Página. Trate-o como segredo, não o exiba no frontend nem o registre em logs. Use-o somente no backend para ativar o canal.
+</Warning>
+
+### 3. Ative o canal
+
+Escolha uma página da lista e chame:
+
+`POST /v1/channels/{channelId}/activate-messenger`
+
+Use a **Secret Key** no cabeçalho. Quando você já listou as páginas, envie o `pageId` e o `accessToken` da página escolhida:
+
+```bash
+curl -X POST https://api.hubmessage.io/v1/channels/ID_DO_CANAL/activate-messenger \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SUA_SECRET_KEY" \
+  -d '{
+    "pageId": "123456789012345",
+    "accessToken": "TOKEN_DA_PAGINA",
+    "code": "",
+    "redirectUri": ""
+  }'
+```
+
+Também é possível enviar `code` e `redirectUri` diretamente nessa chamada. Nesse caso, o Hub Message troca o código, lista as páginas e usa `pageId` para selecionar uma delas. Se houver apenas uma página, `pageId` pode ser omitido; se houver mais de uma, ele é obrigatório.
+
+```json
+{
+  "pageId": "123456789012345",
+  "accessToken": "",
+  "code": "CODIGO_OAUTH_DA_META",
+  "redirectUri": "https://seuapp.com/oauth/meta/callback"
+}
+```
+
+Uma ativação bem-sucedida retorna:
+
+```json
+{
+  "pageId": "123456789012345",
+  "connected": true,
+  "pageName": "Minha Página",
+  "pageCategory": "Empresa",
+  "displayName": "Minha Página"
+}
+```
+
+Durante a ativação, o Hub Message vincula a Página ao canal e configura a assinatura dos eventos de mensagens da Meta. Depois disso, os eventos recebidos serão entregues ao [webhook configurado](/webhooks/introduction).
+
+## Desconectar o canal
+
+Para desativar a integração do Messenger, use:
+
+`POST /v1/channels/{channelId}/deactivate-messenger`
+
+```bash
+curl -X POST https://api.hubmessage.io/v1/channels/ID_DO_CANAL/deactivate-messenger \
+  -H "Authorization: Bearer SUA_SECRET_KEY"
+```
+
+Essa operação remove a associação da Página com o canal e interrompe a assinatura dos eventos.
+
+## Próximos passos
+
+Com o canal conectado, use o `channelId` para enviar [mensagens livres](/messages/introduction). Para responder a uma conversa, use o identificador do contato recebido em `message.sender.identifier` no [webhook](/webhooks/payloads).
