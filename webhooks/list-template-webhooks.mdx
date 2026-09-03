@@ -1,0 +1,15 @@
+---
+title: "Listar webhooks de template"
+description: "Liste os webhooks de template do tenant"
+openapi: "/pt/webhooks/openapi-template.json GET /v1/webhooks"
+---
+
+## Conceituação
+
+Retorna os webhooks de template habilitados do tenant, escopados pelo `Authorization` — não há acesso cross-tenant.
+
+As credenciais de autenticação e o `secret` de assinatura **não são retornados** por segurança.
+
+<Note>
+  Este endpoint requer a role **ENTERPRISE** na sua conta.
+</Note>

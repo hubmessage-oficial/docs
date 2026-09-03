@@ -1,0 +1,74 @@
+---
+title: "Template webhooks"
+description: "Receive WhatsApp template events independently of any instance"
+---
+
+import { projectName } from '/snippets/variables.mdx';
+
+## What are template webhooks?
+
+Unlike **channel** webhooks, {projectName} offers **template webhooks** — endpoints that receive exclusively WhatsApp template events and do **not** depend on an instance (`instanceId = null`).
+
+They coexist with the per-channel webhook routes, which remain unchanged. Template event routing is handled by the internal service independently of any instance.
+
+<Note>
+  The concepts common to both webhook types (**ENTERPRISE** role, authentication, HMAC signing, and payload formats) are in the [Introduction](/en/webhooks/introduction).
+</Note>
+
+## Authentication
+
+All routes require the header:
+
+```
+Authorization: Bearer <secret-key>
+```
+
+## Accepted template events
+
+A template webhook accepts **only** template events. Sending any non-template event results in `422`.
+
+| Value (exact, SNAKE_CASE) | Meaning |
+|---|---|
+| `UPDATE_TEMPLATE_STATUS` | Template status update (approved/rejected etc.) |
+| `UPDATE_TEMPLATE_CATEGORY` | Template category update |
+
+## Business rules
+
+1. **Event scope (required).**
+   - **Template** webhook → only accepts template events. Any non-template event → `422`.
+   - **Channel** webhook → **cannot** subscribe to template events → `422`.
+2. **`payloadFormat` is ignored.** For template webhooks the format is always `DEFAULT`. The field may be omitted; if sent (any value, including `CHATWOOT`), it is silently discarded and persisted as `DEFAULT`.
+3. **`instanceId` stored as `null`** automatically — there is no instance field on these routes. `channelId` also comes back `null`.
+
+## Important notes
+
+<Note>
+  **Per-tenant scope.** Read/update/delete operations are scoped by the `tenant` resolved from the `Authorization` header — there is no cross-tenant access by id.
+</Note>
+
+<Note>
+  **Router cache.** After creating or updating a template webhook, routing may take up to ~5 min to reflect (cache TTL).
+</Note>
+
+## Management
+
+<CardGroup cols={2}>
+  <Card title="Create template webhook" icon="plus" href="/en/webhooks/create-template-webhook">
+    Register a new template endpoint.
+  </Card>
+  <Card title="List template webhooks" icon="list" href="/en/webhooks/list-template-webhooks">
+    View all of the tenant's template webhooks.
+  </Card>
+  <Card title="Get template webhook" icon="magnifying-glass" href="/en/webhooks/get-template-webhook">
+    Retrieve a specific template webhook.
+  </Card>
+  <Card title="Update template webhook" icon="pen" href="/en/webhooks/update-template-webhook">
+    Update URL, events, authentication, or status.
+  </Card>
+  <Card title="Delete template webhook" icon="trash" href="/en/webhooks/delete-template-webhook">
+    Permanently remove a template webhook.
+  </Card>
+  <Card title="Payload structure" icon="brackets-curly" href="/en/webhooks/template-payloads">
+    Real payload examples received for each template event.
+  </Card>
+</CardGroup>

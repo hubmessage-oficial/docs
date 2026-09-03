@@ -1,0 +1,45 @@
+---
+title: "Update template webhook"
+description: "Update the configuration of an existing template webhook"
+openapi: "/en/webhooks/openapi-template.json PATCH /v1/webhooks/{webhookId}"
+---
+
+## Overview
+
+Partially updates a template webhook's configuration. Only the fields sent in the body are updated — the rest remain unchanged.
+
+### Updating events
+
+When sending the `events` field, the list replaces the existing events and must contain **only** template events (otherwise → `422`):
+
+```json
+{ "events": ["UPDATE_TEMPLATE_STATUS", "UPDATE_TEMPLATE_CATEGORY"] }
+```
+
+### HMAC signing
+
+`signing: true` generates a new `secret` (returned only in this response); `signing: false` removes signing.
+
+<Warning>
+  The new `secret` is returned **only in this response**. Store it before closing the session.
+</Warning>
+
+### Temporarily disabling
+
+```json
+{ "status": "DISABLED" }
+```
+
+To reactivate, send `{ "status": "ENABLED" }`.
+
+### `payloadFormat` is still ignored
+
+For template webhooks the format is always `DEFAULT`, even if sent in the update.
+
+<Note>
+  This endpoint requires the **ENTERPRISE** role on your account.
+</Note>
+
+<Note>
+  After the change, routing may take up to ~5 min to reflect (cache TTL).
+</Note>

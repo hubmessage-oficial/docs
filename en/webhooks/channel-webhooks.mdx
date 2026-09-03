@@ -1,0 +1,58 @@
+---
+title: "Channel webhooks"
+description: "Receive the events of a specific channel via webhooks"
+---
+
+import { projectName } from '/snippets/variables.mdx';
+
+## What are channel webhooks?
+
+Channel webhooks are associated with a specific channel via `channelId` and receive that channel's events — such as messages received, delivery status, and connection changes.
+
+A single channel can have **multiple webhooks** with different configurations — for example, one for messages and another for connection events.
+
+<Note>
+  The concepts common to both webhook types (**ENTERPRISE** role, authentication, HMAC signing, and payload formats) are in the [Introduction](/en/webhooks/introduction).
+</Note>
+
+## Available events
+
+| Event | When it is triggered |
+|---|---|
+| `MESSAGE_RECEIVED` | A message was received on the channel |
+| `MESSAGE_DELIVERY` | Delivery confirmation for a sent message |
+| `MESSAGE_STATUS` | Message status update (read, failed, etc.) |
+| `RECEIVED_STATUS` | Combined received and status |
+| `RECEIVED_AND_DELIVERY` | Combined received and delivery |
+| `CONNECTED` | The channel was connected |
+| `DISCONNECTED` | The channel was disconnected |
+| `PRESENCE_CHAT` | Contact presence or typing indicator |
+| `INITIAL_DATA` | Initial data sync when channel connects |
+| `BLOCK` | Contact block event |
+
+<Note>
+  Channel webhooks **cannot** subscribe to template events (`422`). To receive WhatsApp template events, use the [Template webhooks](/en/webhooks/template-webhooks).
+</Note>
+
+## Management
+
+<CardGroup cols={2}>
+  <Card title="Create webhook" icon="plus" href="/en/webhooks/create-webhook">
+    Register a new webhook endpoint on a channel.
+  </Card>
+  <Card title="List webhooks" icon="list" href="/en/webhooks/list-webhooks">
+    View all webhooks for a channel.
+  </Card>
+  <Card title="Get webhook" icon="magnifying-glass" href="/en/webhooks/get-webhook">
+    Retrieve a specific webhook.
+  </Card>
+  <Card title="Update webhook" icon="pen" href="/en/webhooks/update-webhook">
+    Update URL, events, authentication, or status.
+  </Card>
+  <Card title="Delete webhook" icon="trash" href="/en/webhooks/delete-webhook">
+    Remove a webhook from a channel.
+  </Card>
+  <Card title="Payload structure" icon="brackets-curly" href="/en/webhooks/payloads">
+    Real payload examples received for each message type.
+  </Card>
+</CardGroup>

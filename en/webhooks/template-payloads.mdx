@@ -1,0 +1,80 @@
+---
+title: "Payload structure"
+description: "Real payload examples received in your webhook for each template event"
+---
+
+import { projectName } from '/snippets/variables.mdx';
+
+Template events reach your endpoint as an **array** of objects, in the same format sent by Meta (WhatsApp Business).
+
+## `UPDATE_TEMPLATE_STATUS` — Status update
+
+Triggered when a template's status changes (approved, rejected, etc.). The `field` value is `message_template_status_update`.
+
+```json
+[
+  {
+    "field": "message_template_status_update",
+    "identifier": "019F950F34A47C38AFDEB99726CA308D",
+    "type": "TEMPLATE_STATUS",
+    "value": {
+      "event": "APPROVED",
+      "message_template_id": "1027341066623944",
+      "message_template_name": "teste_visualizacao_template",
+      "message_template_language": "pt_BR",
+      "reason": null
+    },
+    "waba_id": "1554659762413879"
+  }
+]
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `field` | string | Meta event type — `message_template_status_update` |
+| `identifier` | string | Event identifier |
+| `type` | string | Internal type — `TEMPLATE_STATUS` |
+| `value.event` | string | New template status (e.g. `APPROVED`, `REJECTED`) |
+| `value.message_template_id` | string | Template ID |
+| `value.message_template_name` | string | Template name |
+| `value.message_template_language` | string | Template language (e.g. `pt_BR`) |
+| `value.reason` | string \| null | Reason (set on rejections; `null` otherwise) |
+| `waba_id` | string | WhatsApp Business Account (WABA) ID |
+
+## `UPDATE_TEMPLATE_CATEGORY` — Category update
+
+Triggered when Meta changes a template's category. The `field` value is `template_category_update`.
+
+```json
+[
+  {
+    "field": "template_category_update",
+    "identifier": "019F950F34A47C38AFDEB99726CA308D",
+    "type": "TEMPLATE_CATEGORY_UPDATE",
+    "value": {
+      "category_update_timestamp": 1693478400,
+      "correct_category": "MARKETING",
+      "message_template_id": "1027341066623944",
+      "message_template_language": "pt_BR",
+      "message_template_name": "teste_visualizacao_template",
+      "new_category": "AUTHENTICATION",
+      "previous_category": "UTILITY"
+    },
+    "waba_id": "1554659762413879"
+  }
+]
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `field` | string | Meta event type — `template_category_update` |
+| `identifier` | string | Event identifier |
+| `type` | string | Internal type — `TEMPLATE_CATEGORY_UPDATE` |
+| `value.category_update_timestamp` | number | Timestamp (epoch seconds) of the update |
+| `value.correct_category` | string | Correct category defined by Meta |
+| `value.message_template_id` | string | Template ID |
+| `value.message_template_language` | string | Template language (e.g. `pt_BR`) |
+| `value.message_template_name` | string | Template name |
+| `value.new_category` | string | New category applied |
+| `value.previous_category` | string | Previous category |
+| `waba_id` | string | WhatsApp Business Account (WABA) ID |
